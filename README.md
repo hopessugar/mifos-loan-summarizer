@@ -1,4 +1,6 @@
-# ✨ Mifos X — Smart Contract & Loan Agreement Summarization with LLMs
+<div align="center">
+  
+# Mifos X — Smart Contract & Loan Agreement Summarization with LLMs
 
 <div align="center">
 
