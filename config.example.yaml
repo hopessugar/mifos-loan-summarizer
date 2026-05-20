@@ -1,0 +1,31 @@
+﻿llm:
+  primary: hf_inference
+  model: Qwen/Qwen2.5-72B-Instruct
+  fallback: hf_inference
+  fallback_model: meta-llama/Llama-3.1-8B-Instruct
+
+hf_token: YOUR_HF_TOKEN_HERE
+
+ollama_base_url: http://localhost:11434
+ollama_model: qwen2.5:7b
+
+fineract_url: http://localhost:8443/fineract-provider
+fineract_user: mifos
+fineract_password: password
+fineract_tenant: default
+
+
+groq_api_key: ""
+cerebras_api_key: ""
+
+
+levenshtein_threshold: 0.80
+cosine_threshold: 0.80
+math_tolerance: 0.10
+confidence_threshold: 0.50
+
+use_semantic_chunking: false
+max_segment_tokens: 200
+extraction_max_tokens: 2000
+summary_max_tokens: 500
+extraction_temperature: 0.1
