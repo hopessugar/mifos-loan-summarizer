@@ -1,13 +1,19 @@
-﻿from pydantic_settings import BaseSettings
-import yaml
+﻿import yaml
 import os
+from pydantic_settings import BaseSettings
 
 
 def _load_yaml() -> dict:
-    path = os.path.join(os.path.dirname(__file__), '..', 'config.yaml')
+    # Look for config.yaml in project root
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    path = os.path.join(root, 'config.yaml')
+    print(f'Loading config from: {path}')
     if os.path.exists(path):
-        with open(path) as f:
-            return yaml.safe_load(f) or {}
+        with open(path, encoding='utf-8-sig') as f:
+            data = yaml.safe_load(f) or {}
+            print(f'Config loaded: primary={data.get("llm", {}).get("primary")}')
+            return data
+    print('WARNING: config.yaml not found!')
     return {}
 
 
@@ -17,9 +23,9 @@ _yaml = _load_yaml()
 class Settings(BaseSettings):
     # LLM
     LLM_PRIMARY: str = _yaml.get('llm', {}).get('primary', 'hf_inference')
-    LLM_MODEL: str = _yaml.get('llm', {}).get('model', 'Qwen/Qwen2.5-72B-Instruct')
-    LLM_FALLBACK: str = _yaml.get('llm', {}).get('fallback', 'hf_inference')
-    LLM_FALLBACK_MODEL: str = _yaml.get('llm', {}).get('fallback_model', 'meta-llama/Llama-3.1-8B-Instruct')
+    LLM_MODEL: str = _yaml.get('llm', {}).get('model', 'llama-3.1-8b-instant')
+    LLM_FALLBACK: str = _yaml.get('llm', {}).get('fallback', 'groq')
+    LLM_FALLBACK_MODEL: str = _yaml.get('llm', {}).get('fallback_model', 'llama-3.1-8b-instant')
 
     # HuggingFace
     HF_TOKEN: str = _yaml.get('hf_token', '')
@@ -34,7 +40,7 @@ class Settings(BaseSettings):
     FINERACT_PASSWORD: str = _yaml.get('fineract_password', 'password')
     FINERACT_TENANT: str = _yaml.get('fineract_tenant', 'default')
 
-    # Cloud free-tier providers
+    # Free tier providers
     GROQ_API_KEY: str = _yaml.get('groq_api_key', '')
     CEREBRAS_API_KEY: str = _yaml.get('cerebras_api_key', '')
 
@@ -56,3 +62,4 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+print(f'Settings initialized: LLM_PRIMARY={settings.LLM_PRIMARY}, LLM_MODEL={settings.LLM_MODEL}')
