@@ -26,18 +26,24 @@ def check_hallucination(value: str, contract_text: str) -> dict:
 
     # Short values — use Levenshtein sliding window
     if len(value_str) <= 50:
-        best_score = 0.0
-        window_size = max(len(value_str), 5)
-        for i in range(0, len(contract_text) - window_size + 1, 5):
-            window = contract_text[i:i + window_size]
+    best_score = 0.0
+    window_size = max(len(value_str), 5)
+    for i in range(0, len(contract_text) - window_size + 1, 3):
+        window = contract_text[i:i + window_size]
+        score = levenshtein_ratio(value_str.lower(), window.lower())
+        if score > best_score:
+            best_score = score
+    if best_score < settings.LEVENSHTEIN_THRESHOLD:
+        for i in range(0, len(contract_text) - window_size + 1, 3):
+            window = contract_text[i:i + window_size + 10]
             score = levenshtein_ratio(value_str.lower(), window.lower())
             if score > best_score:
                 best_score = score
-        return {
-            'is_verified': best_score >= settings.LEVENSHTEIN_THRESHOLD,
-            'similarity': round(best_score, 3),
-            'verify_method': 'levenshtein',
-        }
+    return {
+        'is_verified': best_score >= settings.LEVENSHTEIN_THRESHOLD,
+        'similarity': round(best_score, 3),
+        'verify_method': 'levenshtein',
+    }
 
     # Long clauses — use TF-IDF cosine similarity
     try:
