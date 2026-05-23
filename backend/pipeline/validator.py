@@ -16,36 +16,25 @@ FINANCIAL_KEYWORDS = [
 
 def check_hallucination(value: str, contract_text: str) -> dict:
     if not value or not contract_text:
-        return {
-            'is_verified': False,
-            'similarity': 0.0,
-            'verify_method': 'none',
-        }
+        return {'is_verified': False, 'similarity': 0.0, 'verify_method': 'none'}
 
     value_str = str(value).strip()
 
-    # Short values — use Levenshtein sliding window
     if len(value_str) <= 50:
-    best_score = 0.0
-    window_size = max(len(value_str), 5)
-    for i in range(0, len(contract_text) - window_size + 1, 3):
-        window = contract_text[i:i + window_size]
-        score = levenshtein_ratio(value_str.lower(), window.lower())
-        if score > best_score:
-            best_score = score
-    if best_score < settings.LEVENSHTEIN_THRESHOLD:
-        for i in range(0, len(contract_text) - window_size + 1, 3):
-            window = contract_text[i:i + window_size + 10]
+        best_score = 0.0
+        window_size = max(len(value_str), 5)
+        step = 3
+        for i in range(0, max(1, len(contract_text) - window_size + 1), step):
+            window = contract_text[i:i + window_size + 5]
             score = levenshtein_ratio(value_str.lower(), window.lower())
             if score > best_score:
                 best_score = score
-    return {
-        'is_verified': best_score >= settings.LEVENSHTEIN_THRESHOLD,
-        'similarity': round(best_score, 3),
-        'verify_method': 'levenshtein',
-    }
+        return {
+            'is_verified': best_score >= settings.LEVENSHTEIN_THRESHOLD,
+            'similarity': round(best_score, 3),
+            'verify_method': 'levenshtein',
+        }
 
-    # Long clauses — use TF-IDF cosine similarity
     try:
         vectorizer = TfidfVectorizer()
         matrix = vectorizer.fit_transform([value_str, contract_text])
@@ -56,11 +45,7 @@ def check_hallucination(value: str, contract_text: str) -> dict:
             'verify_method': 'cosine',
         }
     except Exception:
-        return {
-            'is_verified': False,
-            'similarity': 0.0,
-            'verify_method': 'cosine_failed',
-        }
+        return {'is_verified': False, 'similarity': 0.0, 'verify_method': 'cosine_failed'}
 
 
 def get_regex_score(field_name: str, value) -> float:
@@ -95,19 +80,10 @@ def get_keyword_proximity_score(source_clause: str) -> float:
     return min(matches / 3.0, 1.0)
 
 
-def calculate_confidence(
-    field_name: str,
-    value,
-    source_clause: str,
-    similarity: float,
-) -> float:
+def calculate_confidence(field_name: str, value, source_clause: str, similarity: float) -> float:
     regex_score = get_regex_score(field_name, value)
     keyword_score = get_keyword_proximity_score(source_clause)
-    confidence = (
-        0.40 * regex_score +
-        0.35 * keyword_score +
-        0.25 * similarity
-    )
+    confidence = (0.40 * regex_score) + (0.35 * keyword_score) + (0.25 * similarity)
     return round(min(confidence, 1.0), 3)
 
 
@@ -117,11 +93,7 @@ def check_math_consistency(schema: LoanAgreementSchema) -> dict:
     tc = schema.total_cost.value
 
     if not all([mp, rd]):
-        return {
-            'is_consistent': None,
-            'difference_pct': None,
-            'warning': 'Cannot check — one or more values missing',
-        }
+        return {'is_consistent': None, 'difference_pct': None, 'warning': 'Cannot check — one or more values missing'}
 
     expected = mp * rd
 
@@ -131,17 +103,9 @@ def check_math_consistency(schema: LoanAgreementSchema) -> dict:
         warning = None
         if not is_consistent:
             warning = f"Numbers do not add up — {round(diff_pct * 100, 1)}% difference. Ask lender to explain."
-        return {
-            'is_consistent': is_consistent,
-            'difference_pct': round(diff_pct * 100, 2),
-            'warning': warning,
-        }
+        return {'is_consistent': is_consistent, 'difference_pct': round(diff_pct * 100, 2), 'warning': warning}
 
-    return {
-        'is_consistent': None,
-        'difference_pct': None,
-        'warning': f'Total cost not found — estimated total repayment: Rs. {expected:,.0f}',
-    }
+    return {'is_consistent': None, 'difference_pct': None, 'warning': f'Total cost not found — estimated total repayment: Rs. {expected:,.0f}'}
 
 
 def compute_risk_analysis(schema: LoanAgreementSchema) -> dict:
@@ -160,8 +124,7 @@ def compute_risk_analysis(schema: LoanAgreementSchema) -> dict:
             score += 2.0
             factors.append('Moderately high interest rate (18%+)')
 
-    pi = schema.penalty_interest.value
-    if pi and pi >= 36:
+    if schema.penalty_interest.value and schema.penalty_interest.value >= 36:
         score += 2.0
         factors.append('Severe penalty interest rate (36%+)')
 
@@ -177,53 +140,29 @@ def compute_risk_analysis(schema: LoanAgreementSchema) -> dict:
         score += 1.5
         factors.append('High number of default triggers')
 
-    score = max(0.0, min(10.0, score))
-
-    return {
-        'score': round(score, 1),
-        'factors': factors,
-    }
+    return {'score': round(max(0.0, min(10.0, score)), 1), 'factors': factors}
 
 
-def validate_extraction(
-    schema: LoanAgreementSchema,
-    contract_text: str,
-) -> dict:
+def validate_extraction(schema: LoanAgreementSchema, contract_text: str) -> dict:
     entity_results = {}
 
     fields_to_validate = {
-        'loan_amount': schema.loan_amount.value,
-        'interest_rate': schema.interest_rate.value,
-        'repayment_duration': schema.repayment_duration.value,
-        'monthly_payment': schema.monthly_payment.value,
-        'total_cost': schema.total_cost.value,
-        'late_fee': schema.late_fee.value,
-        'processing_fee': schema.processing_fee.value,
-        'penalty_interest': schema.penalty_interest.value,
+        'loan_amount': (schema.loan_amount.value, schema.loan_amount.source_clause),
+        'interest_rate': (schema.interest_rate.value, schema.interest_rate.source_clause),
+        'repayment_duration': (schema.repayment_duration.value, schema.repayment_duration.source_clause),
+        'monthly_payment': (schema.monthly_payment.value, schema.monthly_payment.source_clause),
+        'total_cost': (schema.total_cost.value, schema.total_cost.source_clause),
+        'late_fee': (schema.late_fee.value, schema.late_fee.source_clause),
+        'processing_fee': (schema.processing_fee.value, schema.processing_fee.source_clause),
+        'penalty_interest': (schema.penalty_interest.value, schema.penalty_interest.source_clause),
     }
 
-    source_clauses = {
-        'loan_amount': schema.loan_amount.source_clause or '',
-        'interest_rate': schema.interest_rate.source_clause or '',
-        'repayment_duration': schema.repayment_duration.source_clause or '',
-        'monthly_payment': schema.monthly_payment.source_clause or '',
-        'total_cost': schema.total_cost.source_clause or '',
-        'late_fee': schema.late_fee.source_clause or '',
-        'processing_fee': schema.processing_fee.source_clause or '',
-        'penalty_interest': schema.penalty_interest.source_clause or '',
-    }
-
-    for field_name, value in fields_to_validate.items():
+    for field_name, (value, source_clause) in fields_to_validate.items():
         if value is None:
             continue
 
         hallucination = check_hallucination(str(value), contract_text)
-        confidence = calculate_confidence(
-            field_name,
-            value,
-            source_clauses[field_name],
-            hallucination['similarity'],
-        )
+        confidence = calculate_confidence(field_name, value, source_clause or '', hallucination['similarity'])
 
         flag = None
         if not hallucination['is_verified']:
@@ -233,7 +172,7 @@ def validate_extraction(
 
         entity_results[field_name] = {
             'value': value,
-            'source_clause': source_clauses[field_name] or None,
+            'source_clause': source_clause or None,
             'confidence': confidence,
             'is_verified': hallucination['is_verified'],
             'similarity': hallucination['similarity'],
@@ -264,27 +203,22 @@ def validate_extraction(
     mp = schema.monthly_payment.value
     rd = schema.repayment_duration.value
     la = schema.loan_amount.value
-    ir = schema.interest_rate.value
 
     total_repayment = (mp * rd) if mp and rd else None
     total_interest = (total_repayment - la) if total_repayment and la else None
-    eff_rate = (total_interest / la * 100) if total_interest and la else None
-
-    financial_summary = {
-        'total_repayment': total_repayment,
-        'total_interest': total_interest,
-        'effective_interest_pct': round(eff_rate, 2) if eff_rate else None,
-    }
-
-    default_events = [
-        {'trigger': e.trigger, 'source_clause': e.source_clause}
-        for e in schema.default_events
-    ]
+    eff_rate = round((total_interest / la * 100), 2) if total_interest and la else None
 
     return {
         'entities': entity_results,
         'math_check': math_check,
-        'financial_summary': financial_summary,
+        'financial_summary': {
+            'total_repayment': total_repayment,
+            'total_interest': total_interest,
+            'effective_interest_pct': eff_rate,
+        },
         'risk_analysis': risk,
-        'default_events': default_events,
+        'default_events': [
+            {'trigger': e.trigger, 'source_clause': e.source_clause}
+            for e in schema.default_events
+        ],
     }
