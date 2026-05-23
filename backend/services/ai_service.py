@@ -2,6 +2,7 @@ import time
 from backend.pipeline.segmenter import segment_contract, segments_to_dict
 from backend.pipeline.extractor import build_extraction_chain
 from backend.pipeline.validator import validate_extraction
+from backend.pipeline.summariser import build_summary_chain, build_whatsapp_text
 from backend.providers.registry import ProviderRegistry
 from backend.schemas.response import (
     AnalysisResponse, EntityResult,
@@ -30,53 +31,42 @@ async def analyse_contract(
     # Stage 3: validate
     validated = validate_extraction(schema, text)
 
+    # Stage 4: summarise
+    summary_chain = build_summary_chain(provider, language)
+    summary = summary_chain.invoke({
+        'schema': schema,
+        'validated': validated,
+    })
+
+    whatsapp_text = build_whatsapp_text(summary, schema, validated)
+
     # Convert entities
     entities = {
         k: EntityResult(**v)
         for k, v in validated['entities'].items()
     }
 
-    # Math check
-    mc = validated['math_check']
     math_check = MathCheckResult(
-        is_consistent=mc.get('is_consistent'),
-        difference_pct=mc.get('difference_pct'),
-        warning=mc.get('warning'),
+        is_consistent=validated['math_check'].get('is_consistent'),
+        difference_pct=validated['math_check'].get('difference_pct'),
+        warning=validated['math_check'].get('warning'),
     )
 
-    # Financial summary
-    fs = validated['financial_summary']
     financial_summary = FinancialSummary(
-        total_repayment=fs.get('total_repayment'),
-        total_interest=fs.get('total_interest'),
-        effective_interest_pct=fs.get('effective_interest_pct'),
+        total_repayment=validated['financial_summary'].get('total_repayment'),
+        total_interest=validated['financial_summary'].get('total_interest'),
+        effective_interest_pct=validated['financial_summary'].get('effective_interest_pct'),
     )
 
-    # Risk analysis
-    ra = validated['risk_analysis']
     risk_analysis = RiskAnalysis(
-        score=ra.get('score', 0),
-        factors=ra.get('factors', []),
+        score=validated['risk_analysis'].get('score', 0),
+        factors=validated['risk_analysis'].get('factors', []),
     )
 
-    # Default events
     default_events = [
         DefaultEvent(**e)
         for e in validated['default_events']
     ]
-
-    # Basic summary
-    la = schema.loan_amount.value
-    ir = schema.interest_rate.value
-    rd = schema.repayment_duration.value
-    mp = schema.monthly_payment.value
-
-    summary = (
-        f"This loan is for Rs. {la:,.0f} at {ir}% interest "
-        f"over {rd} months. Monthly payment is Rs. {mp:,.0f}. "
-        f"Total repayment will be Rs. {fs.get('total_repayment', 0):,.0f}. "
-        f"Risk score: {ra.get('score', 0)}/10."
-    ) if all([la, ir, rd, mp]) else 'Could not generate summary — extraction incomplete.'
 
     processing_time = int((time.time() - start_time) * 1000)
 
@@ -87,7 +77,7 @@ async def analyse_contract(
         risk_analysis=risk_analysis,
         default_events=default_events,
         summary=summary,
-        whatsapp_text=summary[:280],
+        whatsapp_text=whatsapp_text,
         segment_count=len(segments),
         provider_used=provider.get_model_name(),
         processing_time_ms=processing_time,
