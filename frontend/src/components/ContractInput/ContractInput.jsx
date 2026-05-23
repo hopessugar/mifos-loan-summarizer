@@ -1,52 +1,111 @@
 ﻿import { useState } from 'react'
-import { Button } from '../shared/Button'
 
 export function ContractInput({ onSubmit, loading, onReset, hasResult }) {
   const [text, setText] = useState('')
   const charCount = text.length
   const isValid = charCount >= 50 && charCount <= 50000
 
-  function handleSubmit() {
-    if (isValid) onSubmit(text)
-  }
-
-  function getCharCountClass() {
-    if (charCount < 50 || charCount > 50000) return 'text-red-500'
-    return 'text-gray-400'
+  function getCountColor() {
+    if (charCount === 0) return '#CCC'
+    if (charCount < 50 || charCount > 50000) return '#DC2626'
+    return '#999'
   }
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6">
-      <h2 className="text-base font-semibold text-gray-900 mb-1">
-        Paste Loan Agreement
-      </h2>
-      <p className="text-sm text-gray-500 mb-4">
-        Paste the full text of a loan agreement (50 to 50,000 characters)
-      </p>
+    <div style={{
+      background: '#fff',
+      border: '0.5px solid #E5E5E3',
+      borderRadius: '12px',
+      overflow: 'hidden',
+      marginBottom: '12px',
+    }}>
+      <div style={{
+        padding: '16px 20px 0',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+      }}>
+        <span style={{ fontSize: '13px', fontWeight: '500', color: '#111' }}>
+          Paste loan agreement
+        </span>
+        <span style={{ fontSize: '12px', color: '#BBB' }}>
+          50 – 50,000 characters
+        </span>
+      </div>
 
-      <textarea
-        value={text}
-        onChange={e => setText(e.target.value)}
-        placeholder="Paste loan agreement text here..."
-        rows={10}
-        className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-      />
+      <div style={{ padding: '12px 20px 0' }}>
+        <textarea
+          value={text}
+          onChange={e => setText(e.target.value)}
+          placeholder="Paste the full text of a loan agreement here..."
+          rows={8}
+          style={{
+            width: '100%',
+            background: 'none',
+            border: 'none',
+            outline: 'none',
+            fontSize: '13px',
+            color: '#333',
+            resize: 'none',
+            lineHeight: '1.7',
+            fontFamily: 'inherit',
+          }}
+        />
+      </div>
 
-      <div className="flex items-center justify-between mt-3">
-        <span className={getCharCountClass() + ' text-xs'}>
-          {charCount} / 50,000 characters
-          {charCount < 50 && charCount > 0 ? ' (minimum 50)' : ''}
+      <div style={{
+        padding: '12px 20px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        borderTop: '0.5px solid #F0F0EE',
+        marginTop: '8px',
+      }}>
+        <span style={{ fontSize: '12px', color: getCountColor(), fontVariantNumeric: 'tabular-nums' }}>
+          {charCount.toLocaleString()} / 50,000
+          {charCount > 0 && charCount < 50 ? ' — need at least 50' : ''}
         </span>
 
-        <div className="flex gap-2">
+        <div style={{ display: 'flex', gap: '8px' }}>
           {hasResult && (
-            <Button variant="secondary" onClick={onReset}>
+            <button
+              onClick={onReset}
+              style={{
+                padding: '7px 14px',
+                border: '0.5px solid #E5E5E3',
+                borderRadius: '7px',
+                fontSize: '13px',
+                color: '#666',
+                background: 'none',
+                cursor: 'pointer',
+              }}
+            >
               Reset
-            </Button>
+            </button>
           )}
-          <Button onClick={handleSubmit} disabled={!isValid || loading}>
-            {loading ? 'Analysing...' : 'Analyse'}
-          </Button>
+          <button
+            onClick={() => isValid && onSubmit(text)}
+            disabled={!isValid || loading}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '7px 16px',
+              background: isValid && !loading ? '#111' : '#E5E5E3',
+              color: isValid && !loading ? '#fff' : '#AAA',
+              border: 'none',
+              borderRadius: '7px',
+              fontSize: '13px',
+              fontWeight: '500',
+              cursor: isValid && !loading ? 'pointer' : 'not-allowed',
+              transition: 'all 0.15s',
+            }}
+          >
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M7 1L13 7L7 13M1 7h12" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            {loading ? 'Analysing...' : 'Analyse contract'}
+          </button>
         </div>
       </div>
     </div>
