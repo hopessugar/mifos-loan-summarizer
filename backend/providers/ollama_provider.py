@@ -1,3 +1,4 @@
+from openai import OpenAI
 from backend.providers.base import LLMProvider
 from backend.config import settings
 
@@ -6,7 +7,10 @@ class OllamaProvider(LLMProvider):
 
     def __init__(self):
         self._model = settings.OLLAMA_MODEL
-        self._client = None
+        self._client = OpenAI(
+            api_key='ollama',
+            base_url=f'{settings.OLLAMA_BASE_URL}/v1',
+        )
 
     def get_model_name(self) -> str:
         return self._model
@@ -21,10 +25,4 @@ class OllamaProvider(LLMProvider):
 
     @property
     def raw_client(self):
-        if self._client is None:
-            from langchain_ollama import ChatOllama
-            self._client = ChatOllama(
-                model=self._model,
-                base_url=settings.OLLAMA_BASE_URL,
-            )
         return self._client

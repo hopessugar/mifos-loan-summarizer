@@ -45,7 +45,6 @@ def build_extraction_chain(provider):
             }
         ]
 
-        # Try Instructor first
         try:
             import instructor
             client = instructor.from_openai(
@@ -60,25 +59,25 @@ def build_extraction_chain(provider):
                 max_tokens=2000,
                 max_retries=3,
             )
-            print(f'Instructor extraction succeeded: {result}')
+            print(f'Instructor extraction succeeded')
             return result
 
         except Exception as e1:
             print(f'Instructor failed: {e1}')
 
-            # Fallback: raw call
             try:
                 response = provider.raw_client.chat.completions.create(
                     model=provider.get_model_name(),
                     messages=messages,
                     temperature=0.1,
                     max_tokens=2000,
+                    timeout=280,
                 )
                 raw_text = response.choices[0].message.content
-                print(f'Raw LLM response: {raw_text[:1000]}')
+                print(f'Raw LLM response: {raw_text[:500]}')
 
                 parsed = parse_llm_response(raw_text)
-                print(f'Parsed dict: {parsed}')
+                print(f'Parsed dict keys: {list(parsed.keys())}')
 
                 if parsed:
                     return LoanAgreementSchema(**parsed)

@@ -1,16 +1,16 @@
 ﻿from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import nltk
-
-from backend.routers import analysis, loanproducts, health, providers
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Download NLTK data once on startup
-    nltk.download('punkt', quiet=True)
-    nltk.download('punkt_tab', quiet=True)
+    import nltk
+    try:
+        nltk.download('punkt', quiet=True)
+        nltk.download('punkt_tab', quiet=True)
+    except Exception:
+        pass
     yield
 
 
@@ -28,6 +28,8 @@ app.add_middleware(
     allow_methods=['*'],
     allow_headers=['*'],
 )
+
+from backend.routers import analysis, loanproducts, health, providers
 
 app.include_router(analysis.router)
 app.include_router(loanproducts.router)
