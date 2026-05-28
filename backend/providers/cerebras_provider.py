@@ -1,3 +1,5 @@
+import httpx
+from openai import OpenAI
 from backend.providers.base import LLMProvider
 from backend.config import settings
 
@@ -5,8 +7,12 @@ from backend.config import settings
 class CerebrasProvider(LLMProvider):
 
     def __init__(self):
-        self._model = 'llama-3.1-8b'
-        self._client = None
+        self._model = 'gpt-oss-120b'
+        self._client = OpenAI(
+            api_key=settings.CEREBRAS_API_KEY,
+            base_url='https://api.cerebras.ai/v1',
+            http_client=httpx.Client(verify=False),
+        )
 
     def get_model_name(self) -> str:
         return self._model
@@ -16,10 +22,4 @@ class CerebrasProvider(LLMProvider):
 
     @property
     def raw_client(self):
-        if self._client is None:
-            from openai import OpenAI
-            self._client = OpenAI(
-                api_key=settings.CEREBRAS_API_KEY,
-                base_url='https://api.cerebras.ai/v1',
-            )
         return self._client
