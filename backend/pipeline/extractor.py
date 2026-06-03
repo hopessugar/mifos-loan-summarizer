@@ -1,7 +1,19 @@
 import json
+
+# Import compatibility shim first to fix langchain.debug issue
+try:
+    from backend import langchain_compat
+except ImportError:
+    pass  # Compatibility shim not needed or not available
+
 from langchain_core.runnables import RunnableLambda
-from backend.schemas.loan_schema import LoanAgreementSchema
-from backend.pipeline.prompts import EXTRACTION_SYSTEM_PROMPT
+from schemas.loan_schema import LoanAgreementSchema
+from pipeline.prompts import EXTRACTION_SYSTEM_PROMPT
+from pipeline.input_sanitizer import (
+    sanitize_contract_text,
+    validate_extraction_output,
+    create_secure_prompt,
+)
 
 
 def format_segments(segments: list[dict]) -> str:
@@ -31,8 +43,28 @@ def parse_llm_response(text: str) -> dict:
 
 def build_extraction_chain(provider):
 
-    def _extract(segments: list[dict]) -> LoanAgreementSchema:
+    def _extract(segments: list[dict]) -> tuple[LoanAgreementSchema, list[str]]:
+        """
+        Extract financial entities from contract segments with prompt injection protection.
+        
+        Returns:
+            Tuple of (schema, security_warnings)
+        """
         formatted = format_segments(segments)
+        
+        # Layer 1: Sanitize input to prevent prompt injection
+        sanitized, warnings = sanitize_contract_text(formatted)
+        
+        if warnings:
+            print(f'SECURITY: Input sanitization warnings: {warnings}')
+        
+        # Layer 2: Use secure prompt with delimiters
+        user_message = create_secure_prompt(
+            "Extract all financial entities from the contract below.",
+            sanitized,
+            delimiter_start='<CONTRACT>',
+            delimiter_end='</CONTRACT>'
+        )
 
         messages = [
             {
@@ -41,7 +73,7 @@ def build_extraction_chain(provider):
             },
             {
                 'role': 'user',
-                'content': f'Extract all financial entities from these contract segments:\n\n{formatted}\n\nJSON:',
+                'content': user_message,
             }
         ]
 
@@ -60,7 +92,19 @@ def build_extraction_chain(provider):
                 max_retries=3,
             )
             print(f'Instructor extraction succeeded')
-            return result
+            
+            # Layer 3: Validate output for injection signs
+            is_valid, issues = validate_extraction_output(
+                result.dict(),
+                formatted,  # Use original unsanitized text for validation
+                warnings
+            )
+            
+            if not is_valid:
+                print(f'SECURITY: Output validation issues: {issues}')
+                warnings.extend(issues)
+            
+            return result, warnings
 
         except Exception as e1:
             print(f'Instructor failed: {e1}')
@@ -80,11 +124,27 @@ def build_extraction_chain(provider):
                 print(f'Parsed dict keys: {list(parsed.keys())}')
 
                 if parsed:
-                    return LoanAgreementSchema(**parsed)
-                return LoanAgreementSchema()
+                    schema = LoanAgreementSchema(**parsed)
+                    
+                    # Layer 3: Validate output
+                    is_valid, issues = validate_extraction_output(
+                        parsed,
+                        formatted,
+                        warnings
+                    )
+                    
+                    if not is_valid:
+                        print(f'SECURITY: Output validation issues: {issues}')
+                        warnings.extend(issues)
+                    
+                    return schema, warnings
+                
+                return LoanAgreementSchema(), warnings
 
             except Exception as e2:
                 print(f'Fallback also failed: {e2}')
-                return LoanAgreementSchema()
+                return LoanAgreementSchema(), warnings
+
+    return RunnableLambda(_extract)
 
     return RunnableLambda(_extract)

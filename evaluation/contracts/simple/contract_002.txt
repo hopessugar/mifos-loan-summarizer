@@ -1,0 +1,39 @@
+PERSONAL LOAN AGREEMENT
+
+Agreement Date: March 10, 2026
+Reference: PL-2026-002
+
+Between:
+LENDER: XYZ Finance Company
+BORROWER: Priya Sharma
+
+LOAN DETAILS:
+
+Principal Amount: Rs. 25,000 (Twenty-Five Thousand Rupees)
+
+Interest: 24% per annum (flat rate)
+
+Tenure: 24 months
+
+Monthly EMI: Rs. 1,292
+
+Total Amount Payable: Rs. 31,008
+
+FEES:
+- Processing Fee: Rs. 250 (already deducted)
+- Late Fee: Rs. 150 per delayed payment
+
+PAYMENT SCHEDULE:
+Monthly payments due on the 5th of every month starting April 5, 2026.
+
+PREPAYMENT TERMS:
+Prepayment allowed with 2% penalty on outstanding principal.
+
+DEFAULT CONDITIONS:
+- Missing 3 consecutive payments
+- Providing false information
+- Using loan for illegal purposes
+
+Signed on March 10, 2026
+Lender Signature: ________________
+Borrower Signature: ________________

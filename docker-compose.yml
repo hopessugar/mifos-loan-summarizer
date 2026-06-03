@@ -1,0 +1,105 @@
+version: '3.8'
+
+services:
+  # ============================================================================
+  # Backend Service - FastAPI application
+  # ============================================================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: mifos-backend
+    ports:
+      - "8000:8000"
+    environment:
+      # Application settings
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+      - API_KEY=${API_KEY}
+      
+      # LLM Provider Configuration
+      - LLM_PRIMARY=${LLM_PRIMARY:-groq}
+      - LLM_MODEL=${LLM_MODEL:-llama-3.1-8b-instant}
+      - LLM_FALLBACK=${LLM_FALLBACK:-cerebras}
+      - LLM_FALLBACK_MODEL=${LLM_FALLBACK_MODEL:-llama3.1-8b}
+      
+      # LLM Provider API Keys
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - HF_API_KEY=${HF_API_KEY}
+      - HF_TOKEN=${HF_TOKEN}
+      - CEREBRAS_API_KEY=${CEREBRAS_API_KEY}
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+      
+      # Fineract Configuration
+      - FINERACT_URL=${FINERACT_URL}
+      - FINERACT_USER=${FINERACT_USER}
+      - FINERACT_PASSWORD=${FINERACT_PASSWORD}
+      - FINERACT_TENANT=${FINERACT_TENANT:-default}
+      - FINERACT_SSL_VERIFY=${FINERACT_SSL_VERIFY:-true}
+      - FINERACT_CA_BUNDLE=${FINERACT_CA_BUNDLE}
+      
+      # Pipeline Configuration
+      - DEFAULT_PROVIDER=${DEFAULT_PROVIDER:-groq}
+      - LEVENSHTEIN_THRESHOLD=${LEVENSHTEIN_THRESHOLD:-0.80}
+      - COSINE_THRESHOLD=${COSINE_THRESHOLD:-0.80}
+      - CONFIDENCE_THRESHOLD=${CONFIDENCE_THRESHOLD:-0.60}
+      - MATH_TOLERANCE=${MATH_TOLERANCE:-0.10}
+      - EXTRACTION_MAX_TOKENS=${EXTRACTION_MAX_TOKENS:-1000}
+      - SUMMARY_MAX_TOKENS=${SUMMARY_MAX_TOKENS:-300}
+      - EXTRACTION_TEMPERATURE=${EXTRACTION_TEMPERATURE:-0.1}
+    volumes:
+      # Mount code for development (comment out for production)
+      - ./backend:/app
+      # Prevent overwriting dependencies
+      - /app/__pycache__
+      - /home/appuser/.local
+    networks:
+      - mifos-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health').read()"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+  # ============================================================================
+  # Frontend Service - React + Nginx
+  # ============================================================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=${VITE_API_URL:-http://localhost:8000}
+        - VITE_API_KEY=${API_KEY}
+    container_name: mifos-frontend
+    ports:
+      - "80:8080"
+    environment:
+      - VITE_API_URL=${VITE_API_URL:-http://localhost:8000}
+    depends_on:
+      - backend
+    networks:
+      - mifos-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+# ============================================================================
+# Networks
+# ============================================================================
+networks:
+  mifos-network:
+    driver: bridge
+    name: mifos-network
+
+# ============================================================================
+# Volumes (optional - for persistent data)
+# ============================================================================
+volumes:
+  backend-cache:
+    name: mifos-backend-cache

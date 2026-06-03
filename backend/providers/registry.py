@@ -1,5 +1,5 @@
-from backend.providers.base import LLMProvider
-from backend.config import settings
+from providers.base import LLMProvider
+from config import settings
 
 
 _PROVIDERS = {
@@ -11,22 +11,22 @@ _PROVIDERS = {
 
 
 def _import_hf():
-    from backend.providers.hf_inference_provider import HFInferenceProvider
+    from providers.hf_inference_provider import HFInferenceProvider
     return HFInferenceProvider()
 
 
 def _import_ollama():
-    from backend.providers.ollama_provider import OllamaProvider
+    from providers.ollama_provider import OllamaProvider
     return OllamaProvider()
 
 
 def _import_groq():
-    from backend.providers.groq_provider import GroqProvider
+    from providers.groq_provider import GroqProvider
     return GroqProvider()
 
 
 def _import_cerebras():
-    from backend.providers.cerebras_provider import CerebrasProvider
+    from providers.cerebras_provider import CerebrasProvider
     return CerebrasProvider()
 
 

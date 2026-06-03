@@ -1,6 +1,13 @@
+# Import compatibility shim first to fix langchain.debug issue
+try:
+    from backend import langchain_compat
+except ImportError:
+    pass  # Compatibility shim not needed or not available
+
 from langchain_core.runnables import RunnableLambda
-from backend.pipeline.prompts import SUMMARY_SYSTEM_PROMPT
-from backend.schemas.loan_schema import LoanAgreementSchema
+from pipeline.prompts import SUMMARY_SYSTEM_PROMPT
+from schemas.loan_schema import LoanAgreementSchema
+from pipeline.input_sanitizer import sanitize_contract_text, create_secure_prompt
 
 
 def build_summary_input(schema: LoanAgreementSchema, validated: dict) -> str:
@@ -38,11 +45,31 @@ def build_summary_input(schema: LoanAgreementSchema, validated: dict) -> str:
 
 def build_summary_chain(provider, language: str = 'en'):
 
-    def _summarise(inputs: dict) -> str:
+    def _summarise(inputs: dict) -> tuple[str, list[str]]:
+        """
+        Generate borrower-friendly summary with prompt injection protection.
+        
+        Returns:
+            Tuple of (summary_text, security_warnings)
+        """
         schema = inputs['schema']
         validated = inputs['validated']
 
         summary_input = build_summary_input(schema, validated)
+        
+        # Sanitize the summary input (though it's structured data, be safe)
+        sanitized_input, warnings = sanitize_contract_text(summary_input, max_length=10_000)
+        
+        if warnings:
+            print(f'SECURITY: Summary input sanitization warnings: {warnings}')
+        
+        # Use secure prompt with delimiters
+        user_message = create_secure_prompt(
+            f"Language: {language}\n\nWrite a plain-language summary for the borrower based on the loan details below.",
+            sanitized_input,
+            delimiter_start='<DATA>',
+            delimiter_end='</DATA>'
+        )
 
         messages = [
             {
@@ -51,11 +78,7 @@ def build_summary_chain(provider, language: str = 'en'):
             },
             {
                 'role': 'user',
-                'content': (
-                    f"Language: {language}\n\n"
-                    f"Loan details:\n{summary_input}\n\n"
-                    f"Write a plain-language summary for the borrower:"
-                ),
+                'content': user_message,
             }
         ]
 
@@ -66,7 +89,8 @@ def build_summary_chain(provider, language: str = 'en'):
                 temperature=0.3,
                 max_tokens=500,
             )
-            return response.choices[0].message.content.strip()
+            summary = response.choices[0].message.content.strip()
+            return summary, warnings
         except Exception as e:
             print(f'Summary generation failed: {e}')
             la = schema.loan_amount.value
@@ -74,11 +98,12 @@ def build_summary_chain(provider, language: str = 'en'):
             rd = schema.repayment_duration.value
             mp = schema.monthly_payment.value
             tr = validated['financial_summary'].get('total_repayment')
-            return (
+            fallback = (
                 f"This loan is for Rs. {la:,.0f} at {ir}% interest "
                 f"over {rd} months with monthly payments of Rs. {mp:,.0f}. "
                 f"Total repayment will be Rs. {tr:,.0f}."
             ) if all([la, ir, rd, mp, tr]) else "Summary could not be generated."
+            return fallback, warnings
 
     return RunnableLambda(_summarise)
 

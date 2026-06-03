@@ -1,6 +1,6 @@
 from openai import OpenAI
-from backend.providers.base import LLMProvider
-from backend.config import settings
+from providers.base import LLMProvider
+from config import settings
 
 
 class OllamaProvider(LLMProvider):

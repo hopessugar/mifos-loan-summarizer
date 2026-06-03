@@ -5,12 +5,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    import nltk
-    try:
-        nltk.download('punkt', quiet=True)
-        nltk.download('punkt_tab', quiet=True)
-    except Exception:
-        pass
+    # NLTK data is pre-downloaded in Docker image
+    # Skip download to avoid startup delays
     yield
 
 
@@ -23,13 +19,13 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['http://localhost:5173', 'http://localhost:3000'],
+    allow_origins=['http://localhost:5173', 'http://localhost:3000', 'http://localhost', 'http://localhost:80'],
     allow_credentials=True,
     allow_methods=['*'],
     allow_headers=['*'],
 )
 
-from backend.routers import analysis, loanproducts, health, providers
+from routers import analysis, loanproducts, health, providers
 
 app.include_router(analysis.router)
 app.include_router(loanproducts.router)

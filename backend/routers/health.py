@@ -1,7 +1,7 @@
 ﻿from fastapi import APIRouter
-from backend.config import settings
-from backend.providers.registry import ProviderRegistry
-from backend.services.fineract_service import check_fineract_health
+from config import settings
+from providers.registry import ProviderRegistry
+from services.fineract_service import check_fineract_health
 
 router = APIRouter(tags=['health'])
 

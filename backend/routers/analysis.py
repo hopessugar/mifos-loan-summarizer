@@ -1,13 +1,14 @@
-﻿from fastapi import APIRouter, HTTPException
-from backend.schemas.request import ContractRequest
-from backend.schemas.response import AnalysisResponse
-from backend.services.ai_service import analyse_contract
-from backend.services.fineract_service import get_product_as_text
+﻿from fastapi import APIRouter, HTTPException, Depends
+from schemas.request import ContractRequest
+from schemas.response import AnalysisResponse
+from services.ai_service import analyse_contract
+from services.fineract_service import get_product_as_text
+from auth import verify_api_key
 
 router = APIRouter(tags=['analysis'])
 
 
-@router.post('/analyze', response_model=AnalysisResponse)
+@router.post('/analyze', response_model=AnalysisResponse, dependencies=[Depends(verify_api_key)])
 async def analyze_contract(request: ContractRequest):
     try:
         if request.text:

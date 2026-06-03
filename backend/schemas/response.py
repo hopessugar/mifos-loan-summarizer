@@ -45,3 +45,4 @@ class AnalysisResponse(BaseModel):
     segment_count: int = 0
     provider_used: str = ''
     processing_time_ms: int = 0
+    security_warnings: list[str] = []  # Prompt injection and other security warnings

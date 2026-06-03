@@ -2,6 +2,21 @@
 config.yaml
 .env
 *.env
+.env.local
+.env.*.local
+
+# Backup files that might contain secrets
+*.bak
+*.backup
+*.swp
+*~
+.#*
+
+# Secret management files
+secrets.yaml
+secrets.json
+credentials.json
+.secrets/
 
 # Python
 __pycache__/
@@ -31,3 +46,28 @@ Thumbs.db
 
 # Evaluation outputs
 evaluation/scores/
+
+# Temporary test files
+test_*.py
+test_*.json
+*_test_result.json
+quick_test_result.json
+frontend_test_result.json
+
+# Internal progress reports (not for public repo)
+AUDIT_SUMMARY.md
+CRITICAL_ISSUES_ANALYSIS.md
+CRITICAL_ISSUES_COMPLETE.md
+DOCKER_TESTING_RESULTS.md
+FINAL_TEST_RESULTS.md
+FRONTEND_TEST_GUIDE.md
+IMPLEMENTATION_STATUS.md
+ISSUE_*_COMPLETION_REPORT.md
+ISSUE_*_PROGRESS_REPORT.md
+ISSUE_*_COMPLETE.md
+ISSUE_FIXED.md
+LANGCHAIN_FIX_COMPLETION_REPORT.md
+QUICK_TEST_GUIDE.md
+READY_TO_TEST.md
+TESTING_CHECKLIST.md
+TEST_CONTRACT.txt

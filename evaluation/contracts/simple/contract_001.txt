@@ -1,0 +1,38 @@
+SIMPLE LOAN AGREEMENT
+
+Date: January 15, 2026
+Loan Agreement Number: SLA-001
+
+PARTIES:
+Lender: ABC Microfinance Ltd.
+Borrower: Rajesh Kumar
+
+LOAN TERMS:
+
+1. LOAN AMOUNT
+The Lender agrees to provide a loan of Rs. 50,000 (Fifty Thousand Rupees Only) to the Borrower.
+
+2. INTEREST RATE
+The interest rate applicable to this loan is 18% per annum on a reducing balance basis.
+
+3. REPAYMENT SCHEDULE
+The loan shall be repaid in 12 equal monthly instalments of Rs. 4,583 each.
+First instalment due: February 15, 2026
+Last instalment due: January 15, 2027
+
+4. PROCESSING FEE
+A one-time processing fee of Rs. 500 has been charged and deducted from the disbursement amount.
+
+5. LATE PAYMENT PENALTY
+In case of late payment, a penalty of Rs. 200 per month will be charged.
+
+6. PREPAYMENT
+The Borrower may prepay the loan at any time without any prepayment penalty.
+
+7. DEFAULT
+If the Borrower fails to make 2 consecutive monthly payments, the loan will be considered in default.
+
+SIGNATURES:
+Lender: ________________
+Borrower: ________________
+Date: January 15, 2026

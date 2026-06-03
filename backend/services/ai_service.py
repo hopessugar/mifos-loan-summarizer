@@ -1,10 +1,17 @@
+# Import compatibility shim first to fix langchain.debug issue
+try:
+    from backend import langchain_compat
+except ImportError:
+    pass  # Compatibility shim not needed or not available
+
 import time
-from backend.pipeline.segmenter import segment_contract, segments_to_dict
-from backend.pipeline.extractor import build_extraction_chain
-from backend.pipeline.validator import validate_extraction
-from backend.pipeline.summariser import build_summary_chain, build_whatsapp_text
-from backend.providers.registry import ProviderRegistry
-from backend.schemas.response import (
+import asyncio
+from pipeline.segmenter import segment_contract, segments_to_dict
+from pipeline.extractor import build_extraction_chain
+from pipeline.validator import validate_extraction
+from pipeline.summariser import build_summary_chain, build_whatsapp_text
+from providers.registry import ProviderRegistry
+from schemas.response import (
     AnalysisResponse, EntityResult,
     MathCheckResult, FinancialSummary,
     RiskAnalysis, DefaultEvent,
@@ -16,27 +23,50 @@ async def analyse_contract(
     language: str = 'en',
     provider_override: str | None = None,
 ) -> AnalysisResponse:
+    """
+    Analyze loan contract with proper async/await patterns.
+    
+    Performance improvements:
+    - CPU-bound operations run in thread pool (segment, validate)
+    - I/O-bound operations use async (LLM API calls)
+    - Enables concurrent request handling
+    """
     start_time = time.time()
+    security_warnings = []
 
     provider = ProviderRegistry.get(provider_override)
 
-    # Stage 1: segment
-    segments = segment_contract(text)
+    # Stage 1: segment (CPU-bound → run in thread pool)
+    segments = await asyncio.to_thread(segment_contract, text)
     segments_dict = segments_to_dict(segments)
 
-    # Stage 2: extract
+    # Stage 2: extract (I/O-bound → use ainvoke for async LLM call)
     extraction_chain = build_extraction_chain(provider)
-    schema = extraction_chain.invoke(segments_dict)
+    extraction_result = await extraction_chain.ainvoke(segments_dict)
+    
+    # Handle tuple return (schema, warnings) from updated extractor
+    if isinstance(extraction_result, tuple):
+        schema, extraction_warnings = extraction_result
+        security_warnings.extend(extraction_warnings)
+    else:
+        schema = extraction_result
 
-    # Stage 3: validate
-    validated = validate_extraction(schema, text)
+    # Stage 3: validate (CPU-bound → run in thread pool)
+    validated = await asyncio.to_thread(validate_extraction, schema, text)
 
-    # Stage 4: summarise
+    # Stage 4: summarise (I/O-bound → use ainvoke for async LLM call)
     summary_chain = build_summary_chain(provider, language)
-    summary = summary_chain.invoke({
+    summary_result = await summary_chain.ainvoke({
         'schema': schema,
         'validated': validated,
     })
+    
+    # Handle tuple return (summary, warnings) from updated summarizer
+    if isinstance(summary_result, tuple):
+        summary, summary_warnings = summary_result
+        security_warnings.extend(summary_warnings)
+    else:
+        summary = summary_result
 
     whatsapp_text = build_whatsapp_text(summary, schema, validated)
 
@@ -81,4 +111,5 @@ async def analyse_contract(
         segment_count=len(segments),
         provider_used=provider.get_model_name(),
         processing_time_ms=processing_time,
+        security_warnings=security_warnings,
     )

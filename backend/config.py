@@ -1,5 +1,6 @@
 ﻿import yaml
 import os
+from pydantic import Field
 from pydantic_settings import BaseSettings
 
 
@@ -12,20 +13,62 @@ def _load_yaml() -> dict:
         with open(path, encoding='utf-8-sig') as f:
             data = yaml.safe_load(f) or {}
             print(f'Config loaded: primary={data.get("llm", {}).get("primary")}')
+            
+            # Detect secrets in YAML (security warning)
+            secret_warnings = _detect_secrets_in_yaml(data)
+            if secret_warnings:
+                print('\n' + '='*80)
+                print('SECURITY WARNING: Secrets detected in config.yaml!')
+                print('='*80)
+                for warning in secret_warnings:
+                    print(f'  ⚠️  {warning}')
+                print('\nRECOMMENDATION: Use environment variables instead:')
+                print('  - Set secrets via: export SECRET_NAME=value')
+                print('  - Or use .env file (see backend/.env.example)')
+                print('  - Remove secrets from config.yaml')
+                print('='*80 + '\n')
+            
             return data
     print('WARNING: config.yaml not found!')
     return {}
+
+
+def _detect_secrets_in_yaml(yaml_data: dict) -> list[str]:
+    """
+    Detect if secrets are stored in YAML (discouraged practice).
+    
+    Returns list of warnings for secrets found in YAML.
+    """
+    warnings = []
+    
+    # Define secret fields and their placeholder values
+    secret_fields = {
+        'hf_token': ['', 'YOUR_HF_TOKEN_HERE', 'YOUR_TOKEN_HERE'],
+        'fineract_password': ['', 'password'],
+        'groq_api_key': [''],
+        'cerebras_api_key': [''],
+        'api_key': ['', 'your-secret-api-key-here', 'your-api-key-here'],
+    }
+    
+    for field, placeholders in secret_fields.items():
+        value = yaml_data.get(field, '')
+        # If value exists and is not a placeholder, it's a real secret
+        if value and value not in placeholders:
+            env_var = field.upper()
+            warnings.append(f'{field} found in YAML (use {env_var} environment variable instead)')
+    
+    return warnings
 
 
 _yaml = _load_yaml()
 
 
 class Settings(BaseSettings):
-    # LLM
-    LLM_PRIMARY: str = _yaml.get('llm', {}).get('primary', 'hf_inference')
-    LLM_MODEL: str = _yaml.get('llm', {}).get('model', 'llama-3.1-8b-instant')
-    LLM_FALLBACK: str = _yaml.get('llm', {}).get('fallback', 'groq')
-    LLM_FALLBACK_MODEL: str = _yaml.get('llm', {}).get('fallback_model', 'llama-3.1-8b-instant')
+    # LLM - Read from environment variables, fallback to YAML, then hardcoded defaults
+    LLM_PRIMARY: str = Field(default_factory=lambda: os.getenv('LLM_PRIMARY') or _yaml.get('llm', {}).get('primary', 'groq'))
+    LLM_MODEL: str = Field(default_factory=lambda: os.getenv('LLM_MODEL') or _yaml.get('llm', {}).get('model', 'llama-3.1-8b-instant'))
+    LLM_FALLBACK: str = Field(default_factory=lambda: os.getenv('LLM_FALLBACK') or _yaml.get('llm', {}).get('fallback', 'cerebras'))
+    LLM_FALLBACK_MODEL: str = Field(default_factory=lambda: os.getenv('LLM_FALLBACK_MODEL') or _yaml.get('llm', {}).get('fallback_model', 'llama3.1-8b'))
 
     # HuggingFace
     HF_TOKEN: str = _yaml.get('hf_token', '')
@@ -39,6 +82,8 @@ class Settings(BaseSettings):
     FINERACT_USER: str = _yaml.get('fineract_user', 'mifos')
     FINERACT_PASSWORD: str = _yaml.get('fineract_password', 'password')
     FINERACT_TENANT: str = _yaml.get('fineract_tenant', 'default')
+    FINERACT_SSL_VERIFY: bool = _yaml.get('fineract_ssl_verify', True)
+    FINERACT_CA_BUNDLE: str = _yaml.get('fineract_ca_bundle', '')
 
     # Free tier providers
     GROQ_API_KEY: str = _yaml.get('groq_api_key', '')
@@ -57,9 +102,33 @@ class Settings(BaseSettings):
     SUMMARY_MAX_TOKENS: int = _yaml.get('summary_max_tokens', 500)
     EXTRACTION_TEMPERATURE: float = _yaml.get('extraction_temperature', 0.1)
 
+    # Authentication
+    API_KEY: str = os.getenv('API_KEY', _yaml.get('api_key', ''))
+    API_KEY_HEADER_NAME: str = os.getenv('API_KEY_HEADER_NAME', _yaml.get('api_key_header_name', 'X-API-Key'))
+
     class Config:
         extra = 'ignore'
+    
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        # Security validation: prevent SSL verification bypass in production
+        import os
+        environment = os.getenv('ENVIRONMENT', 'development').lower()
+        if environment == 'production' and not self.FINERACT_SSL_VERIFY:
+            raise ValueError(
+                'CRITICAL SECURITY ERROR: SSL verification cannot be disabled in production. '
+                'Set FINERACT_SSL_VERIFY=true or remove the setting to use secure default.'
+            )
+        
+        # Security validation: require API key in production
+        if environment == 'production' and not self.API_KEY:
+            raise ValueError(
+                'CRITICAL SECURITY ERROR: API_KEY must be set in production. '
+                'Set API_KEY environment variable or add api_key to config.yaml.'
+            )
 
 
 settings = Settings()
 print(f'Settings initialized: LLM_PRIMARY={settings.LLM_PRIMARY}, LLM_MODEL={settings.LLM_MODEL}')
+print(f'Fineract SSL verification: {"ENABLED" if settings.FINERACT_SSL_VERIFY else "DISABLED (development only)"}')
+print(f'API authentication: {"ENABLED" if settings.API_KEY else "DISABLED (development only)"}')

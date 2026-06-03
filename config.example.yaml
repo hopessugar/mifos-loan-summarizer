@@ -1,20 +1,56 @@
-﻿llm:
+﻿# =============================================================================
+# MIFOS LOAN SUMMARIZER - CONFIGURATION
+# =============================================================================
+#
+# SECURITY WARNING: Do NOT put real secrets in this file!
+#
+# This is an EXAMPLE configuration file. Real secrets should be stored in:
+#   1. Environment variables (RECOMMENDED for production)
+#   2. .env file (for local development only, already gitignored)
+#
+# To use this file:
+#   1. Copy to config.yaml: cp config.example.yaml config.yaml
+#   2. Leave secret fields empty in config.yaml
+#   3. Set secrets via environment variables or .env file
+#
+# See backend/.env.example for all available environment variables
+# See README.md for detailed secrets management instructions
+#
+# =============================================================================
+
+llm:
   primary: hf_inference
   model: Qwen/Qwen2.5-72B-Instruct
   fallback: hf_inference
   fallback_model: meta-llama/Llama-3.1-8B-Instruct
 
-hf_token: YOUR_HF_TOKEN_HERE
+# HuggingFace API Token
+# SECURITY: Set via HF_TOKEN environment variable
+# DO NOT put your real token here!
+hf_token: ""
 
 ollama_base_url: http://localhost:11434
 ollama_model: qwen2.5:7b
 
 fineract_url: http://localhost:8443/fineract-provider
 fineract_user: mifos
-fineract_password: password
+# SECURITY: Set via FINERACT_PASSWORD environment variable
+# DO NOT put your real password here!
+fineract_password: ""
 fineract_tenant: default
+fineract_ssl_verify: true
+# fineract_ca_bundle: /path/to/ca-certificate.pem  # Optional: for self-signed certs in development
 
+# Authentication (REQUIRED in production)
+# SECURITY: Set via API_KEY environment variable
+# Generate strong API key: python -c "import secrets; print(secrets.token_urlsafe(32))"
+# DO NOT put your real API key here!
+# api_key: ""
+# api_key_header_name: X-API-Key  # Optional: customize header name (default: X-API-Key)
 
+# LLM Provider API Keys
+# SECURITY: Set via environment variables
+# DO NOT put your real API keys here!
 groq_api_key: ""
 cerebras_api_key: ""
 

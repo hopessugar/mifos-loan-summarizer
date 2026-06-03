@@ -1,0 +1,114 @@
+{
+  "contracts": [
+    {
+      "id": "contract_001",
+      "file": "simple/contract_001.txt",
+      "complexity": "simple",
+      "ground_truth": {
+        "loan_amount": 50000,
+        "interest_rate": 18.0,
+        "interest_type": "reducing",
+        "repayment_duration": 12,
+        "monthly_payment": 4583,
+        "total_cost": 55000,
+        "currency": "INR",
+        "payment_frequency": "monthly",
+        "payment_due_day": "15",
+        "processing_fee": 500,
+        "late_fee": 200,
+        "prepayment_penalty": null,
+        "penalty_interest": null,
+        "collateral_present": false,
+        "default_events": [
+          "Fails to make 2 consecutive monthly payments"
+        ],
+        "risk_score_range": [2, 4],
+        "expected_summary_keywords": [
+          "50,000",
+          "18%",
+          "12 months",
+          "4,583",
+          "reducing balance"
+        ]
+      }
+    },
+    {
+      "id": "contract_002",
+      "file": "simple/contract_002.txt",
+      "complexity": "simple",
+      "ground_truth": {
+        "loan_amount": 25000,
+        "interest_rate": 24.0,
+        "interest_type": "flat",
+        "repayment_duration": 24,
+        "monthly_payment": 1292,
+        "total_cost": 31008,
+        "currency": "INR",
+        "payment_frequency": "monthly",
+        "payment_due_day": "5",
+        "processing_fee": 250,
+        "late_fee": 150,
+        "prepayment_penalty": 2.0,
+        "penalty_interest": null,
+        "collateral_present": false,
+        "default_events": [
+          "Missing 3 consecutive payments",
+          "Providing false information",
+          "Using loan for illegal purposes"
+        ],
+        "risk_score_range": [4, 6],
+        "expected_summary_keywords": [
+          "25,000",
+          "24%",
+          "24 months",
+          "1,292",
+          "flat rate"
+        ]
+      }
+    }
+  ],
+  "evaluation_criteria": {
+    "faithfulness": {
+      "description": "Extracted values must be present in source text",
+      "threshold": 0.85,
+      "weight": 0.30
+    },
+    "answer_relevancy": {
+      "description": "Extracted information must be relevant to loan analysis",
+      "threshold": 0.90,
+      "weight": 0.20
+    },
+    "context_precision": {
+      "description": "Extracted values must match ground truth",
+      "threshold": 0.80,
+      "weight": 0.25
+    },
+    "context_recall": {
+      "description": "All important fields must be extracted",
+      "threshold": 0.75,
+      "weight": 0.15
+    },
+    "extraction_accuracy": {
+      "description": "Numerical values must match exactly or within 5%",
+      "threshold": 0.70,
+      "weight": 0.10
+    }
+  },
+  "scoring_rules": {
+    "numerical_tolerance": 0.05,
+    "string_similarity_threshold": 0.85,
+    "required_fields": [
+      "loan_amount",
+      "interest_rate",
+      "repayment_duration",
+      "monthly_payment"
+    ],
+    "optional_fields": [
+      "processing_fee",
+      "late_fee",
+      "prepayment_penalty",
+      "penalty_interest",
+      "collateral_present"
+    ]
+  }
+}

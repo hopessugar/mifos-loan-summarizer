@@ -1,5 +1,6 @@
 ﻿import { useState } from 'react'
 import { AppProvider } from './context/AppContext'
+import { ErrorBoundary, SectionErrorFallback } from './components/ErrorBoundary'
 import { useAnalysis } from './hooks/useAnalysis'
 import { useLanguage } from './hooks/useLanguage'
 import { ContractInput } from './components/ContractInput/ContractInput'
@@ -14,47 +15,38 @@ function Main() {
   const [inputMode, setInputMode] = useState('paste')
 
   return (
-    <div style={{ minHeight: '100vh', background: '#F7F6F2' }}>
+    <div className="min-h-screen bg-[#F7F6F2]">
       <Header language={language} setLanguage={setLanguage} result={result} />
 
-      <main style={{ maxWidth: '760px', margin: '0 auto', padding: '40px 24px' }}>
-        <div style={{ marginBottom: '32px' }}>
-          <p style={{ fontSize: '11px', fontWeight: '500', color: '#888', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '6px' }}>
+      <main className="max-w-3xl mx-auto px-6 py-10">
+        <div className="mb-8">
+          <p className="text-[11px] font-medium text-[#888] uppercase tracking-[0.08em] mb-1.5">
             Loan analysis
           </p>
-          <h1 style={{ fontSize: '24px', fontWeight: '600', color: '#111', marginBottom: '6px', letterSpacing: '-0.02em' }}>
+          <h1 className="text-2xl font-semibold text-[#111] mb-1.5 tracking-[-0.02em]">
             Understand your loan agreement
           </h1>
-          <p style={{ fontSize: '14px', color: '#666', lineHeight: '1.6' }}>
+          <p className="text-sm text-[#666] leading-relaxed">
             Paste any loan contract or select a Mifos X product to get a plain-language summary, extracted terms, and risk analysis.
           </p>
         </div>
 
-        <div style={{
-          display: 'flex',
-          gap: '0',
-          borderBottom: '0.5px solid #E5E5E3',
-          marginBottom: '16px',
-        }}>
+        <div 
+          role="tablist"
+          className="flex gap-0 border-b border-[#E5E5E3] mb-4"
+        >
           {[
             { key: 'paste', label: 'Paste text' },
             { key: 'mifos', label: 'Mifos X product' },
           ].map(tab => (
             <button
               key={tab.key}
+              role="tab"
+              aria-selected={inputMode === tab.key}
               onClick={() => { setInputMode(tab.key); reset(); }}
-              style={{
-                padding: '8px 16px',
-                fontSize: '13px',
-                color: inputMode === tab.key ? '#111' : '#999',
-                background: 'none',
-                border: 'none',
-                borderBottom: inputMode === tab.key ? '1.5px solid #111' : '1.5px solid transparent',
-                cursor: 'pointer',
-                fontWeight: inputMode === tab.key ? '500' : '400',
-                marginBottom: '-0.5px',
-                transition: 'all 0.15s',
-              }}
+              className={`px-4 py-2 text-[13px] bg-none border-none border-b-[1.5px] cursor-pointer -mb-[0.5px] transition-all duration-150 ${
+                inputMode === tab.key ? 'text-[#111] border-[#111] font-medium' : 'text-[#999] border-transparent font-normal'
+              }`}
             >
               {tab.label}
             </button>
@@ -62,44 +54,42 @@ function Main() {
         </div>
 
         {inputMode === 'paste' ? (
-          <ContractInput
-            onSubmit={(text) => submit({ text, language })}
-            loading={status === 'loading'}
-            onReset={reset}
-            hasResult={!!result}
-          />
+          <ErrorBoundary fallback={<SectionErrorFallback />}>
+            <ContractInput
+              onSubmit={(text) => submit({ text, language })}
+              loading={status === 'loading'}
+              onReset={reset}
+              hasResult={!!result}
+            />
+          </ErrorBoundary>
         ) : (
-          <MifosProductPicker
-            onSubmit={(id) => submit({ loan_product_id: id, language })}
-            loading={status === 'loading'}
-          />
+          <ErrorBoundary fallback={<SectionErrorFallback />}>
+            <MifosProductPicker
+              onSubmit={(id) => submit({ loan_product_id: id, language })}
+              loading={status === 'loading'}
+            />
+          </ErrorBoundary>
         )}
 
         {status === 'loading' && (
-          <div style={{ marginTop: '48px', textAlign: 'center' }}>
+          <div className="mt-12 text-center">
             <Spinner />
-            <p style={{ marginTop: '12px', fontSize: '13px', color: '#888' }}>
+            <p className="mt-3 text-[13px] text-[#888]">
               Analysing contract...
             </p>
           </div>
         )}
 
         {status === 'error' && (
-          <div style={{
-            marginTop: '16px',
-            padding: '12px 16px',
-            background: '#FEF2F2',
-            border: '0.5px solid #FECACA',
-            borderRadius: '10px',
-            fontSize: '13px',
-            color: '#DC2626',
-          }}>
+          <div className="mt-4 px-4 py-3 bg-[#FEF2F2] border border-[#FECACA] rounded-xl text-[13px] text-[#DC2626]">
             {error}
           </div>
         )}
 
         {status === 'success' && result && (
-          <ResultsSection result={result} />
+          <ErrorBoundary fallback={<SectionErrorFallback />}>
+            <ResultsSection result={result} />
+          </ErrorBoundary>
         )}
       </main>
     </div>
@@ -108,8 +98,10 @@ function Main() {
 
 export default function App() {
   return (
-    <AppProvider>
-      <Main />
-    </AppProvider>
+    <ErrorBoundary>
+      <AppProvider>
+        <Main />
+      </AppProvider>
+    </ErrorBoundary>
   )
 }
