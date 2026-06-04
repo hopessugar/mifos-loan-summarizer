@@ -1,10 +1,6 @@
 import json
 
-# Import compatibility shim first to fix langchain.debug issue
-try:
-    from backend import langchain_compat
-except ImportError:
-    pass  # Compatibility shim not needed or not available
+import langchain_compat  # noqa: F401
 
 from langchain_core.runnables import RunnableLambda
 from schemas.loan_schema import LoanAgreementSchema
@@ -44,21 +40,14 @@ def parse_llm_response(text: str) -> dict:
 def build_extraction_chain(provider):
 
     def _extract(segments: list[dict]) -> tuple[LoanAgreementSchema, list[str]]:
-        """
-        Extract financial entities from contract segments with prompt injection protection.
-        
-        Returns:
-            Tuple of (schema, security_warnings)
-        """
         formatted = format_segments(segments)
         
-        # Layer 1: Sanitize input to prevent prompt injection
+        # WARNING: Sanitize input to prevent prompt injection
         sanitized, warnings = sanitize_contract_text(formatted)
         
         if warnings:
             print(f'SECURITY: Input sanitization warnings: {warnings}')
         
-        # Layer 2: Use secure prompt with delimiters
         user_message = create_secure_prompt(
             "Extract all financial entities from the contract below.",
             sanitized,
@@ -77,8 +66,15 @@ def build_extraction_chain(provider):
             }
         ]
 
+        is_ollama = 'ollama' in provider.get_model_name().lower() or hasattr(provider, '__class__') and 'ollama' in provider.__class__.__name__.lower()
+        
         try:
             import instructor
+            
+            if is_ollama:
+                print('Using fallback mode for Ollama (instructor compatibility)')
+                raise Exception("Skipping instructor for Ollama compatibility")
+            
             client = instructor.from_openai(
                 provider.raw_client,
                 mode=instructor.Mode.JSON,
@@ -88,15 +84,15 @@ def build_extraction_chain(provider):
                 response_model=LoanAgreementSchema,
                 messages=messages,
                 temperature=0.1,
-                max_tokens=2000,
+                max_tokens=1200,
                 max_retries=3,
             )
             print(f'Instructor extraction succeeded')
             
-            # Layer 3: Validate output for injection signs
+            # WARNING: Validate output for injection signs
             is_valid, issues = validate_extraction_output(
                 result.dict(),
-                formatted,  # Use original unsanitized text for validation
+                formatted,
                 warnings
             )
             
@@ -107,18 +103,35 @@ def build_extraction_chain(provider):
             return result, warnings
 
         except Exception as e1:
-            print(f'Instructor failed: {e1}')
+            print(f'Instructor failed (fallback to manual JSON parsing): {e1}')
 
             try:
-                response = provider.raw_client.chat.completions.create(
-                    model=provider.get_model_name(),
-                    messages=messages,
-                    temperature=0.1,
-                    max_tokens=2000,
-                    timeout=280,
-                )
-                raw_text = response.choices[0].message.content
-                print(f'Raw LLM response: {raw_text[:500]}')
+                is_ollama = 'ollama' in provider.__class__.__name__.lower()
+                
+                if is_ollama and hasattr(provider, 'generate_native'):
+                    print('Using Ollama native API for extraction...')
+                    system_prompt = EXTRACTION_SYSTEM_PROMPT
+                    user_prompt = user_message
+                    
+                    raw_text = provider.generate_native(
+                        prompt=user_prompt,
+                        system=system_prompt,
+                        max_tokens=1200,
+                        temperature=0.1
+                    )
+                else:
+                    timeout = 120 if is_ollama else 60
+                    
+                    response = provider.raw_client.chat.completions.create(
+                        model=provider.get_model_name(),
+                        messages=messages,
+                        temperature=0.1,
+                        max_tokens=1200,
+                        timeout=timeout,
+                    )
+                    raw_text = response.choices[0].message.content
+                
+                print(f'Raw LLM response (first 500 chars): {raw_text[:500]}')
 
                 parsed = parse_llm_response(raw_text)
                 print(f'Parsed dict keys: {list(parsed.keys())}')
@@ -126,7 +139,6 @@ def build_extraction_chain(provider):
                 if parsed:
                     schema = LoanAgreementSchema(**parsed)
                     
-                    # Layer 3: Validate output
                     is_valid, issues = validate_extraction_output(
                         parsed,
                         formatted,
@@ -143,6 +155,8 @@ def build_extraction_chain(provider):
 
             except Exception as e2:
                 print(f'Fallback also failed: {e2}')
+                import traceback
+                traceback.print_exc()
                 return LoanAgreementSchema(), warnings
 
     return RunnableLambda(_extract)

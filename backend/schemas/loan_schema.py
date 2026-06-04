@@ -5,12 +5,16 @@ from typing import Optional
 class EntityField(BaseModel):
     value: Optional[float] = None
     source_clause: Optional[str] = None
+    confidence: Optional[float] = None
+    extraction_method: Optional[str] = None
 
 
 class InterestField(BaseModel):
     value: Optional[float] = None
     type: Optional[str] = None
     source_clause: Optional[str] = None
+    confidence: Optional[float] = None
+    extraction_method: Optional[str] = None
 
 
 class FeeField(BaseModel):
@@ -18,6 +22,8 @@ class FeeField(BaseModel):
     logic: Optional[str] = None
     base: Optional[str] = None
     source_clause: Optional[str] = None
+    confidence: Optional[float] = None
+    extraction_method: Optional[str] = None
 
 
 class CollateralField(BaseModel):
@@ -52,8 +58,8 @@ class LoanAgreementSchema(BaseModel):
     repayment_start_date: Optional[str] = None
     currency: Optional[str] = 'INR'
 
-    # Fee fields
     late_fee: FeeField = FeeField()
+    late_payment_interest: FeeField = FeeField()
     penalty_interest: FeeField = FeeField()
     prepayment_penalty: FeeField = FeeField()
     processing_fee: FeeField = FeeField()

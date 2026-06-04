@@ -13,10 +13,8 @@ pip-log.txt
 pip-delete-this-directory.txt
 
 # Virtual environments
-.env
-.venv
-env/
 venv/
+env/
 ENV/
 env.bak/
 venv.bak/
@@ -56,3 +54,6 @@ logs/
 # Config (use environment variables instead)
 config.yaml
 .env.local
+
+# Test files
+test_*.py

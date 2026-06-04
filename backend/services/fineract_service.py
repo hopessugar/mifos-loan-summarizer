@@ -1,6 +1,23 @@
 import httpx
 import base64
 from config import settings
+from tenacity import (
+    retry,
+    stop_after_attempt,
+    wait_exponential,
+    retry_if_exception_type,
+    before_sleep_log
+)
+from functools import lru_cache
+import time
+import logging
+
+logger = logging.getLogger(__name__)
+
+# Cache timestamp for invalidation
+_products_cache_time = 0
+_products_cache = None
+CACHE_TTL = 300  # 5 minutes
 
 
 # Shared HTTP client for Fineract API calls
@@ -9,19 +26,9 @@ _fineract_client: httpx.AsyncClient | None = None
 
 
 def _get_ssl_config():
-    """
-    Determine SSL verification configuration.
-    
-    Returns:
-        - True: Verify using system CA bundle (production default)
-        - False: Skip verification (ONLY for development, blocked in production)
-        - str: Path to custom CA bundle (for self-signed certs in development)
-    """
     if not settings.FINERACT_SSL_VERIFY:
-        # This should never happen in production due to Settings validation
         return False
     
-    # If custom CA bundle provided, use it
     if settings.FINERACT_CA_BUNDLE:
         import os
         if not os.path.exists(settings.FINERACT_CA_BUNDLE):
@@ -30,26 +37,17 @@ def _get_ssl_config():
             )
         return settings.FINERACT_CA_BUNDLE
     
-    # Default: use system CA bundle
     return True
 
 
 def _get_fineract_client() -> httpx.AsyncClient:
-    """
-    Get or create shared Fineract HTTP client.
-    
-    Benefits of shared client:
-    - Connection pooling (reuses TCP connections)
-    - Better performance (~20-50ms faster per request)
-    - Centralized SSL configuration
-    """
     global _fineract_client
     
     if _fineract_client is None:
         ssl_config = _get_ssl_config()
         _fineract_client = httpx.AsyncClient(
             verify=ssl_config,
-            timeout=httpx.Timeout(10.0, connect=5.0),
+            timeout=httpx.Timeout(30.0, connect=10.0),
             limits=httpx.Limits(max_keepalive_connections=5, max_connections=10),
         )
     
@@ -67,16 +65,20 @@ def _auth_headers() -> dict:
     }
 
 
+@retry(
+    stop=stop_after_attempt(3),
+    wait=wait_exponential(multiplier=1, min=2, max=10),
+    retry=retry_if_exception_type((httpx.TimeoutException, httpx.ConnectError)),
+    before_sleep=before_sleep_log(logger, logging.WARNING)
+)
 async def list_loan_products() -> list[dict]:
-    """
-    Fetch list of loan products from Fineract.
+    global _products_cache, _products_cache_time
     
-    Returns:
-        List of dicts with 'id' and 'name' keys.
+    current_time = time.time()
+    if _products_cache and (current_time - _products_cache_time) < CACHE_TTL:
+        logger.info(f"Returning cached loan products ({len(_products_cache)} items)")
+        return _products_cache
     
-    Raises:
-        httpx.HTTPError: If Fineract API call fails.
-    """
     try:
         client = _get_fineract_client()
         r = await client.get(
@@ -84,25 +86,25 @@ async def list_loan_products() -> list[dict]:
             headers=_auth_headers(),
         )
         r.raise_for_status()
-        return [{'id': p['id'], 'name': p['name']} for p in r.json()]
+        products = [{'id': p['id'], 'name': p['name']} for p in r.json()]
+        
+        _products_cache = products
+        _products_cache_time = current_time
+        
+        logger.info(f'Successfully fetched {len(products)} loan products from Fineract (cached)')
+        return products
     except Exception as e:
-        print(f'Fineract list_loan_products failed: {e}')
+        logger.error(f'Fineract list_loan_products failed: {e}')
         raise
 
 
+@retry(
+    stop=stop_after_attempt(3),
+    wait=wait_exponential(multiplier=1, min=2, max=10),
+    retry=retry_if_exception_type((httpx.TimeoutException, httpx.ConnectError)),
+    before_sleep=before_sleep_log(logger, logging.WARNING)
+)
 async def get_product_as_text(product_id: int) -> str:
-    """
-    Fetch single loan product from Fineract and convert to human-readable text.
-    
-    Args:
-        product_id: Fineract loan product ID.
-    
-    Returns:
-        Human-readable contract text suitable for LLM analysis.
-    
-    Raises:
-        httpx.HTTPError: If Fineract API call fails.
-    """
     try:
         client = _get_fineract_client()
         r = await client.get(
@@ -111,9 +113,10 @@ async def get_product_as_text(product_id: int) -> str:
         )
         r.raise_for_status()
         d = r.json()
+        logger.info(f'Successfully fetched loan product {product_id} from Fineract')
         return _product_to_text(d)
     except Exception as e:
-        print(f'Fineract get_product failed: {e}')
+        logger.error(f'Fineract get_product failed for product_id={product_id}: {e}')
         raise
 
 
@@ -159,16 +162,6 @@ def _product_to_text(d: dict) -> str:
 
 
 async def check_fineract_health() -> bool:
-    """
-    Check if Fineract API is reachable and responding.
-    
-    Returns:
-        True if Fineract is healthy, False otherwise.
-    
-    Note:
-        This function does not raise exceptions - returns False on any error.
-        Used by health check endpoint which should not fail.
-    """
     try:
         client = _get_fineract_client()
         r = await client.get(
