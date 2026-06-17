@@ -1,12 +1,14 @@
-﻿from pydantic import BaseModel, model_validator
-from typing import Literal
+from pydantic import BaseModel, model_validator
+from typing import Literal, Optional
+
+VALID_PROVIDERS = Literal['gemini', 'groq', 'cerebras', 'ollama', 'hf_inference']
 
 
 class ContractRequest(BaseModel):
     text: str | None = None
     loan_product_id: int | None = None
     language: Literal['en', 'hi'] = 'en'
-    provider: str | None = None
+    provider: Optional[VALID_PROVIDERS] = None
 
     @model_validator(mode='after')
     def exactly_one_input(self):

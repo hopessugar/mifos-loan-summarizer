@@ -34,7 +34,7 @@ services:
       # Fineract Configuration
       - FINERACT_URL=${FINERACT_URL:-https://demo.mifos.io/fineract-provider}
       - FINERACT_USER=${FINERACT_USER:-mifos}
-      - FINERACT_PASSWORD=${FINERACT_PASSWORD:-password}
+      - FINERACT_PASSWORD=${FINERACT_PASSWORD}
       - FINERACT_TENANT=${FINERACT_TENANT:-default}
       - FINERACT_SSL_VERIFY=${FINERACT_SSL_VERIFY:-true}
       - FINERACT_CA_BUNDLE=${FINERACT_CA_BUNDLE:-}
@@ -69,7 +69,6 @@ services:
       dockerfile: Dockerfile
       args:
         - VITE_API_URL=${VITE_API_URL:-http://localhost:8000}
-        - VITE_API_KEY=${API_KEY}
     container_name: mifos-frontend
     ports:
       - "80:8080"

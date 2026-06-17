@@ -10,6 +10,9 @@ _PROVIDERS = {
     'gemini': lambda: _import_gemini(),
 }
 
+# Singleton cache — providers are reused across requests
+_instances: dict[str, LLMProvider] = {}
+
 
 def _import_hf():
     from providers.hf_inference_provider import HFInferenceProvider
@@ -43,7 +46,9 @@ class ProviderRegistry:
         name = override or settings.LLM_PRIMARY
         if name not in _PROVIDERS:
             raise ValueError(f'Unknown provider: {name}. Choose from: {list(_PROVIDERS.keys())}')
-        return _PROVIDERS[name]()
+        if name not in _instances:
+            _instances[name] = _PROVIDERS[name]()
+        return _instances[name]
 
     @staticmethod
     def list_all() -> list[dict]:

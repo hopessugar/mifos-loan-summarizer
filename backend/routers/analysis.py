@@ -1,9 +1,11 @@
-﻿from fastapi import APIRouter, HTTPException, Depends, Request
+from fastapi import APIRouter, HTTPException, Depends, Request
+from fastapi.responses import JSONResponse
 from schemas.request import ContractRequest
 from schemas.response import AnalysisResponse
 from services.ai_service import analyse_contract
 from services.fineract_service import get_product_as_text
 from auth import verify_api_key
+from exceptions import RateLimitError, ExtractionError
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 import httpx
@@ -105,6 +107,19 @@ async def analyze_contract(request: Request, contract_request: ContractRequest):
         raise HTTPException(
             status_code=422,
             detail=f"Invalid input: {str(e)}. Please check your request data."
+        )
+    except RateLimitError as e:
+        logger.warning(f"Rate limit hit: {e}")
+        raise HTTPException(
+            status_code=429,
+            detail=f"LLM API rate limit reached. Please wait {e.retry_after} seconds and try again.",
+            headers={"Retry-After": str(e.retry_after)},
+        )
+    except ExtractionError as e:
+        logger.error(f"Extraction failed: {e}")
+        raise HTTPException(
+            status_code=502,
+            detail="All LLM providers failed to extract data. Please try again later.",
         )
     except Exception as e:
         logger.error(f"Analysis failed: {e}", exc_info=True)
