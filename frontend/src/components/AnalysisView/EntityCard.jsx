@@ -8,12 +8,36 @@ export function EntityCard({ fieldName, entity }) {
     .replace(/\b\w/g, c => c.toUpperCase())
 
   const conf = entity.confidence || 0
-  const confColor = conf >= 0.7 ? '#1D9E75' : conf >= 0.5 ? '#D97706' : '#DC2626'
-  const confWidth = `${Math.round(conf * 100)}%`
+  let trafficLight = '🔴 Uncertain'
+  let confColor = '#DC2626'
+  
+  if (entity.is_verified || conf >= 0.90) {
+    trafficLight = '🟢 Verified'
+    confColor = '#1D9E75'
+  } else if (conf >= 0.50) {
+    trafficLight = '🟡 Needs Review'
+    confColor = '#D97706'
+  }
+
+  const renderSourceClause = () => {
+    if (!entity.source_clause) return null;
+    if (entity.value === null || entity.value === undefined) return `"${entity.source_clause}"`;
+    
+    const valStr = String(entity.value);
+    const parts = entity.source_clause.split(new RegExp(`(${valStr})`, 'gi'));
+    return (
+      <>
+        "{parts.map((part, i) => 
+          part.toLowerCase() === valStr.toLowerCase() 
+            ? <span key={i} style={{backgroundColor: '#FEF08A', fontWeight: 'bold', color: '#000'}}>{part}</span> 
+            : part
+        )}"
+      </>
+    );
+  }
 
   return (
     <div style={{
-      background: '#fff',
       border: entity.flag ? '0.5px solid #FDE68A' : '0.5px solid #E5E5E3',
       borderRadius: '10px',
       padding: '14px 16px',
@@ -26,13 +50,9 @@ export function EntityCard({ fieldName, entity }) {
         {entity.value !== null && entity.value !== undefined ? String(entity.value) : '—'}
       </div>
 
-      <div style={{ height: '2px', background: '#F0F0EE', borderRadius: '1px', marginBottom: '6px' }}>
-        <div style={{ height: '2px', width: confWidth, background: confColor, borderRadius: '1px', transition: 'width 0.3s' }} />
-      </div>
-
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <span style={{ fontSize: '11px', color: confColor }}>
-          {Math.round(conf * 100)}% confidence
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '8px' }}>
+        <span style={{ fontSize: '12px', fontWeight: '500', color: confColor }}>
+          {trafficLight}
         </span>
         {entity.source_clause && (
           <button
@@ -59,7 +79,7 @@ export function EntityCard({ fieldName, entity }) {
           lineHeight: '1.5',
           fontStyle: 'italic',
         }}>
-          "{entity.source_clause}"
+          {renderSourceClause()}
         </div>
       )}
 

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class LLMProvider(ABC):
+class BaseLLMProvider(ABC):
 
     @abstractmethod
     def get_model_name(self) -> str: ...
@@ -12,3 +12,7 @@ class LLMProvider(ABC):
     @property
     @abstractmethod
     def raw_client(self): ...
+
+
+# Alias for backwards compatibility
+LLMProvider = BaseLLMProvider

@@ -7,6 +7,7 @@ _PROVIDERS = {
     'ollama': lambda: _import_ollama(),
     'groq': lambda: _import_groq(),
     'cerebras': lambda: _import_cerebras(),
+    'gemini': lambda: _import_gemini(),
 }
 
 
@@ -28,6 +29,11 @@ def _import_groq():
 def _import_cerebras():
     from providers.cerebras_provider import CerebrasProvider
     return CerebrasProvider()
+
+
+def _import_gemini():
+    from providers.gemini_provider import GeminiProvider
+    return GeminiProvider()
 
 
 class ProviderRegistry:

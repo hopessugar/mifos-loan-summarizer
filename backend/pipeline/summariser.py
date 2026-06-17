@@ -195,9 +195,11 @@ def build_summary_chain(provider, language: str = 'en'):
 
         try:
             is_ollama = 'ollama' in provider.__class__.__name__.lower()
+            is_gemini = 'gemini' in provider.__class__.__name__.lower() or hasattr(provider, '_is_gemini')
             
-            if is_ollama and hasattr(provider, 'generate_native'):
-                print('Using Ollama native API for summarization...')
+            if (is_ollama or is_gemini) and hasattr(provider, 'generate_native'):
+                provider_name = 'Ollama' if is_ollama else 'Gemini'
+                print(f'Using {provider_name} native API for summarization...')
                 summary = provider.generate_native(
                     prompt=user_message,
                     system=SUMMARY_SYSTEM_PROMPT,
@@ -205,7 +207,7 @@ def build_summary_chain(provider, language: str = 'en'):
                     temperature=0.1
                 )
                 if summary is None:
-                    raise Exception("Ollama returned empty response")
+                    raise Exception(f"{provider_name} returned empty response")
                 summary = summary.strip()
             else:
                 timeout_kwarg = {}

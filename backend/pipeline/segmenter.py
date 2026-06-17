@@ -108,11 +108,81 @@ def segment_by_sentences(text: str, max_tokens: int = 200) -> list[Segment]:
     return segments
 
 
-def segment_contract(text: str) -> list[Segment]:
-    segments = segment_by_headers(text)
+def segment_semantic(text: str, max_tokens: int = 200) -> list[Segment]:
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    from sklearn.metrics.pairwise import cosine_similarity
+    import numpy as np
+    
+    try:
+        sentences = nltk.sent_tokenize(text)
+    except Exception:
+        sentences = text.split('. ')
 
-    if not segments:
-        segments = segment_by_sentences(text)
+    if not sentences:
+        return []
+
+    vectorizer = TfidfVectorizer()
+    try:
+        tfidf_matrix = vectorizer.fit_transform(sentences)
+        similarity_matrix = cosine_similarity(tfidf_matrix)
+    except Exception:
+        return segment_by_sentences(text, max_tokens)
+
+    segments = []
+    current_sentences = [sentences[0]]
+    current_tokens = len(sentences[0].split())
+    segment_id = 1
+    char_pos = 0
+
+    for i in range(1, len(sentences)):
+        sentence = sentences[i]
+        token_count = len(sentence.split())
+        
+        # Check similarity with previous sentence
+        sim = similarity_matrix[i-1][i]
+        
+        # If similarity is low or chunk is getting too big, break chunk
+        if (current_tokens + token_count > max_tokens) or (sim < 0.1 and current_tokens > 50):
+            section_text = ' '.join(current_sentences).strip()
+            segments.append(Segment(
+                id=segment_id,
+                label=f'Semantic Chunk {segment_id}',
+                text=section_text,
+                char_start=char_pos,
+                char_end=char_pos + len(section_text),
+                token_count=current_tokens,
+            ))
+            char_pos += len(section_text)
+            segment_id += 1
+            current_sentences = []
+            current_tokens = 0
+
+        current_sentences.append(sentence)
+        current_tokens += token_count
+
+    if current_sentences:
+        section_text = ' '.join(current_sentences).strip()
+        segments.append(Segment(
+            id=segment_id,
+            label=f'Semantic Chunk {segment_id}',
+            text=section_text,
+            char_start=char_pos,
+            char_end=char_pos + len(section_text),
+            token_count=current_tokens,
+        ))
+
+    return segments
+
+
+def segment_contract(text: str) -> list[Segment]:
+    from config import settings
+    
+    if settings.USE_SEMANTIC_CHUNKING:
+        segments = segment_semantic(text, settings.MAX_SEGMENT_TOKENS)
+    else:
+        segments = segment_by_headers(text)
+        if not segments:
+            segments = segment_by_sentences(text, settings.MAX_SEGMENT_TOKENS)
 
     if not segments:
         raise ValueError('Contract could not be segmented')

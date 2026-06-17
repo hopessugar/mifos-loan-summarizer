@@ -1,4 +1,4 @@
-﻿import yaml
+import yaml
 import os
 from pydantic import Field
 from pydantic_settings import BaseSettings
@@ -71,34 +71,40 @@ _yaml = _load_yaml()
 class Settings(BaseSettings):
     LLM_PRIMARY: str = Field(default_factory=lambda: os.getenv('LLM_PRIMARY') or _yaml.get('llm', {}).get('primary', 'groq'))
     LLM_MODEL: str = Field(default_factory=lambda: os.getenv('LLM_MODEL') or _yaml.get('llm', {}).get('model', 'llama-3.1-8b-instant'))
-    LLM_FALLBACK: str = Field(default_factory=lambda: os.getenv('LLM_FALLBACK') or _yaml.get('llm', {}).get('fallback', 'cerebras'))
+    LLM_FALLBACK: str = Field(default_factory=lambda: os.getenv('LLM_FALLBACK') or _yaml.get('llm', {}).get('fallback', ''))
     LLM_FALLBACK_MODEL: str = Field(default_factory=lambda: os.getenv('LLM_FALLBACK_MODEL') or _yaml.get('llm', {}).get('fallback_model', 'llama3.1-8b'))
 
-    HF_TOKEN: str = _yaml.get('hf_token', '')
+    # API Keys - prioritize environment variables
+    HF_TOKEN: str = Field(default_factory=lambda: os.getenv('HF_TOKEN') or os.getenv('HF_API_KEY') or _yaml.get('hf_token', ''))
+    GROQ_API_KEY: str = Field(default_factory=lambda: os.getenv('GROQ_API_KEY') or _yaml.get('groq_api_key', ''))
+    CEREBRAS_API_KEY: str = Field(default_factory=lambda: os.getenv('CEREBRAS_API_KEY') or _yaml.get('cerebras_api_key', ''))
+    GEMINI_API_KEY: str = Field(default_factory=lambda: os.getenv('GEMINI_API_KEY') or _yaml.get('gemini_api_key', ''))
 
-    OLLAMA_BASE_URL: str = _yaml.get('ollama_base_url', 'http://localhost:11434')
-    OLLAMA_MODEL: str = _yaml.get('ollama_model', 'qwen2.5:7b')
+    # Ollama Configuration
+    OLLAMA_BASE_URL: str = Field(default_factory=lambda: os.getenv('OLLAMA_BASE_URL') or _yaml.get('ollama_base_url', 'http://localhost:11434'))
+    OLLAMA_MODEL: str = Field(default_factory=lambda: os.getenv('OLLAMA_MODEL') or _yaml.get('ollama_model', 'qwen2.5:7b'))
 
-    FINERACT_URL: str = _yaml.get('fineract_url', '')
-    FINERACT_USER: str = _yaml.get('fineract_user', 'mifos')
-    FINERACT_PASSWORD: str = _yaml.get('fineract_password', 'password')
-    FINERACT_TENANT: str = _yaml.get('fineract_tenant', 'default')
-    FINERACT_SSL_VERIFY: bool = _yaml.get('fineract_ssl_verify', True)
-    FINERACT_CA_BUNDLE: str = _yaml.get('fineract_ca_bundle', '')
+    # Fineract Configuration
+    FINERACT_URL: str = Field(default_factory=lambda: os.getenv('FINERACT_URL') or _yaml.get('fineract_url', ''))
+    FINERACT_USER: str = Field(default_factory=lambda: os.getenv('FINERACT_USER') or _yaml.get('fineract_user', 'mifos'))
+    FINERACT_PASSWORD: str = Field(default_factory=lambda: os.getenv('FINERACT_PASSWORD') or _yaml.get('fineract_password', 'password'))
+    FINERACT_TENANT: str = Field(default_factory=lambda: os.getenv('FINERACT_TENANT') or _yaml.get('fineract_tenant', 'default'))
+    FINERACT_SSL_VERIFY: bool = Field(default_factory=lambda: os.getenv('FINERACT_SSL_VERIFY', '').lower() not in ('false', '0', 'no') if os.getenv('FINERACT_SSL_VERIFY') else _yaml.get('fineract_ssl_verify', True))
+    FINERACT_CA_BUNDLE: str = Field(default_factory=lambda: os.getenv('FINERACT_CA_BUNDLE') or _yaml.get('fineract_ca_bundle', ''))
 
-    GROQ_API_KEY: str = _yaml.get('groq_api_key', '')
-    CEREBRAS_API_KEY: str = _yaml.get('cerebras_api_key', '')
+    # Validation Thresholds
+    LEVENSHTEIN_THRESHOLD: float = Field(default_factory=lambda: float(os.getenv('LEVENSHTEIN_THRESHOLD') or 0) or _yaml.get('levenshtein_threshold', 0.80))
+    COSINE_THRESHOLD: float = Field(default_factory=lambda: float(os.getenv('COSINE_THRESHOLD') or 0) or _yaml.get('cosine_threshold', 0.80))
+    MATH_TOLERANCE: float = Field(default_factory=lambda: float(os.getenv('MATH_TOLERANCE') or 0) or _yaml.get('math_tolerance', 0.10))
+    CONFIDENCE_THRESHOLD: float = Field(default_factory=lambda: float(os.getenv('CONFIDENCE_THRESHOLD') or 0) or _yaml.get('confidence_threshold', 0.50))
 
-    LEVENSHTEIN_THRESHOLD: float = _yaml.get('levenshtein_threshold', 0.80)
-    COSINE_THRESHOLD: float = _yaml.get('cosine_threshold', 0.80)
-    MATH_TOLERANCE: float = _yaml.get('math_tolerance', 0.10)
-    CONFIDENCE_THRESHOLD: float = _yaml.get('confidence_threshold', 0.50)
-
-    USE_SEMANTIC_CHUNKING: bool = _yaml.get('use_semantic_chunking', False)
-    MAX_SEGMENT_TOKENS: int = _yaml.get('max_segment_tokens', 200)
-    EXTRACTION_MAX_TOKENS: int = _yaml.get('extraction_max_tokens', 2000)
-    SUMMARY_MAX_TOKENS: int = _yaml.get('summary_max_tokens', 500)
-    EXTRACTION_TEMPERATURE: float = _yaml.get('extraction_temperature', 0.1)
+    # Pipeline Configuration
+    USE_SEMANTIC_CHUNKING: bool = Field(default_factory=lambda: os.getenv('USE_SEMANTIC_CHUNKING', '').lower() in ('true', '1', 'yes') if os.getenv('USE_SEMANTIC_CHUNKING') else _yaml.get('use_semantic_chunking', False))
+    MAX_SEGMENT_TOKENS: int = Field(default_factory=lambda: int(os.getenv('MAX_SEGMENT_TOKENS') or 0) or _yaml.get('max_segment_tokens', 200))
+    MAX_INPUT_CHARS: int = Field(default_factory=lambda: int(os.getenv('MAX_INPUT_CHARS') or 0) or _yaml.get('max_input_chars', 8000))
+    EXTRACTION_MAX_TOKENS: int = Field(default_factory=lambda: int(os.getenv('EXTRACTION_MAX_TOKENS') or 0) or _yaml.get('extraction_max_tokens', 1500))
+    SUMMARY_MAX_TOKENS: int = Field(default_factory=lambda: int(os.getenv('SUMMARY_MAX_TOKENS') or 0) or _yaml.get('summary_max_tokens', 600))
+    EXTRACTION_TEMPERATURE: float = Field(default_factory=lambda: float(os.getenv('EXTRACTION_TEMPERATURE') or 0) or _yaml.get('extraction_temperature', 0.1))
 
     API_KEY: str = os.getenv('API_KEY', _yaml.get('api_key', ''))
     API_KEY_HEADER_NAME: str = os.getenv('API_KEY_HEADER_NAME', _yaml.get('api_key_header_name', 'X-API-Key'))

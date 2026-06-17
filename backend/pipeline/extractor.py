@@ -10,6 +10,7 @@ from pipeline.input_sanitizer import (
     validate_extraction_output,
     create_secure_prompt,
 )
+from config import settings
 
 
 def format_segments(segments: list[dict]) -> str:
@@ -42,6 +43,11 @@ def build_extraction_chain(provider):
     def _extract(segments: list[dict]) -> tuple[LoanAgreementSchema, list[str]]:
         formatted = format_segments(segments)
         
+        # Truncate if too large to fit in API limits
+        if len(formatted) > settings.MAX_INPUT_CHARS:
+            print(f'⚠️  Contract too large ({len(formatted)} chars), truncating to {settings.MAX_INPUT_CHARS}')
+            formatted = formatted[:settings.MAX_INPUT_CHARS] + "\n\n[CONTRACT TRUNCATED DUE TO SIZE LIMITS]"
+        
         # WARNING: Sanitize input to prevent prompt injection
         sanitized, warnings = sanitize_contract_text(formatted)
         
@@ -67,13 +73,14 @@ def build_extraction_chain(provider):
         ]
 
         is_ollama = 'ollama' in provider.get_model_name().lower() or hasattr(provider, '__class__') and 'ollama' in provider.__class__.__name__.lower()
+        is_gemini = 'gemini' in provider.get_model_name().lower() or hasattr(provider, '_is_gemini')
         
         try:
             import instructor
             
-            if is_ollama:
-                print('Using fallback mode for Ollama (instructor compatibility)')
-                raise Exception("Skipping instructor for Ollama compatibility")
+            if is_ollama or is_gemini:
+                print(f'Using fallback mode for {"Ollama" if is_ollama else "Gemini"} (instructor compatibility)')
+                raise Exception(f"Skipping instructor for {'Ollama' if is_ollama else 'Gemini'} compatibility")
             
             client = instructor.from_openai(
                 provider.raw_client,
@@ -83,11 +90,11 @@ def build_extraction_chain(provider):
                 model=provider.get_model_name(),
                 response_model=LoanAgreementSchema,
                 messages=messages,
-                temperature=0.1,
-                max_tokens=1200,
+                temperature=settings.EXTRACTION_TEMPERATURE,
+                max_tokens=settings.EXTRACTION_MAX_TOKENS,
                 max_retries=3,
             )
-            print(f'Instructor extraction succeeded')
+            print(f'✅ Instructor extraction succeeded')
             
             # WARNING: Validate output for injection signs
             is_valid, issues = validate_extraction_output(
@@ -107,17 +114,19 @@ def build_extraction_chain(provider):
 
             try:
                 is_ollama = 'ollama' in provider.__class__.__name__.lower()
+                is_gemini = 'gemini' in provider.__class__.__name__.lower() or hasattr(provider, '_is_gemini')
                 
-                if is_ollama and hasattr(provider, 'generate_native'):
-                    print('Using Ollama native API for extraction...')
+                if (is_ollama or is_gemini) and hasattr(provider, 'generate_native'):
+                    provider_name = 'Ollama' if is_ollama else 'Gemini'
+                    print(f'Using {provider_name} native API for extraction...')
                     system_prompt = EXTRACTION_SYSTEM_PROMPT
                     user_prompt = user_message
                     
                     raw_text = provider.generate_native(
                         prompt=user_prompt,
                         system=system_prompt,
-                        max_tokens=1200,
-                        temperature=0.1
+                        max_tokens=settings.EXTRACTION_MAX_TOKENS,
+                        temperature=settings.EXTRACTION_TEMPERATURE
                     )
                 else:
                     timeout = 120 if is_ollama else 60
@@ -125,8 +134,8 @@ def build_extraction_chain(provider):
                     response = provider.raw_client.chat.completions.create(
                         model=provider.get_model_name(),
                         messages=messages,
-                        temperature=0.1,
-                        max_tokens=1200,
+                        temperature=settings.EXTRACTION_TEMPERATURE,
+                        max_tokens=settings.EXTRACTION_MAX_TOKENS,
                         timeout=timeout,
                     )
                     raw_text = response.choices[0].message.content
@@ -138,6 +147,7 @@ def build_extraction_chain(provider):
 
                 if parsed:
                     schema = LoanAgreementSchema(**parsed)
+                    print(f'✅ Successfully parsed extraction response')
                     
                     is_valid, issues = validate_extraction_output(
                         parsed,
@@ -150,15 +160,24 @@ def build_extraction_chain(provider):
                         warnings.extend(issues)
                     
                     return schema, warnings
-                
-                return LoanAgreementSchema(), warnings
+                else:
+                    print(f'⚠️  Parsed response is empty - LLM may have returned invalid JSON')
+                    raise Exception("Empty JSON response from LLM")
 
             except Exception as e2:
-                print(f'Fallback also failed: {e2}')
-                import traceback
-                traceback.print_exc()
-                return LoanAgreementSchema(), warnings
-
-    return RunnableLambda(_extract)
+                print(f'❌ Fallback also failed: {e2}')
+                print(f'   Provider: {provider.__class__.__name__}')
+                print(f'   Model: {provider.get_model_name()}')
+                
+                # Check for specific error types
+                error_msg = str(e2)
+                if '413' in error_msg or 'Payload Too Large' in error_msg or 'Request too large' in error_msg:
+                    raise Exception(f"Contract size exceeds API limits for {provider.get_model_name()}. Please use a shorter document or upgrade your API tier.")
+                elif '429' in error_msg or 'rate_limit' in error_msg.lower():
+                    raise Exception(f"Rate limit exceeded for {provider.get_model_name()}. Please wait a few minutes and try again.")
+                elif 'Connection error' in error_msg or 'Name or service not known' in error_msg:
+                    raise Exception(f"Cannot connect to {provider.get_model_name()} API. Check your internet connection and API configuration.")
+                else:
+                    raise Exception(f"Extraction failed: {error_msg[:200]}")
 
     return RunnableLambda(_extract)

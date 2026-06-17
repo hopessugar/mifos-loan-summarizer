@@ -1,4 +1,4 @@
-﻿from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from config import settings
@@ -53,12 +53,13 @@ app.add_middleware(
     allow_headers=['*'],
 )
 
-from routers import analysis, loanproducts, health, providers
+from routers import analysis, loanproducts, health, providers, simulator
 
 app.include_router(analysis.router)
 app.include_router(loanproducts.router)
 app.include_router(health.router)
 app.include_router(providers.router)
+app.include_router(simulator.router)
 
 
 @app.get('/')

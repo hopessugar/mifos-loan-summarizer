@@ -1,4 +1,4 @@
-﻿from pydantic import BaseModel
+from pydantic import BaseModel
 from typing import Any
 
 
@@ -9,6 +9,7 @@ class EntityResult(BaseModel):
     is_verified: bool = False
     similarity: float = 0.0
     verify_method: str = 'none'
+    extraction_method: str = 'llm'  # 'llm', 'calculated', or 'inferred'
     flag: str | None = None
 
 
@@ -27,6 +28,8 @@ class FinancialSummary(BaseModel):
 class RiskAnalysis(BaseModel):
     score: float = 0.0
     factors: list[str] = []
+    bps_score: float = 100.0
+    negotiation_tips: list[str] = []
 
 
 class DefaultEvent(BaseModel):
@@ -46,3 +49,4 @@ class AnalysisResponse(BaseModel):
     provider_used: str = ''
     processing_time_ms: int = 0
     security_warnings: list[str] = []
+    missing_terms: list[str] = []

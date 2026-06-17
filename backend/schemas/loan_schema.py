@@ -1,29 +1,36 @@
 from pydantic import BaseModel, field_validator, model_validator
 from typing import Optional
+from decimal import Decimal
 
 
 class EntityField(BaseModel):
-    value: Optional[float] = None
+    value: Optional[Decimal] = None
     source_clause: Optional[str] = None
     confidence: Optional[float] = None
     extraction_method: Optional[str] = None
+    is_verified: bool = False
+    similarity: float = 0.0
 
 
 class InterestField(BaseModel):
-    value: Optional[float] = None
+    value: Optional[Decimal] = None
     type: Optional[str] = None
     source_clause: Optional[str] = None
     confidence: Optional[float] = None
     extraction_method: Optional[str] = None
+    is_verified: bool = False
+    similarity: float = 0.0
 
 
 class FeeField(BaseModel):
-    value: Optional[float] = None
+    value: Optional[Decimal] = None
     logic: Optional[str] = None
     base: Optional[str] = None
     source_clause: Optional[str] = None
     confidence: Optional[float] = None
     extraction_method: Optional[str] = None
+    is_verified: bool = False
+    similarity: float = 0.0
 
 
 class CollateralField(BaseModel):
@@ -35,7 +42,7 @@ class CollateralField(BaseModel):
 
 class RepaymentScheduleField(BaseModel):
     frequency: Optional[str] = None
-    installment_amount: Optional[float] = None
+    installment_amount: Optional[Decimal] = None
     start_condition: Optional[str] = None
     due_day: Optional[str] = None
     source_clause: Optional[str] = None
@@ -72,6 +79,25 @@ class LoanAgreementSchema(BaseModel):
     repayment_schedule: RepaymentScheduleField = RepaymentScheduleField()
     default_events: list[DefaultEventField] = []
 
+    @model_validator(mode='before')
+    @classmethod
+    def replace_none_with_defaults(cls, values):
+        """Convert null/None values from LLM JSON into empty dicts for nested models."""
+        if isinstance(values, dict):
+            nested_fields = [
+                'loan_amount', 'interest_rate', 'repayment_duration',
+                'monthly_payment', 'total_cost', 'late_fee',
+                'late_payment_interest', 'penalty_interest', 'prepayment_penalty',
+                'processing_fee', 'insurance_fee', 'administrative_fee',
+                'other_fee', 'collateral', 'repayment_schedule',
+            ]
+            for field in nested_fields:
+                if values.get(field) is None:
+                    values[field] = {}
+            if values.get('default_events') is None:
+                values['default_events'] = []
+        return values
+
     @field_validator('loan_amount', mode='before')
     @classmethod
     def validate_loan_amount(cls, v):
@@ -94,8 +120,8 @@ class LoanAgreementSchema(BaseModel):
         rd = self.repayment_duration.value
         tc = self.total_cost.value
         if mp and rd and tc:
-            expected = mp * rd
+            expected = mp * Decimal(str(rd))
             diff_pct = abs(expected - tc) / tc
-            if diff_pct > 0.10:
+            if diff_pct > Decimal('0.10'):
                 pass
         return self

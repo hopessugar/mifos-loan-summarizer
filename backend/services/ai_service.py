@@ -1,4 +1,5 @@
 import langchain_compat  # noqa: F401
+from config import settings
 
 import time
 import asyncio
@@ -22,23 +23,85 @@ async def analyse_contract(
     start_time = time.time()
     security_warnings = []
 
-    provider = ProviderRegistry.get(provider_override)
+    primary_provider = ProviderRegistry.get(provider_override or settings.LLM_PRIMARY)
+    
+    # Optional fallback for consensus - DISABLED if same model or no fallback configured
+    providers_to_try = [primary_provider]
+    try:
+        fallback_name = settings.LLM_FALLBACK
+        if fallback_name and fallback_name != settings.LLM_PRIMARY:
+            fallback_provider = ProviderRegistry.get(fallback_name)
+            # Only add if it's healthy and different model
+            if fallback_provider.health_check() and fallback_provider.get_model_name() != primary_provider.get_model_name():
+                providers_to_try.append(fallback_provider)
+                print(f"✅ Using fallback provider: {fallback_provider.get_model_name()}")
+            else:
+                print(f"⚠️  Fallback provider not healthy or same model - skipping consensus")
+    except Exception as e:
+        print(f"⚠️  Could not initialize fallback provider: {e}")
+        # Continue with just primary
 
     segments = await asyncio.to_thread(segment_contract, text)
     segments_dict = segments_to_dict(segments)
 
-    extraction_chain = build_extraction_chain(provider)
-    extraction_result = await extraction_chain.ainvoke(segments_dict)
+    async def execute_extraction(provider):
+        chain = build_extraction_chain(provider)
+        return await chain.ainvoke(segments_dict)
+
+    # Gather extractions concurrently
+    results = await asyncio.gather(*[execute_extraction(p) for p in providers_to_try], return_exceptions=True)
     
-    if isinstance(extraction_result, tuple):
-        schema, extraction_warnings = extraction_result
-        security_warnings.extend(extraction_warnings)
-    else:
-        schema = extraction_result
+    schema = None
+    extraction_warnings = []
+    
+    # 1.4 LLM Fallback Chain
+    valid_results = []
+    extraction_errors = []
+    for i, res in enumerate(results):
+        if isinstance(res, Exception):
+            error_msg = f'Provider {i+1} extraction failed: {str(res)[:200]}'
+            print(f'❌ {error_msg}')
+            extraction_errors.append(error_msg)
+            continue
+        valid_results.append(res)
+    
+    if not valid_results:
+        # All providers failed - return detailed error
+        error_details = " | ".join(extraction_errors)
+        raise Exception(f"All LLM providers failed to extract data. Errors: {error_details}")
+    
+    # 1.2 Multi-Model Consensus Extraction
+    primary_res = valid_results[0]
+    schema = primary_res[0] if isinstance(primary_res, tuple) else primary_res
+    if isinstance(primary_res, tuple):
+        extraction_warnings.extend(primary_res[1])
+
+    if len(valid_results) > 1:
+        secondary_res = valid_results[1]
+        schema2 = secondary_res[0] if isinstance(secondary_res, tuple) else secondary_res
+        
+        # Simple consensus check on key fields
+        if schema.interest_rate.value == schema2.interest_rate.value:
+            schema.interest_rate.confidence = 0.99  # HIGH confidence
+        else:
+            extraction_warnings.append(f"Consensus mismatch: Primary provider found interest rate {schema.interest_rate.value}, but fallback found {schema2.interest_rate.value}. Needs review.")
+            schema.interest_rate.confidence = 0.40  # Low confidence / needs review
+            
+        if schema.loan_amount.value == schema2.loan_amount.value:
+            schema.loan_amount.confidence = 0.99
+        else:
+            extraction_warnings.append(f"Consensus mismatch on loan amount. Primary: {schema.loan_amount.value}, Fallback: {schema2.loan_amount.value}.")
+            schema.loan_amount.confidence = 0.40
+
+    security_warnings.extend(extraction_warnings)
+
+    # 1.3 Numerical Source Verification
+    from pipeline.verification import verify_numerical_values
+    schema = await asyncio.to_thread(verify_numerical_values, schema, text)
 
     validated = await asyncio.to_thread(validate_extraction, schema, text)
 
-    summary_chain = build_summary_chain(provider, language)
+    summary_chain = build_summary_chain(primary_provider, language)
     summary_result = await summary_chain.ainvoke({
         'schema': schema,
         'validated': validated,
@@ -72,6 +135,8 @@ async def analyse_contract(
     risk_analysis = RiskAnalysis(
         score=validated['risk_analysis'].get('score', 0),
         factors=validated['risk_analysis'].get('factors', []),
+        bps_score=validated['risk_analysis'].get('bps_score', 100.0),
+        negotiation_tips=validated['risk_analysis'].get('negotiation_tips', []),
     )
 
     default_events = [
@@ -90,7 +155,8 @@ async def analyse_contract(
         summary=summary,
         whatsapp_text=whatsapp_text,
         segment_count=len(segments),
-        provider_used=provider.get_model_name(),
+        provider_used=primary_provider.get_model_name(),
         processing_time_ms=processing_time,
         security_warnings=security_warnings,
+        missing_terms=validated.get('missing_terms', []),
     )

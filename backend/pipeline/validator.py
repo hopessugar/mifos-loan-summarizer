@@ -22,6 +22,28 @@ FINANCIAL_KEYWORDS = [
 ]
 
 
+def verify_numerical_value(value, source_clause: str) -> bool:
+    if not source_clause or value is None:
+        return False
+    import re
+    from decimal import Decimal
+    clean_clause = source_clause.replace(',', '')
+    numbers = re.findall(r'\d+(?:\.\d+)?', clean_clause)
+    
+    try:
+        val_dec = Decimal(str(value))
+    except Exception:
+        return False
+        
+    for num in numbers:
+        try:
+            if Decimal(num) == val_dec:
+                return True
+        except Exception:
+            pass
+    return False
+
+
 def check_hallucination(value: str, source_clause: str, contract_text: str) -> dict:
     if not value or not contract_text:
         return {'is_verified': False, 'similarity': 0.0, 'verify_method': 'none'}
@@ -374,6 +396,19 @@ def compute_risk_analysis(schema: LoanAgreementSchema) -> dict:
     }
 
 
+def detect_missing_terms(schema: LoanAgreementSchema) -> list[str]:
+    missing_warnings = []
+    if not schema.prepayment_penalty.value and not schema.prepayment_penalty.source_clause:
+        missing_warnings.append("No mention of prepayment policy — ask: 'Can I repay early without penalty?'")
+    if not schema.late_fee.value and not schema.late_fee.source_clause:
+        missing_warnings.append("No mention of late payment fee — ask: 'What happens if I miss a payment?'")
+    if not schema.interest_rate.type:
+        missing_warnings.append("No mention of interest rate type — ask: 'Is this a flat rate or reducing balance?'")
+    if not schema.repayment_schedule.due_day:
+        missing_warnings.append("No due day specified — ask: 'What day of the month is my EMI due?'")
+    return missing_warnings
+
+
 def validate_extraction(schema: LoanAgreementSchema, contract_text: str) -> dict:
     entity_results = {}
 
@@ -401,6 +436,15 @@ def validate_extraction(schema: LoanAgreementSchema, contract_text: str) -> dict
         hallucination = check_hallucination(str(value), source_clause or '', contract_text)
         confidence, extraction_method = calculate_confidence(field_name, value, source_clause or '', hallucination['similarity'])
 
+        from decimal import Decimal
+        is_numeric = isinstance(value, (int, float, Decimal))
+        
+        if is_numeric and hallucination['is_verified']:
+            num_verified = verify_numerical_value(value, source_clause)
+            if not num_verified:
+                hallucination['is_verified'] = False
+                hallucination['verify_method'] = 'failed_numerical_check'
+                
         flag = None
         if not hallucination['is_verified']:
             flag = 'Could not verify this value in the source contract'
@@ -437,6 +481,26 @@ def validate_extraction(schema: LoanAgreementSchema, contract_text: str) -> dict
 
     math_check = check_math_consistency(schema)
     risk = compute_risk_analysis(schema)
+    missing_terms = detect_missing_terms(schema)
+    
+    # Calculate Borrower Protection Score (BPS)
+    # Risk score is 0-10, where 0 is safest. Base BPS is 100 - (risk * 10).
+    base_bps = 100 - (risk['score'] * 10)
+    # Deduct 5 points for every missing term
+    bps_score = max(0, min(100, base_bps - (len(missing_terms) * 5)))
+    
+    # Generate negotiation tips
+    negotiation_tips = []
+    for factor in risk['factors']:
+        if 'seizure' in factor.lower():
+            negotiation_tips.append("Negotiation Tip: Lender may seize collateral. Ask to add: 'Lender shall provide 30 days written notice before initiating collateral seizure proceedings'")
+        if 'prepayment penalty' in factor.lower():
+            negotiation_tips.append("Negotiation Tip: High prepayment penalty. Ask to cap it at 1-2% or remove it after the first year.")
+        if 'interest rate' in factor.lower() and ('Very high' in factor or 'Extremely high' in factor):
+            negotiation_tips.append("Negotiation Tip: Interest rate is well above market average. Strongly recommend negotiating a lower rate or finding another lender.")
+            
+    risk['bps_score'] = bps_score
+    risk['negotiation_tips'] = negotiation_tips
 
     mp = schema.monthly_payment.value
     rd = schema.repayment_duration.value
@@ -490,4 +554,5 @@ def validate_extraction(schema: LoanAgreementSchema, contract_text: str) -> dict
             {'trigger': e.trigger, 'source_clause': e.source_clause}
             for e in schema.default_events
         ],
+        'missing_terms': missing_terms,
     }
