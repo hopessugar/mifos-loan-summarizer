@@ -30,7 +30,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          python -c "import nltk; nltk.download('punkt')"
+          python -c "import nltk; nltk.download('punkt'); nltk.download('punkt_tab')"
       
       - name: Run linting with ruff
         working-directory: ./backend
@@ -41,6 +41,12 @@ jobs:
       
       - name: Run unit tests with coverage
         working-directory: ./backend
+        env:
+          ENVIRONMENT: development
+          API_KEY: ""
+          GEMINI_API_KEY: "dummy-for-ci"
+          LLM_PRIMARY: gemini
+          LLM_MODEL: gemini-2.5-flash-lite
         run: |
           pytest tests/test_*.py -v \
             --ignore=tests/test_integration_*.py \
@@ -90,7 +96,7 @@ jobs:
         working-directory: ./backend
         run: |
           pip install -r requirements.txt
-          python -c "import nltk; nltk.download('punkt')"
+          python -c "import nltk; nltk.download('punkt'); nltk.download('punkt_tab')"
       
       - name: Run integration tests
         working-directory: ./backend

@@ -1,4 +1,4 @@
-﻿# Credentials — never commit these
+# Credentials — never commit these
 config.yaml
 .env
 *.env
@@ -62,6 +62,7 @@ DOCKER_TESTING_RESULTS.md
 FINAL_TEST_RESULTS.md
 FRONTEND_TEST_GUIDE.md
 IMPLEMENTATION_STATUS.md
+IMPLEMENTATION_PLAN.md
 ISSUE_*_COMPLETION_REPORT.md
 ISSUE_*_PROGRESS_REPORT.md
 ISSUE_*_COMPLETE.md
@@ -71,3 +72,15 @@ QUICK_TEST_GUIDE.md
 READY_TO_TEST.md
 TESTING_CHECKLIST.md
 TEST_CONTRACT.txt
+*_SUMMARY.md
+DOCKER_REBUILD_SUMMARY.md
+DOCKER_QUICK_REFERENCE.md
+DOCKER_SETUP.md
+PHASE1_SUMMARY.md
+
+# Scratch outputs
+response.json
+*.log
+htmlcov/
+coverage.xml
+
