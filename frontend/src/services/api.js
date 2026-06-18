@@ -5,6 +5,12 @@ const client = axios.create({
   timeout: 300000,
 })
 
+// Add API key header to all requests
+const apiKey = import.meta.env.VITE_API_KEY ?? ''
+if (apiKey) {
+  client.defaults.headers.common['X-API-Key'] = apiKey
+}
+
 client.interceptors.response.use(
   res => res.data,
   err => Promise.reject({

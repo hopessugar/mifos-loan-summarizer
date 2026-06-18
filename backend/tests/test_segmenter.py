@@ -1,5 +1,5 @@
 import pytest
-from backend.pipeline.segmenter import (
+from pipeline.segmenter import (
     segment_contract,
     segment_by_headers,
     segment_by_sentences,

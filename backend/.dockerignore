@@ -19,14 +19,13 @@ ENV/
 env.bak/
 venv.bak/
 
-# Testing
+# Testing (cache only — keep test files for in-container testing)
 .pytest_cache/
 .coverage
 .coverage.*
 htmlcov/
 .tox/
 .hypothesis/
-tests/
 
 # IDE
 .vscode/

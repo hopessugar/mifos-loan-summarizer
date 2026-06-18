@@ -3,16 +3,21 @@ from config import settings
 
 import time
 import asyncio
+import logging
 from pipeline.segmenter import segment_contract, segments_to_dict
 from pipeline.extractor import build_extraction_chain
 from pipeline.validator import validate_extraction
 from pipeline.summariser import build_summary_chain, build_whatsapp_text
 from providers.registry import ProviderRegistry
+from services.audit_service import log_analysis
+from exceptions import ExtractionError
 from schemas.response import (
     AnalysisResponse, EntityResult,
     MathCheckResult, FinancialSummary,
     RiskAnalysis, DefaultEvent,
 )
+
+logger = logging.getLogger(__name__)
 
 
 async def analyse_contract(
@@ -31,14 +36,13 @@ async def analyse_contract(
         fallback_name = settings.LLM_FALLBACK
         if fallback_name and fallback_name != settings.LLM_PRIMARY:
             fallback_provider = ProviderRegistry.get(fallback_name)
-            # Only add if it's healthy and different model
             if fallback_provider.health_check() and fallback_provider.get_model_name() != primary_provider.get_model_name():
                 providers_to_try.append(fallback_provider)
-                print(f"✅ Using fallback provider: {fallback_provider.get_model_name()}")
+                logger.info(f"Using fallback provider: {fallback_provider.get_model_name()}")
             else:
-                print(f"⚠️  Fallback provider not healthy or same model - skipping consensus")
+                logger.info("Fallback provider not healthy or same model - skipping consensus")
     except Exception as e:
-        print(f"⚠️  Could not initialize fallback provider: {e}")
+        logger.warning(f"Could not initialize fallback provider: {e}")
         # Continue with just primary
 
     segments = await asyncio.to_thread(segment_contract, text)
@@ -60,15 +64,14 @@ async def analyse_contract(
     for i, res in enumerate(results):
         if isinstance(res, Exception):
             error_msg = f'Provider {i+1} extraction failed: {str(res)[:200]}'
-            print(f'❌ {error_msg}')
+            logger.error(error_msg)
             extraction_errors.append(error_msg)
             continue
         valid_results.append(res)
     
     if not valid_results:
-        # All providers failed - return detailed error
         error_details = " | ".join(extraction_errors)
-        raise Exception(f"All LLM providers failed to extract data. Errors: {error_details}")
+        raise ExtractionError(extraction_errors)
     
     # 1.2 Multi-Model Consensus Extraction
     primary_res = valid_results[0]
@@ -145,6 +148,21 @@ async def analyse_contract(
     ]
 
     processing_time = int((time.time() - start_time) * 1000)
+
+    # Audit trail — log every analysis for regulatory compliance
+    try:
+        log_analysis(
+            contract_text=text,
+            provider=primary_provider.get_model_name(),
+            risk_score=validated['risk_analysis'].get('score'),
+            processing_time_ms=processing_time,
+            warnings=security_warnings,
+            entities_found=len(validated.get('entities', {})),
+            language=language,
+            source='text',
+        )
+    except Exception as e:
+        logger.error(f"Audit logging failed: {e}")
 
     return AnalysisResponse(
         entities=entities,

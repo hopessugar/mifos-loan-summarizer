@@ -1,4 +1,5 @@
 import json
+import logging
 
 import langchain_compat  # noqa: F401
 
@@ -11,6 +12,8 @@ from pipeline.input_sanitizer import (
     create_secure_prompt,
 )
 from config import settings
+
+logger = logging.getLogger(__name__)
 
 
 def format_segments(segments: list[dict]) -> str:
@@ -118,7 +121,7 @@ def build_extraction_chain(provider):
                 
                 if (is_ollama or is_gemini) and hasattr(provider, 'generate_native'):
                     provider_name = 'Ollama' if is_ollama else 'Gemini'
-                    print(f'Using {provider_name} native API for extraction...')
+                    logger.info(f'Using {provider_name} native API for extraction...')
                     system_prompt = EXTRACTION_SYSTEM_PROMPT
                     user_prompt = user_message
                     
@@ -140,14 +143,22 @@ def build_extraction_chain(provider):
                     )
                     raw_text = response.choices[0].message.content
                 
-                print(f'Raw LLM response (first 500 chars): {raw_text[:500]}')
+                # Guard against oversized LLM responses (possible hallucination)
+                MAX_RESPONSE_SIZE = 100_000  # 100KB
+                if isinstance(raw_text, str) and len(raw_text) > MAX_RESPONSE_SIZE:
+                    logger.warning(f'LLM response too large ({len(raw_text)} chars). Truncating.')
+                    raw_text = raw_text[:MAX_RESPONSE_SIZE]
+                elif not isinstance(raw_text, str):
+                    raw_text = str(raw_text) if raw_text else '{}'
+                
+                logger.debug(f'Raw LLM response (first 200 chars): {raw_text[:200]}')
 
                 parsed = parse_llm_response(raw_text)
-                print(f'Parsed dict keys: {list(parsed.keys())}')
+                logger.info(f'Parsed dict keys: {list(parsed.keys())}')
 
                 if parsed:
                     schema = LoanAgreementSchema(**parsed)
-                    print(f'✅ Successfully parsed extraction response')
+                    logger.info('Successfully parsed extraction response')
                     
                     is_valid, issues = validate_extraction_output(
                         parsed,
@@ -156,27 +167,25 @@ def build_extraction_chain(provider):
                     )
                     
                     if not is_valid:
-                        print(f'SECURITY: Output validation issues: {issues}')
+                        logger.warning(f'Output validation issues: {issues}')
                         warnings.extend(issues)
                     
                     return schema, warnings
                 else:
-                    print(f'⚠️  Parsed response is empty - LLM may have returned invalid JSON')
+                    logger.warning('Parsed response is empty - LLM may have returned invalid JSON')
                     raise Exception("Empty JSON response from LLM")
 
             except Exception as e2:
-                print(f'❌ Fallback also failed: {e2}')
-                print(f'   Provider: {provider.__class__.__name__}')
-                print(f'   Model: {provider.get_model_name()}')
+                logger.error(f'Fallback extraction failed: {e2} (provider={provider.__class__.__name__}, model={provider.get_model_name()})')
                 
-                # Check for specific error types
                 error_msg = str(e2)
                 if '413' in error_msg or 'Payload Too Large' in error_msg or 'Request too large' in error_msg:
-                    raise Exception(f"Contract size exceeds API limits for {provider.get_model_name()}. Please use a shorter document or upgrade your API tier.")
+                    raise Exception(f"Contract size exceeds API limits for {provider.get_model_name()}. Please use a shorter document.")
                 elif '429' in error_msg or 'rate_limit' in error_msg.lower():
-                    raise Exception(f"Rate limit exceeded for {provider.get_model_name()}. Please wait a few minutes and try again.")
+                    from exceptions import RateLimitError
+                    raise RateLimitError(provider=provider.get_model_name())
                 elif 'Connection error' in error_msg or 'Name or service not known' in error_msg:
-                    raise Exception(f"Cannot connect to {provider.get_model_name()} API. Check your internet connection and API configuration.")
+                    raise Exception(f"Cannot connect to {provider.get_model_name()} API. Check your internet connection.")
                 else:
                     raise Exception(f"Extraction failed: {error_msg[:200]}")
 

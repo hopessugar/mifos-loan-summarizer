@@ -1,4 +1,6 @@
 import re
+import logging
+from decimal import Decimal
 from Levenshtein import ratio as levenshtein_ratio
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -12,8 +14,25 @@ from pipeline.financial_calculator import (
     calculate_effective_interest_rate
 )
 
+logger = logging.getLogger(__name__)
 
-# TODO: Expand this list based on domain knowledge
+# ============================================================================
+# Risk Scoring Constants
+# Based on RBI guidelines for NBFC lending and industry benchmarks
+# ============================================================================
+INTEREST_RATE_PREDATORY = 48     # Likely illegal in most jurisdictions
+INTEREST_RATE_VERY_HIGH = 36     # Well above market personal loan rates
+INTEREST_RATE_HIGH = 24          # Above average
+INTEREST_RATE_ABOVE_AVG = 18     # Warrants attention
+INTEREST_RATE_MODERATE = 12      # Typical secured loan range
+
+RISK_SCORE_PREDATORY = 4.0
+RISK_SCORE_VERY_HIGH = 3.5
+RISK_SCORE_HIGH = 2.5
+RISK_SCORE_ABOVE_AVG = 1.5
+RISK_SCORE_MODERATE = 0.5
+
+# Financial keywords for extraction quality checks
 FINANCIAL_KEYWORDS = [
     'interest', 'rate', 'emi', 'instalment', 'installment', 'penalty',
     'principal', 'prepayment', 'schedule', 'repayment', 'loan', 'amount',
@@ -25,8 +44,6 @@ FINANCIAL_KEYWORDS = [
 def verify_numerical_value(value, source_clause: str) -> bool:
     if not source_clause or value is None:
         return False
-    import re
-    from decimal import Decimal
     clean_clause = source_clause.replace(',', '')
     numbers = re.findall(r'\d+(?:\.\d+)?', clean_clause)
     

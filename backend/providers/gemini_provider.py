@@ -80,3 +80,41 @@ class GeminiProvider(BaseLLMProvider):
 
         raise RateLimitError(provider=self._model_name, retry_after=60)
 
+    def generate_json(self, prompt: str, system: str = None, max_tokens: int = 1500, temperature: float = 0.1) -> str:
+        """Generate JSON output using Gemini's native JSON mode.
+        
+        Uses response_mime_type='application/json' to force structured JSON output,
+        significantly reducing parse failures from markdown wrapping or hallucinated formatting.
+        
+        THREADING NOTE: Same as generate_native() — must be called from thread context.
+        """
+        full_prompt = f"{system}\n\n{prompt}" if system else prompt
+
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                response = self._client.models.generate_content(
+                    model=self._model_name,
+                    contents=full_prompt,
+                    config={
+                        "max_output_tokens": max_tokens,
+                        "temperature": temperature,
+                        "response_mime_type": "application/json",
+                    }
+                )
+                return response.text
+
+            except Exception as e:
+                error_str = str(e)
+                if '429' in error_str or 'RESOURCE_EXHAUSTED' in error_str:
+                    delay_match = re.search(r'retry in (\d+)', error_str, re.IGNORECASE)
+                    wait_time = int(delay_match.group(1)) + 2 if delay_match else (30 * (attempt + 1))
+                    logger.warning(f"JSON mode rate limited (attempt {attempt+1}/{max_retries}). Waiting {wait_time}s...")
+                    time.sleep(wait_time)
+                    continue
+                else:
+                    raise
+
+        raise RateLimitError(provider=self._model_name, retry_after=60)
+
+
