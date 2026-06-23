@@ -18,7 +18,7 @@ services:
       
       # LLM Provider Configuration
       - LLM_PRIMARY=${LLM_PRIMARY:-gemini}
-      - LLM_MODEL=${LLM_MODEL:-gemini-1.5-flash}
+      - LLM_MODEL=${LLM_MODEL:-gemini-2.5-flash-lite}
       - LLM_FALLBACK=${LLM_FALLBACK:-}
       - LLM_FALLBACK_MODEL=${LLM_FALLBACK_MODEL:-}
       
@@ -30,9 +30,10 @@ services:
       - GEMINI_API_KEY=${GEMINI_API_KEY}
       - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
       - OLLAMA_MODEL=${OLLAMA_MODEL:-llama3.2:latest}
+      - GROQ_MODEL=${GROQ_MODEL:-llama-3.1-8b-instant}
       
       # Fineract Configuration
-      - FINERACT_URL=${FINERACT_URL:-https://demo.mifos.io/fineract-provider}
+      - FINERACT_URL=${FINERACT_URL:-https://demo.mifos.community/fineract-provider}
       - FINERACT_USER=${FINERACT_USER:-mifos}
       - FINERACT_PASSWORD=${FINERACT_PASSWORD}
       - FINERACT_TENANT=${FINERACT_TENANT:-default}
@@ -46,10 +47,13 @@ services:
       - COSINE_THRESHOLD=${COSINE_THRESHOLD:-0.80}
       - CONFIDENCE_THRESHOLD=${CONFIDENCE_THRESHOLD:-0.50}
       - MATH_TOLERANCE=${MATH_TOLERANCE:-0.10}
-      - MAX_INPUT_CHARS=${MAX_INPUT_CHARS:-2500}
-      - EXTRACTION_MAX_TOKENS=${EXTRACTION_MAX_TOKENS:-1500}
-      - SUMMARY_MAX_TOKENS=${SUMMARY_MAX_TOKENS:-600}
+      - MAX_INPUT_CHARS=${MAX_INPUT_CHARS:-50000}
+      - EXTRACTION_MAX_TOKENS=${EXTRACTION_MAX_TOKENS:-8192}
+      - SUMMARY_MAX_TOKENS=${SUMMARY_MAX_TOKENS:-2048}
       - EXTRACTION_TEMPERATURE=${EXTRACTION_TEMPERATURE:-0.1}
+      
+      # Encoding — prevent emoji/unicode errors on Windows hosts
+      - PYTHONIOENCODING=utf-8
     networks:
       - mifos-network
     restart: unless-stopped

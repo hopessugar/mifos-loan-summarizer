@@ -47,6 +47,7 @@ COPY --chown=appuser:appuser . .
 ENV PATH=/home/appuser/.local/bin:$PATH \
     PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONIOENCODING=utf-8 \
     NLTK_DATA=/usr/local/share/nltk_data \
     PYTHONPATH=/app
 
