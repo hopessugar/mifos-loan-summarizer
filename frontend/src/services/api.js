@@ -21,5 +21,6 @@ client.interceptors.response.use(
 
 export const analyseContract = (payload) => client.post('/analyze', payload)
 export const getLoanProducts = () => client.get('/loanproducts')
+export const refreshLoanProducts = () => client.post('/loanproducts/refresh')
 export const getHealth = () => client.get('/health')
 export const getProviders = () => client.get('/providers')

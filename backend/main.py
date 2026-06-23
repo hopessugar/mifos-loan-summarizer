@@ -43,13 +43,13 @@ limiter = Limiter(key_func=get_remote_address)
 async def lifespan(app: FastAPI):
     import os
     environment = os.getenv('ENVIRONMENT', 'development')
-    logger.info("🚀 Starting Mifos Loan Summarizer API")
+    logger.info("[START] Starting Mifos Loan Summarizer API")
     logger.info(f"Environment: {environment}")
     logger.info(f"LLM Primary Provider: {settings.LLM_PRIMARY}")
     logger.info(f"LLM Model: {settings.LLM_MODEL}")
     logger.info(f"API Authentication: {'ENABLED' if settings.API_KEY else 'DISABLED'}")
     yield
-    logger.info("🛑 Shutting down Mifos Loan Summarizer API")
+    logger.info("[STOP] Shutting down Mifos Loan Summarizer API")
 
 
 app = FastAPI(
