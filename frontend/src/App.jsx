@@ -1,16 +1,17 @@
-﻿import { useState } from 'react'
+import { useState } from 'react'
 import { AppProvider } from './context/AppContext'
 import { ErrorBoundary, SectionErrorFallback } from './components/ErrorBoundary'
 import { useAnalysis } from './hooks/useAnalysis'
 import { useLanguage } from './hooks/useLanguage'
 import { ContractInput } from './components/ContractInput/ContractInput'
+import { PdfUpload } from './components/PdfUpload/PdfUpload'
 import { MifosProductPicker } from './components/MifosProductPicker/MifosProductPicker'
 import { ResultsSection } from './components/AnalysisView/ResultsSection'
 import { Header } from './components/shared/Header'
 import { Spinner } from './components/shared/Spinner'
 
 function Main() {
-  const { status, result, error, submit, reset } = useAnalysis()
+  const { status, result, error, submit, submitPdf, reset } = useAnalysis()
   const { language, setLanguage } = useLanguage()
   const [inputMode, setInputMode] = useState('paste')
 
@@ -27,7 +28,7 @@ function Main() {
             Understand your loan agreement
           </h1>
           <p className="text-sm text-[#666] leading-relaxed">
-            Paste any loan contract or select a Mifos X product to get a plain-language summary, extracted terms, and risk analysis.
+            Paste any loan contract, upload a document (PDF, DOCX, TXT) or scanned image, or select a Mifos X product to get a plain-language summary, extracted terms, and risk analysis.
           </p>
         </div>
 
@@ -37,6 +38,7 @@ function Main() {
         >
           {[
             { key: 'paste', label: 'Paste text' },
+            { key: 'pdf', label: 'Upload document' },
             { key: 'mifos', label: 'Mifos X product' },
           ].map(tab => (
             <button
@@ -53,7 +55,7 @@ function Main() {
           ))}
         </div>
 
-        {inputMode === 'paste' ? (
+        {inputMode === 'paste' && (
           <ErrorBoundary fallback={<SectionErrorFallback />}>
             <ContractInput
               onSubmit={(text) => submit({ text, language })}
@@ -62,7 +64,20 @@ function Main() {
               hasResult={!!result}
             />
           </ErrorBoundary>
-        ) : (
+        )}
+
+        {inputMode === 'pdf' && (
+          <ErrorBoundary fallback={<SectionErrorFallback />}>
+            <PdfUpload
+              onSubmit={(file) => submitPdf(file, language)}
+              loading={status === 'loading'}
+              onReset={reset}
+              hasResult={!!result}
+            />
+          </ErrorBoundary>
+        )}
+
+        {inputMode === 'mifos' && (
           <ErrorBoundary fallback={<SectionErrorFallback />}>
             <MifosProductPicker
               onSubmit={(id) => submit({ loan_product_id: id, language })}

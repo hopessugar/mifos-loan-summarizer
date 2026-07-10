@@ -501,10 +501,10 @@ def validate_extraction(schema: LoanAgreementSchema, contract_text: str) -> dict
     missing_terms = detect_missing_terms(schema)
     
     # Calculate Borrower Protection Score (BPS)
-    # Risk score is 0-10, where 0 is safest. Base BPS is 100 - (risk * 10).
-    base_bps = 100 - (risk['score'] * 10)
-    # Deduct 5 points for every missing term
-    bps_score = max(0, min(100, base_bps - (len(missing_terms) * 5)))
+    # Based purely on risk score for deterministic results.
+    # Risk score is 0-10, where 0 is safest. BPS = 100 - (risk * 10).
+    # Missing terms are informational only — they don't affect the score.
+    bps_score = max(0, min(100, round(100 - (risk['score'] * 10))))
     
     # Generate negotiation tips
     negotiation_tips = []

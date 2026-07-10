@@ -1,9 +1,11 @@
 import langchain_compat  # noqa: F401
 from config import settings
 
+import re
 import time
 import asyncio
 import logging
+import unicodedata
 from pipeline.segmenter import segment_contract, segments_to_dict
 from pipeline.extractor import build_extraction_chain
 from pipeline.validator import validate_extraction
@@ -20,6 +22,39 @@ from schemas.response import (
 logger = logging.getLogger(__name__)
 
 
+def normalize_text(text: str) -> str:
+    """Normalize contract text for deterministic LLM processing.
+    
+    Ensures that the same contract content produces identical LLM input
+    regardless of source format (PDF, DOCX, TXT, pasted text).
+    This is critical for consistent extraction, risk scores, and summaries.
+    """
+    # 1. Unicode normalization (NFKC: compatibility decomposition + canonical composition)
+    text = unicodedata.normalize('NFKC', text)
+    
+    # 2. Remove PDF artifacts: page markers, form feeds, vertical tabs
+    text = re.sub(r'\f', '\n', text)  # form feed → newline
+    text = re.sub(r'\v', '\n', text)  # vertical tab → newline
+    text = re.sub(r'---+\s*Page\s*\d+\s*---+', '', text, flags=re.IGNORECASE)
+    text = re.sub(r'Page\s+\d+\s+of\s+\d+', '', text, flags=re.IGNORECASE)
+    
+    # 3. Normalize whitespace: tabs → space, multiple spaces → single space
+    text = text.replace('\t', ' ')
+    text = re.sub(r'[^\S\n]+', ' ', text)  # collapse horizontal whitespace (preserve newlines)
+    
+    # 4. Normalize line breaks: collapse 3+ consecutive newlines → 2
+    text = re.sub(r'\n{3,}', '\n\n', text)
+    
+    # 5. Strip leading/trailing whitespace from each line
+    lines = [line.strip() for line in text.split('\n')]
+    text = '\n'.join(lines)
+    
+    # 6. Remove empty lines at start/end
+    text = text.strip()
+    
+    return text
+
+
 async def analyse_contract(
     text: str,
     language: str = 'en',
@@ -27,6 +62,9 @@ async def analyse_contract(
 ) -> AnalysisResponse:
     start_time = time.time()
     security_warnings = []
+
+    # Normalize text for deterministic processing across all input formats
+    text = normalize_text(text)
 
     primary_provider = ProviderRegistry.get(provider_override or settings.LLM_PRIMARY)
     

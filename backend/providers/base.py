@@ -37,7 +37,7 @@ class BaseLLMProvider(ABC):
         """
         return True
 
-    def generate_native(self, prompt: str, system: str = None, max_tokens: int = 1000, temperature: float = 0.1) -> str:
+    def generate_native(self, prompt: str, system: str = None, max_tokens: int = 1000, temperature: float = 0.0) -> str:
         """Generate text using the provider's native API.
         
         This is the fallback for providers that don't support OpenAI-compatible APIs.

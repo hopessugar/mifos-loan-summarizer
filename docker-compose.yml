@@ -18,7 +18,7 @@ services:
       
       # LLM Provider Configuration
       - LLM_PRIMARY=${LLM_PRIMARY:-gemini}
-      - LLM_MODEL=${LLM_MODEL:-gemini-2.5-flash-lite}
+      - LLM_MODEL=${LLM_MODEL:-gemini-3.1-flash-lite}
       - LLM_FALLBACK=${LLM_FALLBACK:-}
       - LLM_FALLBACK_MODEL=${LLM_FALLBACK_MODEL:-}
       
@@ -48,9 +48,9 @@ services:
       - CONFIDENCE_THRESHOLD=${CONFIDENCE_THRESHOLD:-0.50}
       - MATH_TOLERANCE=${MATH_TOLERANCE:-0.10}
       - MAX_INPUT_CHARS=${MAX_INPUT_CHARS:-50000}
-      - EXTRACTION_MAX_TOKENS=${EXTRACTION_MAX_TOKENS:-8192}
+      - EXTRACTION_MAX_TOKENS=${EXTRACTION_MAX_TOKENS:-16384}
       - SUMMARY_MAX_TOKENS=${SUMMARY_MAX_TOKENS:-2048}
-      - EXTRACTION_TEMPERATURE=${EXTRACTION_TEMPERATURE:-0.1}
+      - EXTRACTION_TEMPERATURE=${EXTRACTION_TEMPERATURE:-0}
       
       # Encoding — prevent emoji/unicode errors on Windows hosts
       - PYTHONIOENCODING=utf-8
@@ -85,11 +85,52 @@ services:
       - mifos-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/health"]
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:8080/health"]
       interval: 30s
       timeout: 3s
       retries: 3
       start_period: 10s
+  # ============================================================================
+  # Ollama Service (OPTIONAL) — Local LLM inference
+  # ============================================================================
+  # To use Ollama as your LLM provider:
+  #   1. Uncomment this service block
+  #   2. Set LLM_PRIMARY=ollama in your .env file
+  #   3. Set OLLAMA_MODEL to your preferred model (e.g. llama3.2:latest)
+  #   4. Run: docker compose up -d
+  #   The model will be auto-pulled on first start.
+  #
+  # GPU Support:
+  #   - NVIDIA: Uncomment the 'deploy' section below
+  #   - AMD: Replace 'nvidia' with 'amd' in the deploy section
+  #   - CPU-only: Remove the deploy section entirely (slower but works)
+  # ============================================================================
+  # ollama:
+  #   image: ollama/ollama:latest
+  #   container_name: mifos-ollama
+  #   ports:
+  #     - "11434:11434"
+  #   volumes:
+  #     - ollama-data:/root/.ollama    # Persist downloaded models across restarts
+  #   environment:
+  #     - OLLAMA_HOST=0.0.0.0          # Allow connections from other containers
+  #   networks:
+  #     - mifos-network
+  #   restart: unless-stopped
+  #   # Uncomment for NVIDIA GPU support:
+  #   # deploy:
+  #   #   resources:
+  #   #     reservations:
+  #   #       devices:
+  #   #         - driver: nvidia
+  #   #           count: all
+  #   #           capabilities: [gpu]
+  #   healthcheck:
+  #     test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+  #     interval: 30s
+  #     timeout: 5s
+  #     retries: 3
+  #     start_period: 30s
 
 # ============================================================================
 # Networks
@@ -98,3 +139,9 @@ networks:
   mifos-network:
     driver: bridge
     name: mifos-network
+
+# ============================================================================
+# Volumes
+# ============================================================================
+# volumes:
+#   ollama-data:    # Uncomment when using the Ollama service above

@@ -23,12 +23,17 @@ llm:
   model: Qwen/Qwen2.5-72B-Instruct
   fallback: hf_inference
   fallback_model: meta-llama/Llama-3.1-8B-Instruct
+  # To switch to Ollama, change primary to 'ollama':
+  # primary: ollama
+  # model: llama3.2:latest   # (model name is read from ollama_model below)
 
 # HuggingFace API Token
 # SECURITY: Set via HF_TOKEN environment variable
 # DO NOT put your real token here!
 hf_token: ""
 
+# Ollama Configuration (local models — no API key needed!)
+# Popular models: llama3.2:latest, mistral:latest, qwen2.5:7b, phi3:mini
 ollama_base_url: http://localhost:11434
 ollama_model: qwen2.5:7b
 

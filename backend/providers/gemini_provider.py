@@ -45,7 +45,7 @@ class GeminiProvider(BaseLLMProvider):
         """Check if the Gemini API key is configured (no API call to save quota)."""
         return bool(settings.GEMINI_API_KEY)
 
-    def generate_native(self, prompt: str, system: str = None, max_tokens: int = 1000, temperature: float = 0.1) -> str:
+    def generate_native(self, prompt: str, system: str = None, max_tokens: int = 1000, temperature: float = 0.0) -> str:
         """Generate text using Gemini's native API with automatic retry on rate limits.
         
         THREADING NOTE: This method uses time.sleep() for retry backoff.
@@ -63,6 +63,7 @@ class GeminiProvider(BaseLLMProvider):
                     config={
                         "max_output_tokens": max_tokens,
                         "temperature": temperature,
+                        "seed": 42,
                     }
                 )
                 return response.text
@@ -80,7 +81,7 @@ class GeminiProvider(BaseLLMProvider):
 
         raise RateLimitError(provider=self._model_name, retry_after=60)
 
-    def generate_json(self, prompt: str, system: str = None, max_tokens: int = 1500, temperature: float = 0.1) -> str:
+    def generate_json(self, prompt: str, system: str = None, max_tokens: int = 1500, temperature: float = 0.0) -> str:
         """Generate JSON output using Gemini's native JSON mode.
         
         Uses response_mime_type='application/json' to force structured JSON output,
@@ -99,6 +100,7 @@ class GeminiProvider(BaseLLMProvider):
                     config={
                         "max_output_tokens": max_tokens,
                         "temperature": temperature,
+                        "seed": 42,
                         "response_mime_type": "application/json",
                     }
                 )

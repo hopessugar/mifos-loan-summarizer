@@ -1,5 +1,5 @@
-﻿import { useState } from 'react'
-import { analyseContract } from '../services/api'
+import { useState } from 'react'
+import { analyseContract, analysePdf } from '../services/api'
 
 export function useAnalysis() {
   const [status, setStatus] = useState('idle')
@@ -20,11 +20,25 @@ export function useAnalysis() {
     }
   }
 
+  async function submitPdf(file, language = 'en') {
+    setStatus('loading')
+    setError(null)
+    setResult(null)
+    try {
+      const data = await analysePdf(file, language)
+      setResult(data)
+      setStatus('success')
+    } catch (err) {
+      setError(err.message || 'Failed to analyse document')
+      setStatus('error')
+    }
+  }
+
   function reset() {
     setStatus('idle')
     setResult(null)
     setError(null)
   }
 
-  return { status, result, error, submit, reset }
+  return { status, result, error, submit, submitPdf, reset }
 }

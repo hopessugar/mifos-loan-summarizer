@@ -28,7 +28,12 @@ RUN python -c "import nltk; nltk.download('punkt', download_dir='/tmp/nltk_data'
 FROM python:3.11-slim
 
 # Create non-root user for security
-RUN useradd -m -u 1000 appuser && \
+# Install Tesseract OCR for scanned PDF / image support
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    tesseract-ocr \
+    tesseract-ocr-eng \
+    && rm -rf /var/lib/apt/lists/* && \
+    useradd -m -u 1000 appuser && \
     mkdir -p /app /usr/local/share/nltk_data && \
     chown -R appuser:appuser /app
 

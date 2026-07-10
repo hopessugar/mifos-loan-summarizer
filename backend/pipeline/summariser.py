@@ -200,11 +200,12 @@ def build_summary_chain(provider, language: str = 'en'):
             if (is_ollama or is_gemini) and hasattr(provider, 'generate_native'):
                 provider_name = 'Ollama' if is_ollama else 'Gemini'
                 print(f'Using {provider_name} native API for summarization...')
+                from config import settings
                 summary = provider.generate_native(
                     prompt=user_message,
                     system=SUMMARY_SYSTEM_PROMPT,
-                    max_tokens=500,
-                    temperature=0.1
+                    max_tokens=settings.SUMMARY_MAX_TOKENS,
+                    temperature=0.0
                 )
                 if summary is None:
                     raise Exception(f"{provider_name} returned empty response")
@@ -217,7 +218,7 @@ def build_summary_chain(provider, language: str = 'en'):
                 response = provider.raw_client.chat.completions.create(
                     model=provider.get_model_name(),
                     messages=messages,
-                    temperature=0.1,
+                    temperature=0.0,
                     max_tokens=500,
                     **timeout_kwarg
                 )

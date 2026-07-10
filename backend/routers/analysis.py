@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends, Request
+from fastapi import APIRouter, HTTPException, Depends, Request, UploadFile, File, Form
 from fastapi.responses import JSONResponse
 from schemas.request import ContractRequest
 from schemas.response import AnalysisResponse
@@ -126,4 +126,108 @@ async def analyze_contract(request: Request, contract_request: ContractRequest):
         raise HTTPException(
             status_code=500,
             detail="An unexpected error occurred during analysis. Please try again later or contact support if the problem persists."
+        )
+
+
+@router.post('/analyze/pdf', response_model=AnalysisResponse, dependencies=[Depends(verify_api_key)])
+@limiter.limit("10/minute")
+async def analyze_document(
+    request: Request,
+    file: UploadFile = File(..., description="Document file to analyze (PDF, DOCX, or TXT)"),
+    language: str = Form(default='en', description="Output language: 'en' or 'hi'"),
+    provider: str | None = Form(default=None, description="LLM provider override"),
+):
+    """Analyze a loan agreement from an uploaded document.
+    
+    Supports PDF, DOCX, and TXT files. Extracts text from the uploaded file
+    and runs it through the same analysis pipeline as the /analyze endpoint.
+    """
+    from services.pdf_service import extract_text_from_file, validate_uploaded_file
+    
+    start_time = time.time()
+    
+    try:
+        # Read file content
+        file_bytes = await file.read()
+        file_size = len(file_bytes)
+        filename = file.filename or 'unknown'
+        
+        # Validate file metadata
+        validation_errors = validate_uploaded_file(
+            filename=filename,
+            content_type=file.content_type,
+            file_size=file_size,
+        )
+        
+        if validation_errors:
+            raise HTTPException(
+                status_code=400,
+                detail=" ".join(validation_errors)
+            )
+        
+        # Validate language
+        if language not in ('en', 'hi'):
+            raise HTTPException(
+                status_code=400,
+                detail=f"Invalid language '{language}'. Supported: 'en', 'hi'"
+            )
+        
+        # Extract text from document
+        logger.info(f"Extracting text from document: {filename} ({file_size / 1024:.1f}KB)")
+        try:
+            extracted_text = extract_text_from_file(file_bytes, filename)
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=str(e))
+        
+        # Validate extracted text length
+        if len(extracted_text.strip()) < 50:
+            raise HTTPException(
+                status_code=400,
+                detail=(
+                    f"Extracted text is too short ({len(extracted_text.strip())} chars). "
+                    f"The document may contain mostly images or very little text. "
+                    f"Please paste the loan agreement text manually instead."
+                )
+            )
+        
+        if len(extracted_text) > 50000:
+            logger.warning(f"Document text is large ({len(extracted_text)} chars), truncating to 50,000")
+            extracted_text = extracted_text[:50000]
+        
+        logger.info(
+            f"Document text extracted: {len(extracted_text)} chars from '{filename}', "
+            f"language={language}"
+        )
+        
+        # Run through the same analysis pipeline
+        result = await analyse_contract(
+            text=extracted_text,
+            language=language,
+            provider_override=provider,
+        )
+        
+        elapsed = time.time() - start_time
+        logger.info(f"Document analysis complete in {elapsed:.2f}s, provider={result.provider_used}")
+        return result
+    
+    except HTTPException:
+        raise
+    except RateLimitError as e:
+        logger.warning(f"Rate limit hit during document analysis: {e}")
+        raise HTTPException(
+            status_code=429,
+            detail=f"LLM API rate limit reached. Please wait {e.retry_after} seconds and try again.",
+            headers={"Retry-After": str(e.retry_after)},
+        )
+    except ExtractionError as e:
+        logger.error(f"Document extraction pipeline failed: {e}")
+        raise HTTPException(
+            status_code=502,
+            detail="All LLM providers failed to extract data from the document. Please try again later.",
+        )
+    except Exception as e:
+        logger.error(f"Document analysis failed: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=500,
+            detail="An unexpected error occurred during document analysis. Please try again."
         )

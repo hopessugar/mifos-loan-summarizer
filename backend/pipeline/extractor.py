@@ -125,12 +125,23 @@ def build_extraction_chain(provider):
                     system_prompt = EXTRACTION_SYSTEM_PROMPT
                     user_prompt = user_message
                     
-                    raw_text = provider.generate_native(
-                        prompt=user_prompt,
-                        system=system_prompt,
-                        max_tokens=settings.EXTRACTION_MAX_TOKENS,
-                        temperature=settings.EXTRACTION_TEMPERATURE
-                    )
+                    # Prefer generate_json() for structured output (Ollama JSON mode / Gemini JSON mode)
+                    # Falls back to generate_native() if generate_json() is not available
+                    if hasattr(provider, 'generate_json'):
+                        logger.info(f'Using {provider_name} JSON mode for reliable structured output')
+                        raw_text = provider.generate_json(
+                            prompt=user_prompt,
+                            system=system_prompt,
+                            max_tokens=settings.EXTRACTION_MAX_TOKENS,
+                            temperature=settings.EXTRACTION_TEMPERATURE
+                        )
+                    else:
+                        raw_text = provider.generate_native(
+                            prompt=user_prompt,
+                            system=system_prompt,
+                            max_tokens=settings.EXTRACTION_MAX_TOKENS,
+                            temperature=settings.EXTRACTION_TEMPERATURE
+                        )
                 else:
                     timeout = 120 if is_ollama else 60
                     

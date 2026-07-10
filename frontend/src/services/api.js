@@ -20,6 +20,14 @@ client.interceptors.response.use(
 )
 
 export const analyseContract = (payload) => client.post('/analyze', payload)
+export const analysePdf = (file, language = 'en') => {
+  const formData = new FormData()
+  formData.append('file', file)
+  formData.append('language', language)
+  return client.post('/analyze/pdf', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
+}
 export const getLoanProducts = () => client.get('/loanproducts')
 export const refreshLoanProducts = () => client.post('/loanproducts/refresh')
 export const getHealth = () => client.get('/health')
