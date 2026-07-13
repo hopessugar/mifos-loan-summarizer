@@ -4,6 +4,7 @@ from langchain_core.runnables import RunnableLambda
 from pipeline.prompts import SUMMARY_SYSTEM_PROMPT
 from schemas.loan_schema import LoanAgreementSchema
 from pipeline.input_sanitizer import sanitize_contract_text, create_secure_prompt
+from pipeline.currency import format_currency
 import re
 
 
@@ -240,10 +241,11 @@ def build_summary_chain(provider, language: str = 'en'):
             rd = schema.repayment_duration.value
             mp = schema.monthly_payment.value
             tr = validated['financial_summary'].get('total_repayment')
+            cc = schema.currency
             fallback = (
-                f"This loan is for Rs. {la:,.0f} at {ir}% interest "
-                f"over {rd} months with monthly payments of Rs. {mp:,.0f}. "
-                f"Total repayment will be Rs. {tr:,.0f}."
+                f"This loan is for {format_currency(la, cc)} at {ir}% interest "
+                f"over {rd} months with monthly payments of {format_currency(mp, cc)}. "
+                f"Total repayment will be {format_currency(tr, cc)}."
             ) if all([la, ir, rd, mp, tr]) else "Summary could not be generated."
             return fallback, warnings
 
@@ -256,10 +258,11 @@ def build_whatsapp_text(summary: str, schema: LoanAgreementSchema, validated: di
     mp = schema.monthly_payment.value
     tr = validated['financial_summary'].get('total_repayment')
     risk = validated['risk_analysis'].get('score', 0)
+    cc = schema.currency
 
     text = (
-        f"Loan: Rs.{la:,.0f} | Rate: {ir}% | EMI: Rs.{mp:,.0f} | "
-        f"Total: Rs.{tr:,.0f} | Risk: {risk}/10"
+        f"Loan: {format_currency(la, cc)} | Rate: {ir}% | EMI: {format_currency(mp, cc)} | "
+        f"Total: {format_currency(tr, cc)} | Risk: {risk}/10"
     ) if all([la, ir, mp, tr]) else summary[:280]
 
     return text[:300]

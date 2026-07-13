@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { AppProvider } from './context/AppContext'
 import { ErrorBoundary, SectionErrorFallback } from './components/ErrorBoundary'
 import { useAnalysis } from './hooks/useAnalysis'
-import { useLanguage } from './hooks/useLanguage'
+import { useTranslation } from './hooks/useTranslation'
 import { ContractInput } from './components/ContractInput/ContractInput'
 import { PdfUpload } from './components/PdfUpload/PdfUpload'
 import { MifosProductPicker } from './components/MifosProductPicker/MifosProductPicker'
@@ -12,23 +12,23 @@ import { Spinner } from './components/shared/Spinner'
 
 function Main() {
   const { status, result, error, submit, submitPdf, reset } = useAnalysis()
-  const { language, setLanguage } = useLanguage()
+  const { t, language } = useTranslation()
   const [inputMode, setInputMode] = useState('paste')
 
   return (
     <div className="min-h-screen bg-[#F7F6F2]">
-      <Header language={language} setLanguage={setLanguage} result={result} />
+      <Header result={result} />
 
       <main className="max-w-3xl mx-auto px-6 py-10">
         <div className="mb-8">
           <p className="text-[11px] font-medium text-[#888] uppercase tracking-[0.08em] mb-1.5">
-            Loan analysis
+            {t('hero.eyebrow')}
           </p>
           <h1 className="text-2xl font-semibold text-[#111] mb-1.5 tracking-[-0.02em]">
-            Understand your loan agreement
+            {t('hero.title')}
           </h1>
           <p className="text-sm text-[#666] leading-relaxed">
-            Paste any loan contract, upload a document (PDF, DOCX, TXT) or scanned image, or select a Mifos X product to get a plain-language summary, extracted terms, and risk analysis.
+            {t('hero.description')}
           </p>
         </div>
 
@@ -37,9 +37,9 @@ function Main() {
           className="flex gap-0 border-b border-[#E5E5E3] mb-4"
         >
           {[
-            { key: 'paste', label: 'Paste text' },
-            { key: 'pdf', label: 'Upload document' },
-            { key: 'mifos', label: 'Mifos X product' },
+            { key: 'paste', label: t('tab.paste') },
+            { key: 'pdf', label: t('tab.pdf') },
+            { key: 'mifos', label: t('tab.mifos') },
           ].map(tab => (
             <button
               key={tab.key}
@@ -90,7 +90,7 @@ function Main() {
           <div className="mt-12 text-center">
             <Spinner />
             <p className="mt-3 text-[13px] text-[#888]">
-              Analysing contract...
+              {t('status.analysing')}
             </p>
           </div>
         )}

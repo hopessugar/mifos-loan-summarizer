@@ -63,7 +63,7 @@ class LoanAgreementSchema(BaseModel):
     payment_frequency: Optional[str] = None
     payment_due_day: Optional[str] = None
     repayment_start_date: Optional[str] = None
-    currency: Optional[str] = 'INR'
+    currency: Optional[str] = None
 
     late_fee: FeeField = FeeField()
     late_payment_interest: FeeField = FeeField()

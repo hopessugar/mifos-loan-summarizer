@@ -1,7 +1,9 @@
-﻿import { useState } from 'react'
+import { useState } from 'react'
+import { useTranslation } from '../../hooks/useTranslation'
 
 export function ContractInput({ onSubmit, loading, onReset, hasResult }) {
   const [text, setText] = useState('')
+  const { t } = useTranslation()
   const charCount = text.length
   const isValid = charCount >= 50 && charCount <= 50000
 
@@ -26,10 +28,10 @@ export function ContractInput({ onSubmit, loading, onReset, hasResult }) {
         justifyContent: 'space-between',
       }}>
         <span style={{ fontSize: '13px', fontWeight: '500', color: '#111' }}>
-          Paste loan agreement
+          {t('contract.title')}
         </span>
         <span style={{ fontSize: '12px', color: '#BBB' }}>
-          50 – 50,000 characters
+          {t('contract.charHint')}
         </span>
       </div>
 
@@ -37,7 +39,7 @@ export function ContractInput({ onSubmit, loading, onReset, hasResult }) {
         <textarea
           value={text}
           onChange={e => setText(e.target.value)}
-          placeholder="Paste the full text of a loan agreement here..."
+          placeholder={t('contract.placeholder')}
           rows={8}
           style={{
             width: '100%',
@@ -63,7 +65,7 @@ export function ContractInput({ onSubmit, loading, onReset, hasResult }) {
       }}>
         <span style={{ fontSize: '12px', color: getCountColor(), fontVariantNumeric: 'tabular-nums' }}>
           {charCount.toLocaleString()} / 50,000
-          {charCount > 0 && charCount < 50 ? ' — need at least 50' : ''}
+          {charCount > 0 && charCount < 50 ? t('contract.minWarning') : ''}
         </span>
 
         <div style={{ display: 'flex', gap: '8px' }}>
@@ -80,7 +82,7 @@ export function ContractInput({ onSubmit, loading, onReset, hasResult }) {
                 cursor: 'pointer',
               }}
             >
-              Reset
+              {t('contract.reset')}
             </button>
           )}
           <button
@@ -104,7 +106,7 @@ export function ContractInput({ onSubmit, loading, onReset, hasResult }) {
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
               <path d="M7 1L13 7L7 13M1 7h12" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-            {loading ? 'Analysing...' : 'Analyse contract'}
+            {loading ? t('contract.submitting') : t('contract.submit')}
           </button>
         </div>
       </div>

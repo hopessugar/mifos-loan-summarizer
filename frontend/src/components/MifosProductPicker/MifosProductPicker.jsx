@@ -1,7 +1,9 @@
 import { useLoanProducts } from '../../hooks/useLoanProducts'
+import { useTranslation } from '../../hooks/useTranslation'
 
 export function MifosProductPicker({ onSubmit, loading }) {
   const { products, loading: productsLoading, error, refresh, retry } = useLoanProducts()
+  const { t } = useTranslation()
 
   function handleChange(e) {
     const id = parseInt(e.target.value)
@@ -19,7 +21,7 @@ export function MifosProductPicker({ onSubmit, loading }) {
         color: '#92400E',
       }}>
         <div style={{ marginBottom: '8px', fontWeight: '500' }}>
-          ⚠ Cannot connect to Mifos X
+          {t('mifos.connectError')}
         </div>
         <div style={{ fontSize: '12px', color: '#A16207', marginBottom: '12px' }}>
           {error}
@@ -38,7 +40,7 @@ export function MifosProductPicker({ onSubmit, loading }) {
               color: '#92400E',
             }}
           >
-            ↻ Retry
+            {t('mifos.retry')}
           </button>
           <button
             onClick={refresh}
@@ -53,7 +55,7 @@ export function MifosProductPicker({ onSubmit, loading }) {
               color: '#92400E',
             }}
           >
-            🗑 Clear cache & retry
+            {t('mifos.clearRetry')}
           </button>
         </div>
       </div>
@@ -78,12 +80,12 @@ export function MifosProductPicker({ onSubmit, loading }) {
           fontWeight: '500',
           color: '#111',
         }}>
-          Select Mifos X loan product
+          {t('mifos.title')}
         </div>
         <button
           onClick={refresh}
           disabled={productsLoading}
-          title="Clear cache and refresh products from Fineract"
+          title={t('mifos.refreshTitle')}
           style={{
             padding: '4px 10px',
             fontSize: '11px',
@@ -104,7 +106,7 @@ export function MifosProductPicker({ onSubmit, loading }) {
             e.target.style.color = '#888'
           }}
         >
-          ↻ Refresh
+          {t('mifos.refresh')}
         </button>
       </div>
       <div style={{
@@ -112,7 +114,7 @@ export function MifosProductPicker({ onSubmit, loading }) {
         color: '#999',
         marginBottom: '12px',
       }}>
-        Pulls loan product data directly from Fineract API
+        {t('mifos.subtitle')}
       </div>
 
       {productsLoading ? (
@@ -133,7 +135,7 @@ export function MifosProductPicker({ onSubmit, loading }) {
             borderRadius: '50%',
             animation: 'spin 0.8s linear infinite',
           }} />
-          Loading loan products...
+          {t('mifos.loading')}
           <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
         </div>
       ) : (
@@ -151,7 +153,7 @@ export function MifosProductPicker({ onSubmit, loading }) {
             cursor: 'pointer',
           }}
         >
-          <option value="">— Select a loan product —</option>
+          <option value="">{t('mifos.selectDefault')}</option>
           {products.map(p => (
             <option key={p.id} value={p.id}>
               {p.name}
@@ -166,7 +168,10 @@ export function MifosProductPicker({ onSubmit, loading }) {
           fontSize: '11px',
           color: '#BBB',
         }}>
-          {products.length} product{products.length !== 1 ? 's' : ''} available
+          {t('mifos.productCount', {
+            count: products.length,
+            s: products.length !== 1 ? 's' : '',
+          })}
         </div>
       )}
 
@@ -176,7 +181,7 @@ export function MifosProductPicker({ onSubmit, loading }) {
           fontSize: '12px',
           color: '#BBB',
         }}>
-          No products found — try refreshing or check Fineract connection
+          {t('mifos.noProducts')}
         </div>
       )}
     </div>

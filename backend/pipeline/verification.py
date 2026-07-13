@@ -22,8 +22,15 @@ def extract_numbers_from_text(text: str) -> List[Decimal]:
     numbers = []
     
     # Pattern matches: 1,00,000 or 100,000 or 1000 or 10.5 or .5
-    # Also handles Rs., INR, ₹ prefixes and % suffixes
-    pattern = r'(?:Rs\.?|INR|₹)?\s*(\d+(?:,\d+)*(?:\.\d+)?)\s*%?'
+    # Handles international currency prefixes (₹, $, €, £, ¥, etc.) and % suffixes
+    pattern = (
+        r'(?:Rs\.?|INR|USD|EUR|GBP|JPY|CNY|KES|NGN|ZAR|BRL|CAD|AUD|CHF|'
+        r'[₹$€£¥₦₽₺₩₱₫৳]|'
+        r'KSh|USh|TSh|GH₵|R\$|MX\$|A\$|C\$|COL\$|AR\$|CL\$|'
+        r'Rp|RM|RF|MK|ZK|Br|CFA|FCFA|'
+        r'kr|zł|Kč|Ft|E£|S/)?'
+        r'\s*(\d+(?:,\d+)*(?:\.\d+)?)\s*%?'
+    )
     
     matches = re.finditer(pattern, text, re.IGNORECASE)
     

@@ -1,4 +1,14 @@
-export function Header({ language, setLanguage, result }) {
+import { useTranslation } from '../../hooks/useTranslation'
+
+const LANG_LABELS = {
+  en: 'EN',
+  hi: 'हिं',
+  es: 'ES',
+}
+
+export function Header({ result }) {
+  const { t, language, setLanguage } = useTranslation()
+
   return (
     <header style={{
       background: '#fff',
@@ -24,14 +34,14 @@ export function Header({ language, setLanguage, result }) {
           </svg>
         </div>
         <span style={{ fontSize: '14px', fontWeight: '600', color: '#111', letterSpacing: '-0.01em' }}>
-           Smart Contract & Loan Agreement Analyzer
+           {t('header.title')}
         </span>
         <span style={{
           fontSize: '10px', padding: '2px 7px',
           background: '#F3F2EE', border: '0.5px solid #E5E5E3',
           borderRadius: '4px', color: '#888', fontWeight: '500',
         }}>
-          THE MIFOS INITATIVE
+          {t('header.badge')}
         </span>
       </div>
 
@@ -54,7 +64,7 @@ export function Header({ language, setLanguage, result }) {
           borderRadius: '7px',
           overflow: 'hidden',
         }}>
-          {['en', 'hi'].map(lang => (
+          {['en', 'hi', 'es'].map(lang => (
             <button
               key={lang}
               onClick={() => setLanguage(lang)}
@@ -69,7 +79,7 @@ export function Header({ language, setLanguage, result }) {
                 transition: 'all 0.15s',
               }}
             >
-              {lang.toUpperCase()}
+              {LANG_LABELS[lang]}
             </button>
           ))}
         </div>

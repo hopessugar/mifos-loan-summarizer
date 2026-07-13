@@ -1,22 +1,32 @@
-﻿import { useState } from 'react'
+import { useState } from 'react'
 import { EntityCard } from './EntityCard'
 import { RiskBadge } from './RiskBadge'
 import { ExportButton } from '../ExportButton/ExportButton'
+import { useTranslation } from '../../hooks/useTranslation'
+import { formatCurrency } from '../../utils/currencyUtils'
 
 export function ResultsSection({ result }) {
   const [activeTab, setActiveTab] = useState('summary')
-  const tabs = ['Summary', 'Entities', 'Risk', 'Raw JSON']
+  const { t } = useTranslation()
+  const currency = result.entities?.currency?.value || null
+
+  const tabs = [
+    { key: 'summary', label: t('results.tab.summary') },
+    { key: 'entities', label: t('results.tab.entities') },
+    { key: 'risk', label: t('results.tab.risk') },
+    { key: 'raw_json', label: t('results.tab.rawJson') },
+  ]
 
   return (
     <div className="mt-8">
 
       <div className="flex items-center justify-between mb-4">
         <span className="text-sm font-medium text-[#111]">
-          Analysis results
+          {t('results.title')}
         </span>
         <div className="flex gap-1.5">
           {[
-            `${result.segment_count} segments`,
+            t('results.segments', { n: result.segment_count }),
             `${result.processing_time_ms}ms`,
             result.provider_used,
           ].map(chip => (
@@ -29,10 +39,10 @@ export function ResultsSection({ result }) {
 
       <div className="grid grid-cols-4 gap-2 my-3">
         {[
-          { label: 'Loan amount', value: result.entities?.loan_amount?.value ? `₹${Number(result.entities.loan_amount.value).toLocaleString('en-IN')}` : '—', sub: result.entities?.currency?.value || 'INR' },
-          { label: 'Interest rate', value: result.entities?.interest_rate?.value ? `${result.entities.interest_rate.value}` : '—', sub: 'per annum' },
-          { label: 'Monthly EMI', value: result.entities?.monthly_payment?.value ? `₹${Number(result.entities.monthly_payment.value).toLocaleString('en-IN')}` : '—', sub: `${result.entities?.repayment_duration?.value || '?'} months` },
-          { label: 'Total repayment', value: result.financial_summary?.total_repayment ? `₹${Number(result.financial_summary.total_repayment).toLocaleString('en-IN')}` : '—', sub: result.financial_summary?.total_interest ? `₹${Number(result.financial_summary.total_interest).toLocaleString('en-IN')} interest` : '' },
+          { label: t('stat.loanAmount'), value: result.entities?.loan_amount?.value ? formatCurrency(result.entities.loan_amount.value, currency) : '—', sub: currency || '—' },
+          { label: t('stat.interestRate'), value: result.entities?.interest_rate?.value ? `${result.entities.interest_rate.value}` : '—', sub: t('stat.perAnnum') },
+          { label: t('stat.monthlyEmi'), value: result.entities?.monthly_payment?.value ? formatCurrency(result.entities.monthly_payment.value, currency) : '—', sub: t('stat.months', { n: result.entities?.repayment_duration?.value || '?' }) },
+          { label: t('stat.totalRepayment'), value: result.financial_summary?.total_repayment ? formatCurrency(result.financial_summary.total_repayment, currency) : '—', sub: result.financial_summary?.total_interest ? t('stat.interest', { amount: formatCurrency(result.financial_summary.total_interest, currency) }) : '' },
         ].map(stat => (
           <div key={stat.label} className="bg-[#F7F6F2] rounded-[10px] py-[14px] px-4">
             <div className="text-[11px] text-[#999] mb-1">{stat.label}</div>
@@ -45,13 +55,13 @@ export function ResultsSection({ result }) {
       <div className="flex gap-0 border-b border-[#E5E5E3] mb-4">
         {tabs.map(tab => (
           <button
-            key={tab}
-            onClick={() => setActiveTab(tab.toLowerCase().replace(' ', '_'))}
+            key={tab.key}
+            onClick={() => setActiveTab(tab.key)}
             className={`py-2 px-[14px] text-[13px] bg-transparent border-none border-b-[1.5px] cursor-pointer -mb-[0.5px] transition-all duration-150 ${
-              activeTab === tab.toLowerCase().replace(' ', '_') ? 'text-[#111] font-medium border-[#111]' : 'text-[#999] font-normal border-transparent'
+              activeTab === tab.key ? 'text-[#111] font-medium border-[#111]' : 'text-[#999] font-normal border-transparent'
             }`}
           >
-            {tab}
+            {tab.label}
           </button>
         ))}
       </div>
@@ -71,19 +81,19 @@ export function ResultsSection({ result }) {
                 : 'bg-[#F0FDF4] border border-[#86EFAC] text-[#166534]'
             }`}>
               <div className="font-medium mb-2">
-                {result.math_check.is_consistent === true ? '✓' : result.math_check.warning ? '⚠' : 'ℹ'} Math Check
+                {result.math_check.is_consistent === true ? '✓' : result.math_check.warning ? '⚠' : 'ℹ'} {t('math.label')}
               </div>
               <div className="space-y-1 text-[12px] opacity-90">
-                <div>Monthly EMI: ₹{result.entities?.monthly_payment?.value?.toLocaleString('en-IN')}</div>
-                <div>Loan Tenure: {result.entities?.repayment_duration?.value} months</div>
+                <div>{t('math.monthlyEmi')} {formatCurrency(result.entities?.monthly_payment?.value, currency)}</div>
+                <div>{t('math.tenure')} {t('math.tenureMonths', { n: result.entities?.repayment_duration?.value })}</div>
                 <div className="pt-1 border-t border-current/20">
-                  <strong>Calculated Total:</strong> ₹{result.entities?.monthly_payment?.value?.toLocaleString('en-IN')} × {result.entities?.repayment_duration?.value} = ₹{result.financial_summary.total_repayment?.toLocaleString('en-IN')}
+                  <strong>{t('math.calcTotal')}</strong> {formatCurrency(result.entities?.monthly_payment?.value, currency)} × {result.entities?.repayment_duration?.value} = {formatCurrency(result.financial_summary.total_repayment, currency)}
                 </div>
                 {result.entities?.total_cost?.value && (
                   <div>
-                    <strong>Contract States:</strong> ₹{result.entities.total_cost.value.toLocaleString('en-IN')}
+                    <strong>{t('math.contractStates')}</strong> {formatCurrency(result.entities.total_cost.value, currency)}
                     {result.math_check.difference_pct > 0 && (
-                      <span className="ml-2">({result.math_check.difference_pct}% difference)</span>
+                      <span className="ml-2">({t('math.difference', { pct: result.math_check.difference_pct })})</span>
                     )}
                   </div>
                 )}
@@ -111,7 +121,7 @@ export function ResultsSection({ result }) {
       {activeTab === 'risk' && (
         <div className="bg-white border border-[#E5E5E3] rounded-xl p-5">
           <div className="mb-4">
-            <div className="text-[11px] text-[#999] mb-1">Risk score</div>
+            <div className="text-[11px] text-[#999] mb-1">{t('risk.scoreLabel')}</div>
             <div className={`text-[36px] font-semibold tracking-[-0.03em] ${
               result.risk_analysis?.score >= 7 ? 'text-[#DC2626]' : result.risk_analysis?.score >= 4 ? 'text-[#D97706]' : 'text-[#1D9E75]'
             }`}>
@@ -136,11 +146,11 @@ export function ResultsSection({ result }) {
               ))}
             </div>
           ) : (
-            <p className="text-[13px] text-[#999]">No significant risk factors detected.</p>
+            <p className="text-[13px] text-[#999]">{t('risk.noFactors')}</p>
           )}
           {result.default_events?.length > 0 && (
             <div className="mt-5">
-              <div className="text-xs font-medium text-[#666] mb-2.5">Default triggers</div>
+              <div className="text-xs font-medium text-[#666] mb-2.5">{t('risk.defaultTriggers')}</div>
               {result.default_events.map((e, i) => (
                 <div key={i} className="py-2.5 px-3.5 bg-[#FEF2F2] border border-[#FECACA] rounded-lg text-[13px] text-[#991B1B] mb-1.5">
                   {e.trigger}

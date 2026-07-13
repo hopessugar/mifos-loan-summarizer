@@ -13,6 +13,7 @@ from pipeline.financial_calculator import (
     calculate_total_interest,
     calculate_effective_interest_rate
 )
+from pipeline.currency import format_currency
 
 logger = logging.getLogger(__name__)
 
@@ -180,7 +181,7 @@ def calculate_confidence(field_name: str, value, source_clause: str, similarity:
     return 0.30, 'model_guess'
 
 
-def check_math_consistency(schema: LoanAgreementSchema) -> dict:
+def check_math_consistency(schema: LoanAgreementSchema, currency_code: str | None = None) -> dict:
     mp = schema.monthly_payment.value
     rd = schema.repayment_duration.value
     la = schema.loan_amount.value
@@ -209,7 +210,7 @@ def check_math_consistency(schema: LoanAgreementSchema) -> dict:
             result['estimated_emi'] = estimated_emi
             result['calculation_method'] = method
             result['emi_status'] = 'estimated'
-            result['warning'] = f'Contract does not specify monthly payment. Estimated EMI: Rs. {estimated_emi:,.2f} (using {method.replace("_", " ")}). Please confirm with lender.'
+            result['warning'] = f'Contract does not specify monthly payment. Estimated EMI: {format_currency(estimated_emi, currency_code)} (using {method.replace("_", " ")}). Please confirm with lender.'
             result['is_consistent'] = None
             
             total_repayment = calculate_total_repayment(estimated_emi, rd)
@@ -245,11 +246,11 @@ def check_math_consistency(schema: LoanAgreementSchema) -> dict:
         result['is_consistent'] = False
         
         if discrepancy_pct > 20:
-            result['warning'] = f'⚠️ CRITICAL: Stated EMI (Rs. {mp:,.2f}) differs significantly from calculated EMI (Rs. {calculated_emi:,.2f}) - {discrepancy_pct:.1f}% discrepancy. This may indicate hidden fees or incorrect calculations. Request detailed amortization schedule from lender.'
+            result['warning'] = f'⚠️ CRITICAL: Stated EMI ({format_currency(mp, currency_code)}) differs significantly from calculated EMI ({format_currency(calculated_emi, currency_code)}) - {discrepancy_pct:.1f}% discrepancy. This may indicate hidden fees or incorrect calculations. Request detailed amortization schedule from lender.'
         elif discrepancy_pct > 10:
-            result['warning'] = f'⚠️ WARNING: Stated EMI (Rs. {mp:,.2f}) differs from calculated EMI (Rs. {calculated_emi:,.2f}) - {discrepancy_pct:.1f}% discrepancy. Ask lender to explain this difference.'
+            result['warning'] = f'⚠️ WARNING: Stated EMI ({format_currency(mp, currency_code)}) differs from calculated EMI ({format_currency(calculated_emi, currency_code)}) - {discrepancy_pct:.1f}% discrepancy. Ask lender to explain this difference.'
         else:
-            result['warning'] = f'Minor discrepancy: Stated EMI (Rs. {mp:,.2f}) vs calculated EMI (Rs. {calculated_emi:,.2f}) - {discrepancy_pct:.1f}% difference. Likely due to rounding.'
+            result['warning'] = f'Minor discrepancy: Stated EMI ({format_currency(mp, currency_code)}) vs calculated EMI ({format_currency(calculated_emi, currency_code)}) - {discrepancy_pct:.1f}% difference. Likely due to rounding.'
         
         result['discrepancy_details'] = {
             'stated_emi': mp,
@@ -286,14 +287,22 @@ def is_predatory_clause(trigger: str) -> bool:
     return any(ind in trigger_lower for ind in predatory_indicators)
 
 
-def compute_risk_analysis(schema: LoanAgreementSchema) -> dict:
+def compute_risk_analysis(schema: LoanAgreementSchema, currency_code: str | None = None) -> dict:
     score = 0.0
     factors = []
     warnings = []
 
     ir = schema.interest_rate.value
     if ir:
-        if ir >= 48:
+        if ir >= 100:
+            score += 6.0
+            factors.append(f'Usurious interest rate ({ir}% per annum — exceeds 100%)')
+            warnings.append('CRITICAL: This rate exceeds 100% APR and is illegal in most jurisdictions')
+        elif ir >= 72:
+            score += 5.0
+            factors.append(f'Predatory interest rate ({ir}% per annum — well above legal limits)')
+            warnings.append('CRITICAL: This interest rate is predatory and likely illegal')
+        elif ir >= 48:
             score += 4.0
             factors.append(f'Extremely high interest rate ({ir}% per annum)')
             warnings.append('CRITICAL: This interest rate is likely predatory and may be illegal in some jurisdictions')
@@ -327,7 +336,7 @@ def compute_risk_analysis(schema: LoanAgreementSchema) -> dict:
     
     if late_fee and late_fee > 1000:
         score += 1.0
-        factors.append(f'Large late payment fee (Rs. {late_fee:,.0f})')
+        factors.append(f'Large late payment fee ({format_currency(late_fee, currency_code)})')
 
     prepayment_penalty = schema.prepayment_penalty.value
     if prepayment_penalty:
@@ -442,6 +451,19 @@ def validate_extraction(schema: LoanAgreementSchema, contract_text: str) -> dict
         'processing_fee': (schema.processing_fee.value, schema.processing_fee.source_clause),
     }
 
+    # Build a lookup of extraction methods from the schema for Fineract bypass
+    _schema_extraction_methods = {}
+    _schema_fields_meta = {}
+    for _fn in fields_to_validate:
+        _field_obj = getattr(schema, _fn, None)
+        if _field_obj and hasattr(_field_obj, 'extraction_method'):
+            _schema_extraction_methods[_fn] = _field_obj.extraction_method
+            _schema_fields_meta[_fn] = {
+                'confidence': getattr(_field_obj, 'confidence', None),
+                'is_verified': getattr(_field_obj, 'is_verified', False),
+                'similarity': getattr(_field_obj, 'similarity', 0.0),
+            }
+
     for field_name, (value, source_clause) in fields_to_validate.items():
         if value is None:
             continue
@@ -449,6 +471,26 @@ def validate_extraction(schema: LoanAgreementSchema, contract_text: str) -> dict
         display_value = value
         if field_name == 'prepayment_penalty' and value is not None and value < 1:
             display_value = value * 100  # 0.02 -> 2%
+
+        # Fineract API data is authoritative — skip hallucination re-checks
+        # The schema already has is_verified=True and confidence=0.99 set by
+        # build_schema_from_fineract(). Re-running check_hallucination would
+        # incorrectly flag accurate data because the source_clause format
+        # doesn't match the product_text format (by design — they serve
+        # different purposes).
+        if _schema_extraction_methods.get(field_name) == 'fineract_api':
+            meta = _schema_fields_meta.get(field_name, {})
+            entity_results[field_name] = {
+                'value': display_value,
+                'source_clause': source_clause or None,
+                'confidence': round(meta.get('confidence', 0.99), 3),
+                'extraction_method': 'fineract_api',
+                'is_verified': meta.get('is_verified', True),
+                'similarity': meta.get('similarity', 1.0),
+                'verify_method': 'fineract_api',
+                'flag': None,
+            }
+            continue
 
         hallucination = check_hallucination(str(value), source_clause or '', contract_text)
         confidence, extraction_method = calculate_confidence(field_name, value, source_clause or '', hallucination['similarity'])
@@ -486,18 +528,25 @@ def validate_extraction(schema: LoanAgreementSchema, contract_text: str) -> dict
         ('currency', schema.currency),
     ]:
         if val:
+            # If core fields came from Fineract API, metadata is also authoritative
+            is_fineract = any(
+                _schema_extraction_methods.get(f) == 'fineract_api'
+                for f in ['loan_amount', 'interest_rate', 'repayment_duration']
+            )
             entity_results[key] = {
                 'value': val,
                 'source_clause': None,
-                'confidence': 0.75,
+                'confidence': 0.99 if is_fineract else 0.75,
                 'is_verified': True,
-                'similarity': 0.75,
-                'verify_method': 'metadata',
+                'similarity': 1.0 if is_fineract else 0.75,
+                'verify_method': 'fineract_api' if is_fineract else 'metadata',
+                'extraction_method': 'fineract_api' if is_fineract else 'llm',
                 'flag': None,
             }
 
-    math_check = check_math_consistency(schema)
-    risk = compute_risk_analysis(schema)
+    currency_code = schema.currency
+    math_check = check_math_consistency(schema, currency_code)
+    risk = compute_risk_analysis(schema, currency_code)
     missing_terms = detect_missing_terms(schema)
     
     # Calculate Borrower Protection Score (BPS)

@@ -2,9 +2,21 @@
  * SectionErrorFallback - Smaller error UI for section-level errors.
  * 
  * Used when a specific section fails but the rest of the app should continue working.
+ * 
+ * Note: Cannot use useTranslation hook here because this may be rendered
+ * as a static fallback prop. We import translations directly instead.
  */
+import translations from '../../i18n/translations'
+
+function getT() {
+  const lang = localStorage.getItem('language') || 'en'
+  return (key) =>
+    translations[lang]?.[key] ?? translations['en']?.[key] ?? key
+}
+
 function SectionErrorFallback({ error, resetError }) {
   const isDevelopment = import.meta.env.DEV
+  const t = getT()
 
   return (
     <div className="my-8 p-6 bg-red-50 border border-red-200 rounded-lg">
@@ -29,11 +41,10 @@ function SectionErrorFallback({ error, resetError }) {
         {/* Error Content */}
         <div className="flex-1">
           <h3 className="text-lg font-semibold text-red-900 mb-2">
-            This section encountered an error
+            {t('sectionError.title')}
           </h3>
           <p className="text-sm text-red-700 mb-4">
-            Something went wrong while loading this section. The rest of the app should
-            still work normally.
+            {t('sectionError.description')}
           </p>
 
           {/* Action Button */}
@@ -42,7 +53,7 @@ function SectionErrorFallback({ error, resetError }) {
               onClick={resetError}
               className="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
             >
-              Try Again
+              {t('sectionError.tryAgain')}
             </button>
           )}
 
@@ -50,7 +61,7 @@ function SectionErrorFallback({ error, resetError }) {
           {isDevelopment && error && (
             <details className="mt-4">
               <summary className="cursor-pointer text-sm font-medium text-red-800 hover:text-red-900">
-                Error Details (Development Only)
+                {t('sectionError.details')}
               </summary>
               <pre className="mt-2 text-xs text-red-600 bg-white p-3 rounded border border-red-200 overflow-auto max-h-40">
                 {error.toString()}

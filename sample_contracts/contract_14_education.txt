@@ -1,0 +1,428 @@
+
+===============================================================================
+                          LOAN AGREEMENT
+===============================================================================
+
+AGREEMENT NUMBER: LA-0014/2026/41850
+DATE OF EXECUTION: 14 July, 2026
+PLACE: Delhi, India
+
+THIS LOAN AGREEMENT is made between:
+
+LENDER: ICICI Bank
+Branch: Corporate Branch, Delhi
+Address: 35 Park Street, Delhi
+
+AND
+
+BORROWER: Mohit Singh
+Address: 37/49, Sector 64, Delhi - 435546
+PAN: ABCDE8571K
+Aadhaar: XXXX-XXXX-6937
+Phone: +91-7166408879
+
+===============================================================================
+PAGE 1 - RECITALS AND DEFINITIONS
+===============================================================================
+
+WHEREAS the Borrower has approached the Lender for financial assistance;
+
+AND WHEREAS the Lender has agreed to provide a loan facility to the Borrower;
+
+NOW THEREFORE, in consideration of the mutual covenants and agreements:
+
+1. DEFINITIONS
+
+1.1 "Loan Amount" means Rs. 310,641 (Rupees 310641 only)
+1.2 "Interest Rate" means 17.09% per annum
+1.3 "Loan Tenure" means 60 months
+1.4 "EMI" means Rs. 7,735 per month
+1.5 "Processing Fee" means Rs. 6,212
+1.6 "Late Payment Fee" means Rs. 750 per instance
+
+===============================================================================
+PAGE 2 - LOAN SANCTION AND DISBURSEMENT
+===============================================================================
+
+2. LOAN SANCTION
+
+2.1 The Lender agrees to provide a Education Loan of Rs. 310,641 to the Borrower.
+
+2.2 The loan is sanctioned for the purpose of: Education financing as per the 
+borrower's application dated 29-06-2026.
+
+2.3 DISBURSEMENT CONDITIONS:
+(a) Execution of all loan documents
+(b) Payment of processing fee
+(c) Submission of post-dated cheques/NACH mandate
+(d) Insurance premium payment (where applicable)
+(e) Valuation report (for secured loans)
+
+===============================================================================
+PAGE 3 - INTEREST AND CHARGES
+===============================================================================
+
+3. INTEREST CALCULATIONS
+
+3.1 Interest shall be charged at 17.09% per annum on reducing balance method.
+
+3.2 The Annual Percentage Rate (APR) is calculated at 19.09% including
+all charges.
+
+3.3 Interest shall accrue from the date of disbursement.
+
+3.4 CHARGES AND FEES:
+(a) Processing Fee: Rs. 6,212 (non-refundable)
+(b) Late Payment Charges: Rs. 750 per delayed EMI
+(c) Cheque Bounce Charges: Rs. 991
+(d) Pre-payment Charges: 2% of outstanding principal
+(e) Foreclosure Charges: 5% + applicable taxes
+
+===============================================================================
+PAGE 4 - REPAYMENT TERMS
+===============================================================================
+
+4. REPAYMENT SCHEDULE
+
+4.1 The Borrower shall repay the loan in 60 equal monthly installments (EMIs).
+
+4.2 EMI Amount: Rs. 7,735 per month
+
+4.3 First EMI Due Date: 18-08-2026
+
+4.4 Subsequent EMIs: On the same date of each following month
+
+4.5 REPAYMENT SUMMARY:
+- Total Principal: Rs. 310,641
+- Total Interest: Rs. 153,459
+- Total Repayment: Rs. 464,100
+- Loan Term: 60 months
+- Final Maturity: 18-06-2031
+
+4.6 The Borrower may repay through:
+(a) Post-dated cheques (PDCs)
+(b) Electronic Clearing System (ECS)
+(c) National Automated Clearing House (NACH)
+(d) Standing Instructions
+(e) Online payment gateway
+
+===============================================================================
+PAGE 5 - SECURITY AND COLLATERAL
+===============================================================================
+
+5. SECURITY PROVISIONS
+
+5.1 PRIMARY SECURITY:
+Mortgage of property bearing Survey No. 362/18 at Delhi
+
+5.2 COLLATERAL SECURITY:
+(a) Equitable mortgage of residential property
+(b) Personal guarantee of spouse
+(c) Assignment of life insurance policy
+
+5.3 The Borrower undertakes to maintain adequate insurance on the security.
+
+===============================================================================
+PAGE 6 - REPRESENTATIONS AND WARRANTIES
+===============================================================================
+
+6. BORROWER'S REPRESENTATIONS
+
+The Borrower represents and warrants that:
+
+6.1 The Borrower is of sound mind and legally competent to contract.
+
+6.2 All information provided is true, accurate and complete.
+
+6.3 The Borrower has no pending litigation or legal proceedings.
+
+6.4 The Borrower is not insolvent or under any insolvency proceedings.
+
+6.5 The security offered is free from encumbrances.
+
+6.6 There are no undisclosed liabilities or obligations.
+
+===============================================================================
+PAGE 7 - COVENANTS AND CONDITIONS
+===============================================================================
+
+7. AFFIRMATIVE COVENANTS
+
+The Borrower shall:
+
+7.1 Use the loan amount solely for the stated purpose.
+
+7.2 Make all payments on due dates without any setoff or counterclaim.
+
+7.3 Maintain all records and accounts in proper order.
+
+7.4 Allow the Lender to inspect books and records upon request.
+
+7.5 Insure the security/collateral and keep it in good condition.
+
+7.6 Inform the Lender of any material changes in financial status.
+
+7.7 Comply with all applicable laws and regulations.
+
+8. NEGATIVE COVENANTS
+
+The Borrower shall NOT:
+
+8.1 Create any encumbrance on the secured assets without prior consent.
+
+8.2 Sell, transfer or dispose of the secured assets.
+
+8.3 Take any additional loans exceeding Rs. 155,320 without disclosure.
+
+8.4 Change the nature of business or employment (where applicable).
+
+8.5 Declare bankruptcy or enter into insolvency proceedings.
+
+===============================================================================
+PAGE 8 - EVENTS OF DEFAULT
+===============================================================================
+
+9. DEFAULT CONDITIONS
+
+9.1 An Event of Default occurs if:
+
+(a) Non-payment of EMI for 3 consecutive months
+(b) Breach of any terms and conditions of this Agreement
+(c) Misrepresentation or concealment of material facts
+(d) Insolvency or bankruptcy proceedings against the Borrower
+(e) Death, insanity or legal incapacity of the Borrower
+(f) Sale/disposal of secured assets without consent
+(g) Criminal proceedings affecting financial capacity
+(h) Cross-default on other loan facilities
+
+9.2 CONSEQUENCES OF DEFAULT:
+
+Upon occurrence of an Event of Default, the Lender may:
+
+(i) Recall the entire loan with penal interest of 2% p.a.
+(ii) Enforce security and sell secured assets
+(iii) Initiate legal proceedings for recovery
+(iv) Report to Credit Information Bureau (India) Limited (CIBIL)
+(v) Invoke personal guarantees
+(vi) Take possession of collateral
+
+===============================================================================
+PAGE 9 - INSURANCE AND INDEMNITY
+===============================================================================
+
+10. INSURANCE REQUIREMENTS
+
+10.1 The Borrower shall maintain:
+(a) Life Insurance: Rs. 310,641 covering loan tenure
+(b) Asset Insurance: Full replacement value of secured assets
+(c) Critical Illness/Disability Insurance (recommended)
+
+10.2 The Lender shall be named as beneficiary/loss payee.
+
+10.3 Failure to maintain insurance shall constitute an Event of Default.
+
+11. INDEMNIFICATION
+
+11.1 The Borrower shall indemnify the Lender against:
+(a) All losses arising from Borrower's breach
+(b) Third-party claims related to the loan or security
+(c) Legal costs and expenses of enforcement
+(d) Any taxes, duties or charges payable by Borrower
+
+===============================================================================
+PAGE 10 - PREPAYMENT AND FORECLOSURE
+===============================================================================
+
+12. PREPAYMENT PROVISIONS
+
+12.1 The Borrower may prepay the loan:
+(a) Partially: Minimum Rs. 31,064, subject to 2% charges
+(b) Fully: Entire outstanding amount with foreclosure charges
+
+12.2 Prepayment requests must be submitted 30 days in advance.
+
+12.3 No prepayment shall be allowed in first 12 months.
+
+12.4 Prepayment penalty calculation:
+- If prepaid within 24 months: 5% of outstanding
+- After 24 months: 2% of outstanding
+
+===============================================================================
+PAGE 11 - DISPUTE RESOLUTION AND JURISDICTION
+===============================================================================
+
+13. GOVERNING LAW
+
+13.1 This Agreement shall be governed by the laws of India.
+
+13.2 Subject to jurisdiction of courts at Delhi only.
+
+14. DISPUTE RESOLUTION
+
+14.1 Disputes shall first be attempted to be resolved through mutual discussion.
+
+14.2 If unresolved, parties may refer the matter to arbitration under the 
+Arbitration and Conciliation Act, 1996.
+
+14.3 The arbitration shall be conducted by a sole arbitrator appointed by the Lender.
+
+14.4 The venue of arbitration shall be Delhi.
+
+===============================================================================
+PAGE 12 - MISCELLANEOUS PROVISIONS
+===============================================================================
+
+15. NOTICES
+
+15.1 All notices shall be in writing and sent to:
+
+Lender: ICICI Bank, Delhi
+Email: loans@icicibank.com
+
+Borrower: Mohit Singh
+Address: As mentioned above
+Email: mohit.singh@email.com
+
+15.2 Notices sent by registered post shall be deemed delivered after 7 days.
+
+16. ASSIGNMENT
+
+16.1 The Lender may assign, transfer or securitize this loan without Borrower consent.
+
+16.2 The Borrower cannot assign rights or obligations under this Agreement.
+
+17. AMENDMENTS
+
+17.1 This Agreement can only be amended by mutual written consent.
+
+17.2 The Lender reserves the right to modify interest rates as per RBI guidelines.
+
+18. SEVERABILITY
+
+18.1 If any provision is held invalid, the remaining provisions shall continue in force.
+
+19. ENTIRE AGREEMENT
+
+19.1 This Agreement constitutes the entire understanding between parties.
+
+19.2 All prior discussions, negotiations are merged into this Agreement.
+
+20. ACKNOWLEDGMENTS
+
+20.1 The Borrower acknowledges:
+(a) Receipt of a copy of this Agreement
+(b) Understanding all terms and conditions
+(c) Agreeing to all provisions without coercion
+(d) Having received opportunity to seek independent legal advice
+(e) Accepting the Most Important Terms and Conditions (MITC)
+(f) Understanding the cooling-off period rights
+
+===============================================================================
+SCHEDULE I - LOAN PARTICULARS
+===============================================================================
+
+Loan Type:                    Education Loan
+Loan Amount:                  Rs. 310,641
+Interest Rate:                17.09% per annum (reducing balance)
+Processing Fee:               Rs. 6,212
+Loan Tenure:                  60 months
+EMI Amount:                   Rs. 7,735
+Total Interest:               Rs. 153,459
+Total Amount Payable:         Rs. 464,100
+First EMI Date:               18-08-2026
+Maturity Date:                18-06-2031
+Mode of Disbursement:         NEFT
+Repayment Mode:               PDC
+
+===============================================================================
+SCHEDULE II - REPAYMENT SCHEDULE
+===============================================================================
+
+EMI No  | Due Date      | Principal (Rs) | Interest (Rs) | EMI (Rs) | Balance (Rs)
+--------|---------------|----------------|---------------|----------|-------------
+01      | 18-08-2026 |          3,311 |         4,424 |    7,735 |       307,330
+02      | 17-09-2026 |          3,359 |         4,376 |    7,735 |       303,971
+03      | 17-10-2026 |          3,406 |         4,329 |    7,735 |       300,565
+04      | 16-11-2026 |          3,455 |         4,280 |    7,735 |       297,110
+05      | 16-12-2026 |          3,504 |         4,231 |    7,735 |       293,606
+06      | 15-01-2027 |          3,554 |         4,181 |    7,735 |       290,052
+07      | 14-02-2027 |          3,605 |         4,130 |    7,735 |       286,447
+08      | 16-03-2027 |          3,656 |         4,079 |    7,735 |       282,791
+09      | 15-04-2027 |          3,708 |         4,027 |    7,735 |       279,083
+10      | 15-05-2027 |          3,761 |         3,974 |    7,735 |       275,322
+11      | 14-06-2027 |          3,814 |         3,921 |    7,735 |       271,508
+12      | 14-07-2027 |          3,869 |         3,866 |    7,735 |       267,639
+...
+[Remaining 48 installments follow same pattern]
+
+===============================================================================
+SCHEDULE III - FEES AND CHARGES
+===============================================================================
+
+1. Processing Fee:            Rs. 6,212 (non-refundable)
+2. Late Payment Fee:          Rs. 750 per delayed EMI
+3. Cheque Bounce Charges:     Rs. 999
+4. Penal Interest:            2% p.a. on overdue amount
+5. Prepayment Charges:        3% of outstanding
+6. Foreclosure Charges:       3% of outstanding principal
+7. Duplicate Statement:       Rs. 200
+8. Legal Notice Charges:      Rs. 500
+9. Property Inspection:       Rs. 500 per visit
+10. Documentation Charges:    Rs. 1000
+
+All charges are subject to applicable Goods and Services Tax (GST).
+
+===============================================================================
+DECLARATIONS AND SIGNATURES
+===============================================================================
+
+BORROWER'S DECLARATION:
+
+I, Mohit Singh, hereby declare that:
+
+1. All information provided in the loan application is true and correct.
+2. I have read and understood all terms and conditions of this Agreement.
+3. I agree to abide by all covenants and conditions mentioned herein.
+4. I authorize the Lender to verify my credit history with CIBIL/other bureaus.
+5. I understand the consequences of default and agree to the same.
+6. I have not concealed any material information.
+
+Place: Delhi
+Date: 14-07-2026
+
+________________________                    ________________________
+Signature of Borrower                       Signature of Co-Borrower
+Name: Mohit Singh                            Name: [If applicable]
+
+LENDER'S ACCEPTANCE:
+
+For and on behalf of ICICI Bank
+
+Place: Delhi
+Date: 14-07-2026
+
+________________________
+Authorized Signatory
+Name: [Branch Manager Name]
+Designation: Branch Manager
+Employee ID: BM7293
+
+WITNESSES:
+
+1. Witness 1:                               2. Witness 2:
+   Name: _______________                       Name: _______________
+   Address: ____________                       Address: ____________
+   Signature: __________                       Signature: __________
+
+===============================================================================
+                    END OF LOAN AGREEMENT
+===============================================================================
+
+This is a computer-generated document. For any queries, please contact:
+Customer Care: 1800-563-3628
+Email: support@icicibank.com
+Website: www.icicibank.com
+
+Document ID: LA-0014/2026/85010
+Generated on: 14-07-2026 00:01:12
+Total Pages: 15

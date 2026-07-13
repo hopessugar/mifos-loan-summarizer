@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback } from 'react'
+import { useTranslation } from '../../hooks/useTranslation'
 
 /* ---------- file type config ---------- */
 const ALLOWED_EXTENSIONS = ['.pdf', '.docx', '.doc', '.txt', '.png', '.jpg', '.jpeg']
@@ -26,6 +27,7 @@ export function PdfUpload({ onSubmit, loading, onReset, hasResult }) {
   const [isDragging, setIsDragging] = useState(false)
   const [error, setError] = useState('')
   const inputRef = useRef(null)
+  const { t } = useTranslation()
 
   const MAX_SIZE = 10 * 1024 * 1024 // 10MB
 
@@ -36,13 +38,13 @@ export function PdfUpload({ onSubmit, loading, onReset, hasResult }) {
   }
 
   function validateFile(f) {
-    if (!f) return 'No file selected.'
+    if (!f) return t('pdf.noFile')
     const ext = getExtension(f.name)
     if (!ALLOWED_EXTENSIONS.includes(ext)) {
-      return `Unsupported file type "${ext || '(none)'}". Accepted: PDF, DOCX, TXT, PNG, JPG`
+      return t('pdf.unsupported', { ext: ext || '(none)' })
     }
-    if (f.size === 0) return 'File is empty.'
-    if (f.size > MAX_SIZE) return `File is too large (${formatSize(f.size)}). Maximum is 10 MB.`
+    if (f.size === 0) return t('pdf.empty')
+    if (f.size > MAX_SIZE) return t('pdf.tooLarge', { size: formatSize(f.size) })
     return ''
   }
 
@@ -75,7 +77,7 @@ export function PdfUpload({ onSubmit, loading, onReset, hasResult }) {
     setIsDragging(false)
     const dropped = e.dataTransfer.files?.[0]
     if (dropped) handleFile(dropped)
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const onInputChange = (e) => {
     const selected = e.target.files?.[0]
@@ -107,10 +109,10 @@ export function PdfUpload({ onSubmit, loading, onReset, hasResult }) {
         justifyContent: 'space-between',
       }}>
         <span style={{ fontSize: '13px', fontWeight: '500', color: '#111' }}>
-          Upload document
+          {t('pdf.title')}
         </span>
         <span style={{ fontSize: '12px', color: '#BBB' }}>
-          Max 10 MB
+          {t('pdf.maxSize')}
         </span>
       </div>
 
@@ -154,18 +156,18 @@ export function PdfUpload({ onSubmit, loading, onReset, hasResult }) {
 
             <p style={{ fontSize: '13px', color: '#666', margin: '0 0 4px' }}>
               {isDragging ? (
-                <span style={{ color: '#111', fontWeight: '500' }}>Drop file here</span>
+                <span style={{ color: '#111', fontWeight: '500' }}>{t('pdf.dropHere')}</span>
               ) : (
                 <>
                   <span style={{ color: '#111', fontWeight: '500', textDecoration: 'underline', textUnderlineOffset: '2px' }}>
-                    Click to browse
+                    {t('pdf.browse')}
                   </span>
-                  {' '}or drag and drop
+                  {t('pdf.orDrag')}
                 </>
               )}
             </p>
             <p style={{ fontSize: '11px', color: '#BBB', margin: 0 }}>
-              PDF, DOCX, TXT, or image (PNG/JPG) · Up to 10 MB
+              {t('pdf.typeHint')}
             </p>
 
             <input
@@ -237,7 +239,7 @@ export function PdfUpload({ onSubmit, loading, onReset, hasResult }) {
               }}
               onMouseEnter={e => e.currentTarget.style.color = '#DC2626'}
               onMouseLeave={e => e.currentTarget.style.color = '#999'}
-              title="Remove file"
+              title={t('pdf.removeFile')}
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18" />
@@ -283,7 +285,7 @@ export function PdfUpload({ onSubmit, loading, onReset, hasResult }) {
               cursor: 'pointer',
             }}
           >
-            Reset
+            {t('pdf.reset')}
           </button>
         )}
         <button
@@ -307,7 +309,7 @@ export function PdfUpload({ onSubmit, loading, onReset, hasResult }) {
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
             <path d="M7 1L13 7L7 13M1 7h12" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
-          {loading ? 'Analysing...' : 'Analyse document'}
+          {loading ? t('pdf.submitting') : t('pdf.submit')}
         </button>
       </div>
     </div>

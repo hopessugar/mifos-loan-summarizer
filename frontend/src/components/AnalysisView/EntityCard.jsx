@@ -1,21 +1,23 @@
 import { useState } from 'react'
+import { useTranslation } from '../../hooks/useTranslation'
 
 export function EntityCard({ fieldName, entity }) {
   const [expanded, setExpanded] = useState(false)
+  const { t } = useTranslation()
 
   const label = fieldName
     .replace(/_/g, ' ')
     .replace(/\b\w/g, c => c.toUpperCase())
 
   const conf = entity.confidence || 0
-  let trafficLight = '🔴 Uncertain'
+  let trafficLight = t('entity.uncertain')
   let confColor = '#DC2626'
   
   if (entity.is_verified || conf >= 0.90) {
-    trafficLight = '🟢 Verified'
+    trafficLight = t('entity.verified')
     confColor = '#1D9E75'
   } else if (conf >= 0.50) {
-    trafficLight = '🟡 Needs Review'
+    trafficLight = t('entity.needsReview')
     confColor = '#D97706'
   }
 
@@ -63,7 +65,7 @@ export function EntityCard({ fieldName, entity }) {
               cursor: 'pointer', padding: '0',
             }}
           >
-            {expanded ? 'Hide source ↑' : 'Source ↓'}
+            {expanded ? t('entity.hideSource') : t('entity.showSource')}
           </button>
         )}
       </div>

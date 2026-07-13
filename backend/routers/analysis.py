@@ -2,8 +2,8 @@ from fastapi import APIRouter, HTTPException, Depends, Request, UploadFile, File
 from fastapi.responses import JSONResponse
 from schemas.request import ContractRequest
 from schemas.response import AnalysisResponse
-from services.ai_service import analyse_contract
-from services.fineract_service import get_product_as_text
+from services.ai_service import analyse_contract, analyse_fineract_product
+from services.fineract_service import get_product_raw, build_schema_from_fineract
 from auth import verify_api_key
 from exceptions import RateLimitError, ExtractionError
 from slowapi import Limiter
@@ -59,15 +59,19 @@ async def analyze_contract(request: Request, contract_request: ContractRequest):
                     detail="Invalid product ID. Product ID must be a positive integer."
                 )
             
-            logger.info(f"Fetching Fineract product: {contract_request.loan_product_id}")
+            product_id = contract_request.loan_product_id
+            logger.info(f"Fetching raw Fineract product JSON: {product_id}")
             try:
-                text = await get_product_as_text(contract_request.loan_product_id)
-                logger.info(f"Analyzing Fineract product {contract_request.loan_product_id}: {len(text)} chars")
+                raw_data = await get_product_raw(product_id)
+                logger.info(
+                    f"Fetched Fineract product {product_id} "
+                    f"('{raw_data.get('name', '?')}'), building schema from structured data"
+                )
             except httpx.HTTPStatusError as e:
                 if e.response.status_code == 404:
                     raise HTTPException(
                         status_code=404,
-                        detail=f"Loan product with ID {contract_request.loan_product_id} not found in Mifos X."
+                        detail=f"Loan product with ID {product_id} not found in Mifos X."
                     )
                 elif e.response.status_code == 401:
                     raise HTTPException(
@@ -85,19 +89,28 @@ async def analyze_contract(request: Request, contract_request: ContractRequest):
                     detail="Cannot connect to Mifos X. The server may be down or unreachable. Please use manual paste instead."
                 )
             except Exception as e:
-                logger.error(f"Failed to fetch Fineract product {contract_request.loan_product_id}: {e}")
+                logger.error(f"Failed to fetch Fineract product {product_id}: {e}")
                 raise HTTPException(
                     status_code=503,
                     detail='Failed to fetch loan product from Mifos X. Please check your Fineract configuration or use manual paste.'
                 )
             
-            result = await analyse_contract(
-                text=text,
+            # Build schema DIRECTLY from Fineract structured JSON
+            # No LLM extraction — every value is from the authoritative source
+            schema, product_text = build_schema_from_fineract(raw_data)
+            
+            # Only use LLM for summary generation (its actual value-add)
+            result = await analyse_fineract_product(
+                schema=schema,
+                product_text=product_text,
                 language=contract_request.language,
                 provider_override=contract_request.provider,
             )
             elapsed = time.time() - start_time
-            logger.info(f"Fineract analysis complete in {elapsed:.2f}s")
+            logger.info(
+                f"Fineract analysis complete in {elapsed:.2f}s for product "
+                f"'{raw_data.get('name', '?')}' (source=fineract_api)"
+            )
             return result
 
     except HTTPException:

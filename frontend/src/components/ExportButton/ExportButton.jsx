@@ -1,7 +1,9 @@
 import { useState } from 'react'
+import { useTranslation } from '../../hooks/useTranslation'
 
 export function ExportButton({ whatsappText }) {
   const [copied, setCopied] = useState(false)
+  const { t } = useTranslation()
 
   async function handleCopy() {
     try {
@@ -25,7 +27,7 @@ export function ExportButton({ whatsappText }) {
     }}>
       <div style={{ flex: 1 }}>
         <div style={{ fontSize: '11px', color: '#999', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-          WhatsApp / SMS
+          {t('export.label')}
         </div>
         <div style={{
           fontSize: '12px',
@@ -54,7 +56,7 @@ export function ExportButton({ whatsappText }) {
           transition: 'all 0.15s',
         }}
       >
-        {copied ? '✓ Copied!' : '⎘ Copy'}
+        {copied ? t('export.copied') : t('export.copy')}
       </button>
     </div>
   )

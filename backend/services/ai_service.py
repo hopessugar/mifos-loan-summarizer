@@ -216,3 +216,105 @@ async def analyse_contract(
         security_warnings=security_warnings,
         missing_terms=validated.get('missing_terms', []),
     )
+
+
+async def analyse_fineract_product(
+    schema,
+    product_text: str,
+    language: str = 'en',
+    provider_override: str | None = None,
+) -> AnalysisResponse:
+    """Analyse a Fineract loan product using a pre-built schema.
+
+    Unlike analyse_contract(), this does NOT run LLM extraction — the schema
+    is built directly from Fineract's structured API response, so every
+    financial value is 100% accurate from the authoritative source.
+
+    The LLM is ONLY used for generating the borrower-friendly summary.
+    """
+    start_time = time.time()
+    security_warnings = []
+
+    primary_provider = ProviderRegistry.get(provider_override or settings.LLM_PRIMARY)
+
+    # --- Validation (risk scoring, math checks, financial calcs) ---
+    # These are purely deterministic — no LLM involvement
+    validated = await asyncio.to_thread(validate_extraction, schema, product_text)
+
+    # --- LLM Summary Generation ---
+    # This is the ONLY LLM call — generating a human-readable summary
+    summary_chain = build_summary_chain(primary_provider, language)
+    summary_result = await summary_chain.ainvoke({
+        'schema': schema,
+        'validated': validated,
+    })
+
+    if isinstance(summary_result, tuple):
+        summary, summary_warnings = summary_result
+        security_warnings.extend(summary_warnings)
+    else:
+        summary = summary_result
+
+    whatsapp_text = build_whatsapp_text(summary, schema, validated)
+
+    # --- Build response ---
+    entities = {
+        k: EntityResult(**v)
+        for k, v in validated['entities'].items()
+    }
+
+    math_check = MathCheckResult(
+        is_consistent=validated['math_check'].get('is_consistent'),
+        difference_pct=validated['math_check'].get('difference_pct'),
+        warning=validated['math_check'].get('warning'),
+    )
+
+    financial_summary = FinancialSummary(
+        total_repayment=validated['financial_summary'].get('total_repayment'),
+        total_interest=validated['financial_summary'].get('total_interest'),
+        effective_interest_pct=validated['financial_summary'].get('effective_interest_pct'),
+    )
+
+    risk_analysis = RiskAnalysis(
+        score=validated['risk_analysis'].get('score', 0),
+        factors=validated['risk_analysis'].get('factors', []),
+        bps_score=validated['risk_analysis'].get('bps_score', 100.0),
+        negotiation_tips=validated['risk_analysis'].get('negotiation_tips', []),
+    )
+
+    default_events = [
+        DefaultEvent(**e)
+        for e in validated['default_events']
+    ]
+
+    processing_time = int((time.time() - start_time) * 1000)
+
+    # Audit trail
+    try:
+        log_analysis(
+            contract_text=product_text,
+            provider=primary_provider.get_model_name(),
+            risk_score=validated['risk_analysis'].get('score'),
+            processing_time_ms=processing_time,
+            warnings=security_warnings,
+            entities_found=len(validated.get('entities', {})),
+            language=language,
+            source='fineract',
+        )
+    except Exception as e:
+        logger.error(f"Audit logging failed: {e}")
+
+    return AnalysisResponse(
+        entities=entities,
+        math_check=math_check,
+        financial_summary=financial_summary,
+        risk_analysis=risk_analysis,
+        default_events=default_events,
+        summary=summary,
+        whatsapp_text=whatsapp_text,
+        segment_count=0,
+        provider_used=primary_provider.get_model_name(),
+        processing_time_ms=processing_time,
+        security_warnings=security_warnings,
+        missing_terms=validated.get('missing_terms', []),
+    )

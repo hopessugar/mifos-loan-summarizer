@@ -1,0 +1,45 @@
+LOAN AGREEMENT
+
+This Loan Agreement is made on 15th January 2026 between:
+
+LENDER: Mifos Microfinance Ltd.
+Address: 123 MG Road, Bangalore, Karnataka - 560001
+Registration No: MFI/2020/KAR/12345
+
+BORROWER: Rajesh Kumar
+Address: 45 Church Street, Bangalore, Karnataka - 560002
+Aadhaar: 1234-5678-9012
+
+LOAN DETAILS:
+Loan Amount: Rs. 50,000 (Rupees Fifty Thousand Only)
+Loan Purpose: Business expansion
+Interest Rate: 18% per annum (reducing balance method)
+Loan Tenure: 12 months
+Monthly EMI: Rs. 4,579
+Processing Fee: Rs. 1,000 (2% of loan amount)
+Total Amount Payable: Rs. 54,948
+
+REPAYMENT SCHEDULE:
+First EMI Date: 15th February 2026
+Repayment Mode: Auto-debit from savings account
+Bank Account: SBI Account No. 12345678901
+
+FEES AND CHARGES:
+Late Payment Fee: Rs. 500 per month
+Prepayment Charges: 2% of outstanding principal
+Bounce Charges: Rs. 300 per instance
+Documentation Charges: Rs. 500 (one-time)
+
+DEFAULT PROVISIONS:
+In case of default beyond 30 days, the lender may:
+1. Initiate legal proceedings
+2. Report to credit bureaus
+3. Charge penalty interest of 24% per annum
+
+COLLATERAL: Personal guarantee and post-dated cheques
+
+Borrower Signature: _______________
+Date: 15/01/2026
+
+Lender Authorized Signatory: _______________
+Date: 15/01/2026
