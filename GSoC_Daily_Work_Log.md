@@ -521,3 +521,363 @@ All planned deliverables are complete, plus a few bonus features (semantic chunk
 2. Test with real contract data from day 1 instead of synthetic examples
 3. Set up Docker in week 1, not week 5
 4. Ask my mentor for help sooner instead of debugging alone for hours
+
+---
+
+## Phase 2 — Coding Period (Fineract Integration)
+
+### Week 6 (Jun 29 – Jul 4)
+
+**Day 47 · Jun 29 (Mon) — PHASE 2 STARTS**
+
+Phase 2 focus: integrate directly with Apache Fineract / Mifos X. Up until now the app only took pasted text or uploaded files — but the real value for Mifos is pulling loan product data straight from their platform.
+
+Spent the day going through the Fineract REST API docs properly this time (not just skimming like I did in the community bonding period). The key endpoints I need: `GET /loanproducts` to list all products and `GET /loanproducts/{id}` to fetch the full details of a specific one. The response JSON is massive — nested objects everywhere. Currency is a dict with `code`, `name`, `displaySymbol`. Interest rate has `interestRatePerPeriod` AND `annualInterestRate` (different fields!). Charges are an array with their own nested type objects.
+
+Made notes on every field I'll need to map to our existing `LoanAgreementSchema`. There are a LOT of Fineract-specific fields (grace periods, arrears tolerance, transaction processing strategies) that don't have direct equivalents in our schema. Need to figure out what to do with those.
+
+~5 hrs · Feeling that "staring at docs all day" fatigue but this needs to be right.
+
+---
+
+**Day 48 · Jun 30 (Tue)**
+
+Started building the Fineract configuration layer. Added `FINERACT_URL`, `FINERACT_USER`, `FINERACT_PASSWORD`, `FINERACT_TENANT`, and `FINERACT_SSL_VERIFY` to the settings in `config.py`. The Fineract API uses HTTP Basic Auth with a tenant header, which is different from the bearer token auth I'm used to.
+
+Got the SSL verification config working — three modes: `True` (default, use system certs), a custom CA bundle path (for self-signed certs in dev), or `False` (disabled, dev only). Added a hard block in `config.py` so SSL verification CANNOT be disabled in production. Learned this from the security reading during community bonding — you'd be shocked how many open-source projects ship with `verify=False` hardcoded.
+
+Tested against the Mifos demo instance at `demo.mifos.community` and got my first successful 200 response. The tenant ID is `default`, not `mifos` — I made the exact same mistake as Day 1. At least this time it only took 10 minutes to figure out.
+
+~4 hrs
+
+---
+
+**Day 49 · Jul 1 (Wed)**
+
+Built the core of `fineract_service.py`. Started with `_auth_headers()` — generates the Basic Auth token from username:password and includes the `Fineract-Platform-TenantId` header. Then built a shared `httpx.AsyncClient` with connection pooling (`_get_fineract_client()`). The idea is to reuse connections instead of creating a new one for every API call — way more efficient when the frontend is making multiple requests.
+
+Set up the client with sensible defaults: 30-second read timeout, 10-second connect timeout, max 5 keepalive connections, max 10 total connections. Hit a bug where the global client was `None` on the second call because I was recreating it every time instead of caching it. Switched to a module-level global with a lazy init pattern.
+
+Also wrote `_get_ssl_config()` to handle the three SSL modes. Had to add a `FileNotFoundError` check for when someone configures a CA bundle path that doesn't exist — better to fail loud than silently skip verification.
+
+~5 hrs
+
+---
+
+**Day 50 · Jul 2 (Thu)**
+
+Implemented `list_loan_products()` and `get_product_as_text()`. The list endpoint is straightforward — call the API, extract just `id` and `name` from each product. The text conversion is where it gets tricky.
+
+Wrote `_product_to_text()` which takes the raw Fineract JSON and converts it to human-readable text that our extraction pipeline can understand. The problem: Fineract wraps values in nested dicts sometimes (`{'defaultValue': 50000}`) and sometimes gives plain numbers (`50000`). Had to write a `_safe_get()` helper that handles both formats.
+
+Tested with the demo instance — there are about 15 loan products on the demo server. The text conversion looked decent but I noticed the interest rate frequency wasn't being shown correctly. `interestRatePeriodFrequencyType` is a whole nested object with `id`, `code`, and `value`. You have to dig into `.value` to get "Per year" vs "Per month".
+
+~4 hrs
+
+---
+
+**Day 51 · Jul 3 (Fri)**
+
+Built the `/loanproducts` API router with three endpoints:
+
+1. `GET /loanproducts` — list all products from Fineract
+2. `GET /loanproducts/{product_id}` — get a specific product as text
+3. `POST /loanproducts/refresh` — invalidate the cache and fetch fresh data
+
+The error handling was the interesting part. Fineract can return 401 (bad credentials), 404 (product doesn't exist), 503 (server down), or just time out entirely. Each needs a different user-facing error message. I mapped them all to appropriate HTTP status codes with clear messages like "Authentication failed with Mifos X. Check FINERACT_USER and FINERACT_PASSWORD." instead of just forwarding the raw error.
+
+Also added API key auth (`Depends(verify_api_key)`) to all the Fineract endpoints, same as the analysis endpoints.
+
+~4 hrs
+
+---
+
+**Day 52 · Jul 4 (Sat)**
+
+Tested the full flow: frontend → backend → Fineract demo → response. Mostly worked! But the product text wasn't detailed enough for our extraction pipeline to work well. The LLM was getting confused because the text just said "interest rate: 18" without specifying annual vs monthly, or "charges: Processing Fee — 500" without saying if that's flat or percentage.
+
+Went back and enhanced `_product_to_text()` to include interest type (reducing vs flat), calculation period, frequency labels, charge calculation types, grace periods, and amortization type. The text went from ~5 lines to ~15 lines per product, and extraction quality improved noticeably.
+
+Then had an "aha" moment: why am I even sending this text through the LLM for extraction? Fineract already gives me structured JSON with exact values. The LLM extraction step is UNNECESSARY for Fineract products — it only adds latency and introduces potential hallucinations. Started thinking about a completely different approach.
+
+~5 hrs · That "aha" moment might change the whole architecture.
+
+---
+
+### Week 7 (Jul 6 – Jul 11)
+
+**Day 53 · Jul 6 (Mon)**
+
+Followed up on yesterday's insight. The problem with running Fineract products through the normal LLM extraction pipeline is:
+
+1. We LOSE precision — Fineract gives us `interestRatePerPeriod: 18.0` and the LLM might return `18%` (losing the fact that it's per period, not annual)
+2. We add hallucination risk — the LLM sometimes guesses at fields that aren't in the text representation
+3. It's SLOW — unnecessary LLM call adds 3–5 seconds
+
+The solution: build the `LoanAgreementSchema` DIRECTLY from Fineract's structured JSON, bypassing LLM extraction entirely. Every value comes from the authoritative source. Then only use the LLM for the one thing it's actually good at — generating a human-readable summary.
+
+Spent the day mapping every Fineract field to our schema fields. Made a big spreadsheet:
+- `principal` → `loan_amount.value`
+- `annualInterestRate` → `interest_rate.value` (NOT `interestRatePerPeriod`!)
+- `numberOfRepayments` × `repaymentEvery` → `repayment_duration.value`
+- `charges[]` → various fee fields depending on `chargeTimeType`
+
+The charge classification is especially tricky — more on that tomorrow.
+
+~6 hrs · Excited about this approach. It's fundamentally more correct than LLM extraction.
+
+---
+
+**Day 54 · Jul 7 (Tue)**
+
+Started writing `build_schema_from_fineract()` — the big function that constructs a `LoanAgreementSchema` directly from Fineract JSON. Got the core fields done: loan amount, interest rate, repayment duration.
+
+The interest rate mapping was the trickiest part. Fineract has THREE rate-related fields: `interestRatePerPeriod` (could be monthly or yearly), `annualInterestRate` (always yearly), and `interestRateFrequencyType` (tells you what period the rate is for). Our schema expects annual percentage, so I always use `annualInterestRate` — but I log the per-period rate in the source clause for transparency.
+
+Also mapped `interestType` codes to our schema types. Fineract uses `interestType.declining.balance` and `interestType.flat` — I map these to `reducing` and `flat` respectively. The naming difference tripped me up for a bit.
+
+For repayment duration, I have to calculate total months from `numberOfRepayments × repaymentEvery`, and handle the case where the frequency is weeks instead of months (conversion: `weeks × 7 / 30`). Not perfectly precise but close enough.
+
+Set all confidence scores to 0.99 and `extraction_method` to `fineract_api` — because these values are 100% accurate from the authoritative source, not guessed by an LLM.
+
+~5 hrs
+
+---
+
+**Day 55 · Jul 8 (Wed)**
+
+Tackled the charge/fee classification logic. This was way harder than I expected. Fineract's charges array is a flat list — each charge has a `chargeTimeType` (when it's applied) and a `chargeCalculationType` (how it's calculated), plus a name.
+
+Our schema has specific fee fields: `processing_fee`, `late_fee`, `late_payment_interest`, `penalty_interest`, `prepayment_penalty`, `insurance_fee`, `administrative_fee`, `other_fee`. I need to classify each Fineract charge into the right bucket.
+
+My classification strategy uses a combination of the charge time type code and the charge name:
+- `disbursement` time type OR name contains "processing" → `processing_fee`
+- `overdue` time type OR name contains "late" → `late_fee` (flat) or `late_payment_interest` (percentage)
+- Name contains "prepayment" or "foreclosure" → `prepayment_penalty`
+- Name contains "insurance" → `insurance_fee`
+- Name contains "admin" → `administrative_fee`
+- Everything else → `other_fee`
+
+The percentage vs flat distinction matters: if `chargeCalculationType` contains "percent", it goes to the interest-based fee field. If it's flat, it goes to the flat fee field. Tested with 5 different products from the demo server and the classification was correct for all of them.
+
+~5 hrs · Fee classification is one of those things that seems simple but has tons of edge cases.
+
+---
+
+**Day 56 · Jul 9 (Thu)**
+
+Added handling for Fineract-specific features that don't have direct schema equivalents: down payments, grace periods, arrears tolerance, multi-disbursement loans, and overdue day configuration. I mapped these to `default_events` in our schema — they're not exactly "default events" in the legal sense, but they're important terms that borrowers should know about.
+
+The down payment logic was the most involved. When `enableDownPayment` is true, the net principal (for EMI calculation) is `principal - (principal × downPaymentPercentage / 100)`. I update the `loan_amount` field to reflect the net amount and add a default event explaining the down payment requirement. Used the currency formatter to display amounts properly.
+
+Also handled `graceOnPrincipalPayment`, `graceOnInterestPayment`, `inArrearsTolerance`, `graceOnArrearsAgeing`, and `multiDisburseLoan`. Each one becomes a `DefaultEventField` with a clear trigger description and source clause pointing back to the Fineract product config.
+
+~4 hrs
+
+---
+
+**Day 57 · Jul 10 (Fri)**
+
+Built `analyse_fineract_product()` in `ai_service.py` — a completely separate analysis function for Fineract products. Unlike `analyse_contract()`, this one:
+
+1. Does NOT run LLM extraction (schema is pre-built from Fineract JSON)
+2. Does NOT run input sanitization (data is from a trusted API, not user input)
+3. DOES run the validation pipeline (risk scoring, math checks, financial calcs)
+4. DOES use the LLM for summary generation (the one thing it's good at)
+
+The key insight: validation and risk analysis are purely deterministic — they don't need the LLM at all. Only the human-readable summary benefits from LLM language generation. So we get the best of both worlds: 100% accurate data from Fineract + a helpful summary from the LLM.
+
+Also added `get_product_raw()` to `fineract_service.py` — returns the raw Fineract JSON without converting to text. This is what `build_schema_from_fineract()` needs as input.
+
+~5 hrs · This feels like the right architecture. Authoritative data + LLM for language only.
+
+---
+
+**Day 58 · Jul 11 (Sat)**
+
+Integrated the Fineract path into the `/analyze` endpoint. The `ContractRequest` schema now accepts an optional `loan_product_id` field. The router checks: if `text` is provided, run the normal extraction pipeline. If `loan_product_id` is provided, fetch the product from Fineract, build the schema directly, and only use the LLM for the summary.
+
+The error handling for the Fineract path needed to be more specific than the text path. I handle:
+- Product not found (404) → "Loan product with ID X not found in Mifos X"
+- Auth failed (401) → "Authentication failed with Mifos X. Check credentials."
+- Server down (timeout/connect error) → "Cannot connect to Mifos X. Use manual paste instead."
+- Unknown error → "Failed to fetch loan product. Check Fineract configuration."
+
+Tested end-to-end with the demo server: select a product from the dropdown → backend fetches from Fineract → builds schema → validates → generates summary → returns to frontend. The whole flow takes about 2–3 seconds (vs 5–8 seconds for the LLM extraction path). Much faster because we skip the extraction LLM call entirely.
+
+~5 hrs · Full Fineract analysis pipeline working end-to-end! 🎉
+
+---
+
+### Week 8 (Jul 13 – Jul 18)
+
+**Day 59 · Jul 13 (Mon)**
+
+Production hardening day. Added three things to `fineract_service.py`:
+
+1. **Caching** — `list_loan_products()` now caches the result for 5 minutes (configurable `CACHE_TTL`). Loan products don't change every second, so there's no point hammering the Fineract API on every page load. Added `invalidate_products_cache()` for when you need a force-refresh.
+
+2. **Retry logic** — Wrapped all Fineract API calls with `@retry` from the `tenacity` library. 3 attempts, exponential backoff (2s → 4s → 10s), only retries on `TimeoutException` and `ConnectError` (NOT on 401/404 — those are permanent failures, retrying won't help).
+
+3. **Connection pooling** — The shared `httpx.AsyncClient` already handles this, but I tweaked the limits: max 5 keepalive connections, max 10 total. Good balance between connection reuse and not overwhelming the Fineract server.
+
+Also added `before_sleep_log` to the retry decorator so retries show up in the logs with WARNING level. Super helpful for debugging flaky connections.
+
+~4 hrs
+
+---
+
+**Day 60 · Jul 14 (Tue)**
+
+Built the currency formatting utilities in `pipeline/currency.py`. The problem: our app was hardcoded to INR/Rs everywhere, but Fineract supports loans in any currency. The demo server has products in INR, USD, and several African currencies.
+
+Created a map of 50+ ISO 4217 currency codes to their display symbols (₹, $, €, £, KSh, etc.). Then two formatting functions: `format_currency()` (whole numbers: "₹50,000") and `format_currency_precise()` (2 decimal places: "₹50,000.00"). Some currencies conventionally have a space before the number (like "KSh 500") so I handle that too.
+
+Updated `build_schema_from_fineract()` to use these formatters everywhere instead of hardcoded "Rs." strings. Now the app handles any currency that Fineract throws at it. Tested with INR, USD, KES and the formatting looked correct.
+
+Also added 25 realistic loan contract samples in `sample_contracts/` for testing — covering agriculture, business, housing, education, and vehicle loans. Each one is 15,000+ characters with full legal structure. Way better test data than the tiny samples I was using before.
+
+~5 hrs
+
+---
+
+**Day 61 · Jul 15 (Wed)**
+
+Built the `MifosProductPicker` React component for the frontend. It's a dropdown that loads loan products from Fineract and lets users select one for analysis (instead of pasting text).
+
+Features:
+- Auto-fetches products on mount via the `/loanproducts` endpoint
+- Loading spinner while fetching
+- Error state with retry and "clear & retry" buttons
+- Refresh button to force-fetch fresh data (calls `/loanproducts/refresh`)
+- Shows product count: "12 products available"
+- Graceful fallback when Fineract is unreachable
+
+Used the `useLoanProducts` custom hook to manage the fetch state. The error handling was important — if Fineract is down, the picker shows a friendly message instead of crashing the whole UI: "Could not connect to Mifos X. You can still paste your contract text manually."
+
+Also hooked it up to the i18n system so all strings are translatable.
+
+~4 hrs
+
+---
+
+**Day 62 · Jul 16 (Thu)**
+
+Enhanced the `/health` endpoint to include Fineract connectivity status. It now returns:
+
+```json
+{
+  "status": "ok",
+  "llm_provider": "gemini",
+  "fineract_reachable": true,
+  "fineract_url": "https://demo.mifos.community/fineract-provider",
+  "fineract_status": {
+    "reachable": true,
+    "status_code": 200,
+    "product_count": 15,
+    "error": null
+  }
+}
+```
+
+The `check_fineract_health()` function makes a lightweight call to the loan products endpoint and reports back. It catches `ConnectError`, `TimeoutException`, and non-200 status codes separately, so you can tell the difference between "server is down" and "credentials are wrong".
+
+Also built the loan simulator endpoint (`/simulator`) — takes loan amount, interest rate, tenure, and interest type, and returns a full amortization schedule with month-by-month EMI breakdown. Uses `Decimal` everywhere (learned that lesson the hard way in Phase 1, Day 34). Handles both flat-to-reducing rate conversion and zero-interest edge cases.
+
+~4 hrs
+
+---
+
+**Day 63 · Jul 17 (Fri)**
+
+Testing day. Wrote the `test_fineract_service.py` test suite — 444 lines covering:
+
+- **SSL configuration tests** (4 tests): default enabled, disabled returns false, valid CA bundle, missing CA bundle raises `FileNotFoundError`
+- **Shared HTTP client tests** (4 tests): client creation, reuse on subsequent calls, timeout configuration, connection pool limits
+- **Auth headers tests** (2 tests): correct format with Basic Auth + tenant header, base64 encoding verification
+- **API function tests** (3 tests): successful product list, HTTP error handling, empty response handling
+- **Product-to-text tests** (3 tests): complete data, minimal data, missing name fallback
+- **Health check tests** (3 tests): success returns reachable=true, connection error returns false, non-200 status
+
+All mocked with `unittest.mock` — no real Fineract calls needed. The mocking for async functions (`AsyncMock`) was tricky at first but makes the tests fast and reliable.
+
+One annoying issue: had to reset the global `_fineract_client` in `setup_method` for every test class, otherwise the singleton would leak state between tests. Added `teardown_method` cleanup too.
+
+~5 hrs
+
+---
+
+**Day 64 · Jul 18 (Sat)**
+
+Wrote `test_integration_fineract.py` — 416 lines of integration-style tests (still mocked, but testing the full flow through the service layer). Covers:
+
+- Listing products (success, empty list, auth error, network error)
+- Getting a specific product (success, not found)
+- Analysing a Fineract product through the pipeline (with mocked LLM)
+- SSL verification behaviour
+- Custom CA bundle
+- Timeout handling
+- Invalid JSON response
+- Authentication headers verification
+
+Used a realistic `MOCK_LOAN_PRODUCT` fixture with all the nested Fineract JSON structure (currency, interest type, repayment frequency, charges). Tests that need a real Fineract instance are marked with `@pytest.mark.integration` and skipped by default — you have to explicitly opt in with `RUN_INTEGRATION_TESTS=1`.
+
+Ran the full test suite — all passing. Coverage for `fineract_service.py` is at ~90%.
+
+~5 hrs
+
+---
+
+### Week 9 (Jul 20 – Jul 21)
+
+**Day 65 · Jul 20 (Mon)**
+
+Docker and deployment day. Updated `docker-compose.yml` to pass through all the Fineract environment variables to the backend container. Had to be careful with the Ollama URL — when running Ollama on the host and the backend in Docker, localhost doesn't work. Set the default to `http://host.docker.internal:11434` which Docker Desktop resolves to the host machine.
+
+Added the `PYTHONIOENCODING=utf-8` environment variable to the Docker config because emoji characters in the logger were causing `UnicodeEncodeError` on Windows hosts with cp1252 encoding. Took a while to track down.
+
+Also added a commented-out Ollama service block in docker-compose for users who want to run everything in Docker. Included GPU support instructions (NVIDIA and AMD) and model auto-pull on first start.
+
+Updated security checks: production mode now requires both `FINERACT_SSL_VERIFY=true` and a non-empty `API_KEY`. If either is missing, the app refuses to start with a clear error message.
+
+~4 hrs
+
+---
+
+**Day 66 · Jul 21 (Tue) — today**
+
+Documentation day. Rewrote the entire README from scratch with proper step-by-step setup instructions — Docker quick start (5 steps), manual installation (with OS-specific instructions for Windows PowerShell, Command Prompt, macOS, and Linux), LLM provider setup for all 5 providers, Tesseract OCR setup, API usage examples with curl, troubleshooting FAQ with 10 common issues, and a full configuration reference table.
+
+Also updated the project structure section and architecture diagram to reflect all the Fineract integration work.
+
+~3 hrs
+
+---
+
+## Phase 2 Progress Summary (so far)
+
+### What got done
+
+The complete Fineract / Mifos X integration is working end-to-end:
+
+- **Direct API connection** to Apache Fineract with Basic Auth, SSL verification, connection pooling, and retry logic
+- **Schema builder** (`build_schema_from_fineract`) that constructs loan data directly from Fineract's structured JSON — bypassing LLM extraction entirely for 100% accuracy
+- **Separate analysis pipeline** for Fineract products: deterministic data extraction + LLM-only for summary generation
+- **Caching layer** with 5-minute TTL and manual invalidation
+- **Frontend product picker** (`MifosProductPicker`) with error handling, refresh, and i18n
+- **Health check** with Fineract connectivity monitoring
+- **Loan simulator** with full amortization schedule generation
+- **Currency support** for 50+ international currencies
+- **860+ lines of tests** covering the Fineract integration
+- **Docker + CI/CD** updates for Fineract env vars
+
+### Key architectural decision
+
+The biggest decision was to **bypass LLM extraction for Fineract products**. When data comes from a structured API, using an LLM to "extract" it from a text representation is both slower and less accurate. Instead, we build the schema directly from the JSON and only use the LLM for generating the borrower-friendly summary. This gives us the best of both worlds: authoritative data + helpful language generation.
+
+### What's next
+
+- Fineract write-back: push analysis results back to Fineract as loan notes
+- Support for individual loan accounts (not just products)
+- Multi-language Fineract product analysis (Hindi summaries for Indian MFIs)
+- Performance benchmarking: Fineract path vs text extraction path
