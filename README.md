@@ -20,7 +20,7 @@
 
 ### 🌟 Transform Complex Loan Agreements into Clear, Borrower-Friendly Summaries
 
-[Features](#-features) • [Quick Start](#-quick-start) • [Documentation](#-documentation) • [Contributing](#-contributing) • [Demo](#-demo)
+[Features](#-features) • [Quick Start](#-quick-start) • [Documentation](#-documentation) • [Contributing](#-contributing)
 
 </div>
 
@@ -414,35 +414,6 @@ Found a bug? Have a feature request?
 
 ---
 
-## 🎯 Roadmap
-
-### Phase 1 ✅ (Completed - July 2026)
-- [x] PDF/DOCX/TXT upload & text extraction
-- [x] Multi-provider LLM support (Gemini, Ollama, Groq, Cerebras, HF)
-- [x] Timeout-based fallback system
-- [x] Hallucination detection (Levenshtein + TF-IDF)
-- [x] Risk scoring & BPS calculation
-- [x] Plain-language summarization
-- [x] WhatsApp export
-- [x] 95+ comprehensive tests
-
-### Phase 2 🚧 (August 2026)
-- [ ] Mifos X Fineract full integration
-- [ ] Multi-language support (Hindi, Spanish, French)
-- [ ] Advanced visualization (charts, graphs)
-- [ ] Loan comparison tool
-- [ ] Mobile app (React Native)
-- [ ] Batch processing for multiple contracts
-
-### Future Enhancements 🔮
-- [ ] Voice input/output
-- [ ] Blockchain verification
-- [ ] Smart contract generation
-- [ ] AI-powered negotiation suggestions
-- [ ] Integration with credit bureaus
-
----
-
 ## 📊 Project Stats
 
 | Metric | Value |
@@ -497,19 +468,6 @@ Built for **Google Summer of Code 2026** with the **Mifos Initiative**.
 GSoC 2026 Contributor | Mifos Initiative
 
 - GitHub: [@hopessugar](https://github.com/hopessugar)
-- Email: silkyvyas@example.com
-
----
-
-## 📞 Support
-
-Need help? Have questions?
-
-- 📖 Read the [Documentation](https://github.com/hopessugar/mifos-loan-summarizer/wiki)
-- 💬 Join our [Discord Community](https://discord.gg/mifos)
-- 🐛 Report bugs via [GitHub Issues](https://github.com/hopessugar/mifos-loan-summarizer/issues)
-- 📧 Email: support@mifos.org
-
 ---
 
 <div align="center">
