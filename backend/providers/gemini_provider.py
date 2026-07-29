@@ -25,7 +25,14 @@ class GeminiProvider(BaseLLMProvider):
 
         self._client = genai.Client(api_key=api_key)
 
-        model_name = settings.LLM_MODEL if 'gemini' in settings.LLM_MODEL.lower() else 'gemini-2.0-flash'
+        # Use LLM_FALLBACK_MODEL if Gemini is the fallback provider, otherwise check LLM_MODEL
+        fallback_model = settings.LLM_FALLBACK_MODEL
+        if fallback_model and 'gemini' in fallback_model.lower():
+            model_name = fallback_model
+        elif 'gemini' in settings.LLM_MODEL.lower():
+            model_name = settings.LLM_MODEL
+        else:
+            model_name = 'gemini-2.0-flash'
         self._model_name = model_name
         self._is_gemini = True  # Flag to skip instructor
 

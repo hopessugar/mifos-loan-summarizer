@@ -106,6 +106,10 @@ class Settings(BaseSettings):
     SUMMARY_MAX_TOKENS: int = Field(default_factory=lambda: int(os.getenv('SUMMARY_MAX_TOKENS') or 0) or _yaml.get('summary_max_tokens', 600))
     EXTRACTION_TEMPERATURE: float = Field(default_factory=lambda: float(os.getenv('EXTRACTION_TEMPERATURE') or 0) or _yaml.get('extraction_temperature', 0.1))
 
+    # Provider Timeout Settings
+    PRIMARY_PROVIDER_TIMEOUT: int = Field(default_factory=lambda: int(os.getenv('PRIMARY_PROVIDER_TIMEOUT') or 0) or _yaml.get('primary_provider_timeout', 30))
+    FALLBACK_ON_TIMEOUT: bool = Field(default_factory=lambda: os.getenv('FALLBACK_ON_TIMEOUT', '').lower() in ('true', '1', 'yes') if os.getenv('FALLBACK_ON_TIMEOUT') else _yaml.get('fallback_on_timeout', True))
+
     API_KEY: str = os.getenv('API_KEY', _yaml.get('api_key', ''))
     API_KEY_HEADER_NAME: str = os.getenv('API_KEY_HEADER_NAME', _yaml.get('api_key_header_name', 'X-API-Key'))
 

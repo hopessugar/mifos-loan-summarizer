@@ -854,11 +854,158 @@ Also updated the project structure section and architecture diagram to reflect a
 
 ---
 
+### Week 10 (Jul 22 – Jul 25)
+
+**Day 67 · Jul 22 (Wed)**
+
+Started work on proper Ollama integration. We had Ollama listed as a provider since Day 2 but the implementation was a basic stub — it just wrapped the OpenAI-compatible `/v1` endpoint and broke constantly because Ollama's OpenAI compatibility layer doesn't handle `instructor` well at all. The structured JSON output would randomly fail, or the model would hallucinate extra fields that didn't match the Pydantic schema.
+
+Decided to rewrite `ollama_provider.py` from scratch. The new `OllamaProvider` class (325 lines) takes a completely different approach — instead of pretending Ollama is OpenAI, it uses Ollama's **native HTTP API** directly via `httpx`. Three core methods:
+
+1. `generate_native()` — streaming text generation via `/api/generate`
+2. `generate_json()` — structured JSON output using Ollama's `format: "json"` parameter
+3. The OpenAI-compatible client is still there (`raw_client`) as a fallback for anything that needs it
+
+The `generate_native()` method uses streaming (`httpx.stream`) to handle long responses without timeout issues. Each chunk from Ollama is a JSON line with a `response` field — I accumulate them until `done: true`. Set a 120-second timeout because local models on CPU can be SLOW.
+
+Also set `supports_instructor` to `False` so the extraction pipeline knows to skip the instructor path and go straight to native generation.
+
+~6 hrs · This felt like the right call. Fighting instructor compatibility was a losing battle.
+
+---
+
+**Day 68 · Jul 23 (Thu)**
+
+Built the `generate_json()` method — this was the key piece for reliable extraction. Ollama has a native JSON mode where you pass `"format": "json"` in the request body, and the model is constrained to output valid JSON. This is WAY more reliable than asking the model to "please return JSON" in the prompt and hoping for the best.
+
+The implementation mirrors `generate_native()` (streaming via httpx) but adds the `format` parameter and a JSON validation step at the end. If the response somehow isn't valid JSON (rare but possible with smaller models), it falls back to `generate_native()` with a warning log. Belt and suspenders.
+
+Also added auto-model-pull: when `OllamaProvider.__init__()` runs, it calls `_ensure_model_available()` which checks if the configured model (e.g. `llama3.2:latest`) is actually downloaded. If not, it auto-pulls from the Ollama registry with streaming progress logs. This is important for first-time setup — users just set `OLLAMA_MODEL=llama3.2:latest` in `.env` and the app handles the rest. The pull has a 10-minute timeout for large models (7B+ can be several GB).
+
+The model name matching is fuzzy — `llama3.2` matches `llama3.2:latest` because users might not include the tag.
+
+~5 hrs
+
+---
+
+**Day 69 · Jul 24 (Fri)**
+
+Integrated Ollama into the extraction pipeline (`pipeline/extractor.py`). The extraction flow now has three tiers:
+
+1. **Instructor path** (Groq, Cerebras, HF) — structured output via the instructor library
+2. **Native JSON path** (Ollama, Gemini) — `generate_json()` for reliable structured output
+3. **Raw OpenAI path** — fallback for anything else
+
+The key change: when the extractor detects an Ollama provider (checks `provider.__class__.__name__`), it immediately skips the instructor attempt and goes to the native path. Before, it would try instructor, fail, catch the exception, and THEN fall back — wasting 5–10 seconds on every request. Now it's instant.
+
+For Ollama specifically, I prefer `generate_json()` over `generate_native()` because the JSON mode constraint dramatically reduces parse failures. In my testing with llama3.2, `generate_json()` produced valid JSON on 95%+ of calls, vs maybe 70% with `generate_native()` + prompt-based JSON instructions.
+
+Also set the Ollama timeout to 120 seconds (vs 60 for cloud providers) because local inference is inherently slower, especially on CPU-only machines.
+
+Did the same integration in `pipeline/summariser.py` — the summary chain now uses `generate_native()` for Ollama, which is better for free-text generation (no JSON constraint needed for summaries).
+
+~5 hrs
+
+---
+
+**Day 70 · Jul 25 (Sat)**
+
+Health check and monitoring day. Added Ollama-specific logic to the `/health` endpoint in `routers/health.py`. The health check now:
+
+1. Detects if Ollama is the active provider (`settings.LLM_PRIMARY == 'ollama'`)
+2. Skips the API key check (Ollama doesn't need one — it's local)
+3. Reports `OLLAMA_MODEL` instead of `LLM_MODEL` in the response
+4. Calls `health_check_detailed()` for rich status info
+
+The `health_check_detailed()` method on `OllamaProvider` returns a detailed status dict:
+
+```json
+{
+  "running": true,
+  "base_url": "http://localhost:11434",
+  "model": "llama3.2:latest",
+  "model_available": true,
+  "available_models": ["llama3.2:latest", "phi3:mini"]
+}
+```
+
+If Ollama isn't running, it returns `running: false` with a helpful error message telling the user to start it. If it's running but the model isn't downloaded, `model_available` is false — the frontend can use this to show a "model not found" warning.
+
+Also updated the `provider_configured` check — previously it only checked for API keys (Gemini, Groq, etc.), so Ollama would always show as "not configured". Now `is_ollama` is an explicit override.
+
+~4 hrs
+
+---
+
+### Week 11 (Jul 27 – Jul 29)
+
+**Day 71 · Jul 27 (Mon)**
+
+Error handling hardening for Ollama. Local LLM inference has failure modes that cloud APIs don't — the server can be down, the model can be missing, the machine can run out of RAM mid-generation. Went through every Ollama code path and made sure each failure produces a clear, actionable error message:
+
+- `httpx.ConnectError` → "Cannot connect to Ollama at http://localhost:11434. Please ensure Ollama is running: 1. Install: ollama.com/download, 2. Start: ollama serve, 3. Pull model: ollama pull llama3.2"
+- `httpx.TimeoutException` → "Ollama generation timed out after 120s. The model 'llama3.2' may be too large for your hardware. Try a smaller model like 'llama3.2:1b' or 'phi3:mini'."
+- HTTP 404 from Ollama → model not found, triggers auto-pull
+- Invalid JSON from `generate_json()` → graceful fallback to `generate_native()` with a warning log
+
+The timeout suggestion is genuinely helpful — I tested on a machine with 8GB RAM and llama3.1:8b would OOM halfway through generation. The error message now explicitly suggests smaller alternatives.
+
+Also added `ConnectError` detection by class name as a catch-all, because sometimes httpx wraps the connection error in a generic Exception.
+
+~4 hrs
+
+---
+
+**Day 72 · Jul 28 (Tue)**
+
+Configuration and Docker day. Updated `.env.example` with a comprehensive Ollama section. Added a table of recommended models sorted by size: llama3.2:1b (fastest, good for testing), llama3.2:latest (balanced), phi3:mini, mistral:latest, qwen2.5:7b, llama3.1:8b, gemma2:9b. Each with param count and a one-liner description. Made it dead simple to switch — just change two lines (`LLM_PRIMARY=ollama` and `OLLAMA_MODEL=llama3.2:latest`).
+
+Added `OLLAMA_BASE_URL` (default `http://localhost:11434`) and `OLLAMA_MODEL` (default `llama3.2:latest`) to the config. The base URL is important for Docker — when the backend runs in a container but Ollama runs on the host, you need `http://host.docker.internal:11434` instead of localhost. Documented this in the env file.
+
+Updated `schemas/request.py` to include `'ollama'` in the `VALID_PROVIDERS` literal type, and made sure the provider registry has the lazy import (`_import_ollama`) so Ollama dependencies only load when actually needed — users who don't use Ollama shouldn't need `langchain-ollama` installed.
+
+Also added `langchain-ollama>=0.1.3` to `requirements.txt` for the LangChain integration path (though we primarily use the native API now).
+
+~4 hrs
+
+---
+
+**Day 73 · Jul 28 (Tue) — continued**
+
+Provider fallback and summary routing. Fixed a subtle bug in `ai_service.py` where the summary generation step would always default to the Gemini provider, even when extraction succeeded with Ollama. The issue was in the `summary_provider` resolution line — it checks if the `provider_used` string contains "llama" (case-insensitive) to route to Ollama for summarization. Without this, you'd extract with Ollama but summarize with Gemini, which fails if the user doesn't have a Gemini API key.
+
+The fix: `ProviderRegistry.get('ollama' if 'llama' in provider_used.lower() else 'gemini')`. Not the prettiest code, but it works. The provider name from Ollama contains the model name (e.g., "llama3.2:latest"), so checking for "llama" catches most cases. If someone uses a non-llama model through Ollama (like mistral or phi3), the `'/'` split handles the `ollama/mistral` format.
+
+Also tested the full end-to-end flow with Ollama as both primary and fallback provider. Works well — you can set `LLM_PRIMARY=ollama` and `LLM_FALLBACK=gemini` to use local inference by default but fall back to cloud if Ollama is down. The provider registry singleton pattern means the Ollama client is only initialized once.
+
+~3 hrs
+
+---
+
+**Day 74 · Jul 29 (Tue) — today**
+
+Testing and documentation for the Ollama integration. Updated `test_integration_providers.py` and `test_extractor.py` to cover Ollama-specific paths — mocked the `OllamaProvider` with `generate_json()` and `generate_native()` responses, tested the instructor skip logic, tested timeout handling, and tested the auto-model-pull flow.
+
+Key test scenarios:
+- Ollama provider skips instructor and goes straight to native JSON path
+- `generate_json()` produces valid extraction output
+- `generate_json()` failure falls back to `generate_native()`
+- Connection refused produces actionable error message
+- Timeout produces hardware suggestion
+- Health check returns detailed status when Ollama is active
+- Provider registry lazy-loads Ollama only when requested
+
+Also updated the README with Ollama setup instructions — install Ollama, pull a model, set two env vars, done. Added a "Why Ollama?" section explaining the benefits: no API key needed, data stays local (important for sensitive loan documents), no rate limits, works offline. Listed the trade-offs too: slower than cloud APIs, needs decent hardware, smaller models = lower quality extraction.
+
+~4 hrs
+
+---
+
 ## Phase 2 Progress Summary (so far)
 
 ### What got done
 
-The complete Fineract / Mifos X integration is working end-to-end:
+**Fineract / Mifos X integration** — working end-to-end:
 
 - **Direct API connection** to Apache Fineract with Basic Auth, SSL verification, connection pooling, and retry logic
 - **Schema builder** (`build_schema_from_fineract`) that constructs loan data directly from Fineract's structured JSON — bypassing LLM extraction entirely for 100% accuracy
@@ -871,13 +1018,29 @@ The complete Fineract / Mifos X integration is working end-to-end:
 - **860+ lines of tests** covering the Fineract integration
 - **Docker + CI/CD** updates for Fineract env vars
 
-### Key architectural decision
+**Ollama integration** — full local LLM support:
 
-The biggest decision was to **bypass LLM extraction for Fineract products**. When data comes from a structured API, using an LLM to "extract" it from a text representation is both slower and less accurate. Instead, we build the schema directly from the JSON and only use the LLM for generating the borrower-friendly summary. This gives us the best of both worlds: authoritative data + helpful language generation.
+- **`OllamaProvider`** class (325 lines) with native HTTP API via `httpx` — no more fighting OpenAI compatibility
+- **`generate_native()`** — streaming text generation for summaries
+- **`generate_json()`** — Ollama's native JSON mode for reliable structured extraction (95%+ valid JSON vs ~70% with prompt-only)
+- **Auto-model-pull** — checks if configured model is available on startup, auto-downloads if missing (with streaming progress)
+- **Health check detailed** — `/health` endpoint returns Ollama running status, model availability, and list of installed models
+- **Extraction pipeline integration** — Ollama skips instructor, goes straight to native JSON path (saves 5–10s per request)
+- **Summary pipeline integration** — uses `generate_native()` for free-text summary generation
+- **Provider fallback** — Ollama can be primary with cloud fallback, or vice versa
+- **Error messages** — actionable messages for connection refused, timeout, model not found, OOM situations
+- **Docker support** — `host.docker.internal` URL for host-to-container Ollama access
+- **Configuration** — `OLLAMA_BASE_URL`, `OLLAMA_MODEL`, recommended model list in `.env.example`
+
+### Key architectural decisions
+
+1. **Bypass LLM extraction for Fineract products.** When data comes from a structured API, using an LLM to "extract" it is both slower and less accurate. We build the schema directly from the JSON and only use the LLM for summary generation.
+
+2. **Native Ollama API over OpenAI compatibility.** Ollama's OpenAI-compatible endpoint works for basic chat, but fails with instructor and structured output libraries. Using the native `/api/generate` endpoint with `format: "json"` is dramatically more reliable and gives us access to Ollama-specific features like streaming progress and model management.
 
 ### What's next
 
 - Fineract write-back: push analysis results back to Fineract as loan notes
 - Support for individual loan accounts (not just products)
-- Multi-language Fineract product analysis (Hindi summaries for Indian MFIs)
-- Performance benchmarking: Fineract path vs text extraction path
+- Performance benchmarking: Ollama vs cloud providers for extraction accuracy
+- Ollama model recommendation engine based on hardware detection
