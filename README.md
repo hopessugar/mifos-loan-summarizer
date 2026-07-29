@@ -20,7 +20,7 @@
 
 ### 🌟 Transform Complex Loan Agreements into Clear, Borrower-Friendly Summaries
 
-[Features](#-features) • [Quick Start](#-quick-start) • [Documentation](#-documentation) • [Contributing](#-contributing) • [Demo](#-demo)
+[Features](#-features) • [Quick Start](#-quick-start) • [Documentation](#-documentation) • [Contributing](#-contributing)
 
 </div>
 
