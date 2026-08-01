@@ -1,0 +1,222 @@
+                SUBPRIME AUTO LOAN AGREEMENT
+                ─────────────────────────────
+             (Pre-Owned Vehicle — Higher Risk Lending)
+
+Loan Number: WFC-USED-2024-09-384721
+Origination Date: September 5, 2024
+
+═══════════════════════════════════════════════════════════════════════════════
+LENDER:
+   Westlake Financial Services
+   4751 Wilshire Blvd, Suite 100, Los Angeles, CA 90010
+   CA Finance Lender License: 603 F225
+   Phone: (888) 555-0347
+
+ASSIGNOR/DEALER:
+   DriveTime Automotive Group, Inc.
+   Store #4128, 9450 I-10 Service Road, San Antonio, TX 78230
+   TX Dealer License: P-274918
+
+BORROWER:
+   Christopher "Chris" Medina
+   SSN: XXX-XX-4172
+   DOB: 04/30/1988
+   Address: 1628 Culebra Road, Apt 204, San Antonio, TX 78228
+   Employment: Line Cook, Pappadeaux Seafood Kitchen (2 years, 3 months)
+   Gross Monthly Income: $3,200.00
+
+CO-BORROWER: None
+
+═══════════════════════════════════════════════════════════════════════════════
+                    VEHICLE DESCRIPTION
+═══════════════════════════════════════════════════════════════════════════════
+
+Year/Make/Model: 2020 Nissan Altima 2.5 S
+VIN: 1N4BL4BV5LC284719
+Exterior: Storm Blue
+Mileage at Delivery: 48,217 miles
+Condition: USED (Certified Pre-Owned — DriveTime Limited Warranty)
+
+Vehicle Retail Price:                     $18,995.00
+DriveTime Limited Warranty (incl.):       Included (6 months/6,000 miles)
+
+═══════════════════════════════════════════════════════════════════════════════
+                    FINANCING DETAILS
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Cash Price:                            $18,995.00
+2. TX Sales Tax (6.25%):                  $1,187.19
+3. Title/Registration/Fees:               $208.00
+4. Documentation Fee:                     $150.00
+   ─────────────────────────────────────────
+5. Total Delivered Price:                 $20,540.19
+
+6. Down Payment (Cash):                  ($2,000.00)
+7. Down Payment (Deferred — see below):  ($500.00)
+   ─────────────────────────────────────────
+8. Net Amount Financed:                   $18,040.19
+
+                    TRUTH IN LENDING DISCLOSURES
+
+┌──────────────────┬──────────────────┬──────────────────┬──────────────────┐
+│  ANNUAL          │  FINANCE         │  AMOUNT          │  TOTAL OF        │
+│  PERCENTAGE      │  CHARGE          │  FINANCED        │  PAYMENTS        │
+│  RATE            │                  │                  │                  │
+│                  │                  │                  │                  │
+│    18.99%        │  $12,891.73      │  $18,040.19      │  $30,931.92      │
+└──────────────────┴──────────────────┴──────────────────┴──────────────────┘
+
+PAYMENT SCHEDULE:
+   72 monthly payments of $429.61
+   First Payment Due: October 19, 2024
+   Final Payment Due: September 19, 2030
+   Payment Frequency: Bi-monthly option available (every 2 weeks) upon request
+
+DEFERRED DOWN PAYMENT:
+   $500.00 deferred down payment due in two installments:
+   - $250.00 due October 5, 2024
+   - $250.00 due November 5, 2024
+   FAILURE TO PAY DEFERRED DOWN PAYMENT CONSTITUTES DEFAULT.
+
+═══════════════════════════════════════════════════════════════════════════════
+                    CREDIT PROFILE
+═══════════════════════════════════════════════════════════════════════════════
+
+Credit Score: TransUnion 528 | Equifax 541
+Credit Classification: SUBPRIME (Deep Subprime per industry classification)
+
+Credit History Summary:
+   - Chapter 7 Bankruptcy: Filed 03/2021, Discharged 06/2021
+   - Post-bankruptcy: 3 years clean history
+   - 2 open credit cards (secured), combined limit $1,000
+   - Previous auto loan: Charged off 01/2021 (included in BK)
+   - Medical collections: $2,400 (included in BK, discharged)
+   - No new derogatory since discharge
+
+Risk Factors for Rate Determination:
+   1. Prior bankruptcy within 5 years
+   2. Limited post-bankruptcy credit history
+   3. High debt-to-income ratio (estimated 54% with this loan)
+   4. No previous successful auto loan completion
+
+Rate Justification: The APR of 18.99% reflects the elevated credit risk
+associated with the borrower's credit profile. This rate includes
+compensation for expected higher default rates in this credit tier.
+
+═══════════════════════════════════════════════════════════════════════════════
+                    INSURANCE REQUIREMENTS
+═══════════════════════════════════════════════════════════════════════════════
+
+MANDATORY COVERAGE:
+   Comprehensive and Collision insurance required at all times.
+   Maximum Deductible: $500 (comprehensive), $500 (collision)
+   Lienholder: Westlake Financial Services
+               P.O. Box 997592, Sacramento, CA 95899
+
+CURRENT POLICY:
+   Carrier: SafeAuto Insurance Company
+   Policy #: SA-TX-04721847
+   Effective: 09/05/2024 to 03/05/2025
+   Monthly Premium: $247.00 (included in borrower's budget, not in loan)
+
+FORCE-PLACED INSURANCE WARNING:
+   If Borrower fails to maintain required insurance, Lender may purchase
+   Collateral Protection Insurance (CPI) at Borrower's expense. CPI typically
+   costs significantly more than standard insurance and protects ONLY the
+   lender's interest, NOT the borrower. CPI cost may be added to the loan
+   balance. Borrower may cancel CPI by providing proof of qualifying coverage.
+
+═══════════════════════════════════════════════════════════════════════════════
+               GPS TRACKING DEVICE DISCLOSURE
+═══════════════════════════════════════════════════════════════════════════════
+
+NOTICE: A GPS tracking device and/or starter interrupt device has been
+installed in the vehicle. By signing this agreement, Borrower consents to:
+
+(a) The installation and use of a GPS device for the purpose of locating the
+    vehicle in the event of default and repossession;
+(b) The possible use of a starter interrupt device that may disable the
+    vehicle's starter if payments become significantly delinquent;
+(c) Lender will provide at least 48 hours' notice before activating any
+    starter interrupt function.
+
+The GPS device WILL NOT be used for any purpose other than collateral
+recovery. Borrower's location data will not be sold or shared with third
+parties except as required by law.
+
+Device Manufacturer: PassTime GPS
+Unit ID: PT-SA-0047218
+
+Borrower Acknowledges and Consents:  Initials: _C.M._
+
+═══════════════════════════════════════════════════════════════════════════════
+                    DEFAULT AND REMEDIES
+═══════════════════════════════════════════════════════════════════════════════
+
+DEFAULT occurs if:
+(a) Any payment is 10 or more days past due;
+(b) Deferred down payment is not made when due;
+(c) Insurance coverage lapses;
+(d) Borrower provides materially false information;
+(e) Vehicle is damaged and not repaired;
+(f) Borrower leaves the state of Texas for 30+ days without notice.
+
+LATE FEE: $25.00 or 5% of the scheduled payment, whichever is greater,
+assessed after a 10-day grace period.
+
+NSF/RETURNED PAYMENT FEE: $30.00 per occurrence.
+
+REPOSSESSION: Upon default, Lender may repossess the vehicle without prior
+notice (except as required by Texas law). Borrower agrees to make the
+vehicle available and shall not conceal, damage, or remove the vehicle
+from the state.
+
+DEFICIENCY: If the vehicle is repossessed and sold, Borrower may owe a
+deficiency balance (the difference between the sale price and the amount
+owed). Texas law permits deficiency judgments. Lender must provide notice of
+sale and an accounting of the disposition.
+
+VOLUNTARY SURRENDER: Borrower may voluntarily surrender the vehicle at any
+time. Voluntary surrender does NOT extinguish the debt. Borrower remains
+liable for any deficiency.
+
+═══════════════════════════════════════════════════════════════════════════════
+                         ARBITRATION CLAUSE
+═══════════════════════════════════════════════════════════════════════════════
+
+PLEASE READ CAREFULLY. THIS AFFECTS YOUR LEGAL RIGHTS.
+
+Any dispute arising out of or relating to this contract shall be resolved by
+binding arbitration under the Federal Arbitration Act and the rules of the
+American Arbitration Association (AAA). Either party may elect arbitration.
+
+CLASS ACTION WAIVER: Borrower agrees that any arbitration shall be conducted
+on an individual basis only. Borrower waives the right to participate in a
+class action lawsuit or class-wide arbitration.
+
+OPT-OUT: Borrower may opt out of this arbitration clause by sending written
+notice to Westlake Financial Services within 60 days of signing this contract.
+
+Borrower Opt-Out Election:  [ ] I opt out of arbitration
+                            [X] I agree to arbitration
+
+Borrower Initials: _C.M._
+
+═══════════════════════════════════════════════════════════════════════════════
+                         SIGNATURES
+═══════════════════════════════════════════════════════════════════════════════
+
+BUYER:
+_________________________________          Date: 09/05/2024
+Christopher Medina
+
+DEALER:
+_________________________________          Date: 09/05/2024
+Sandra Vega, F&I Manager
+DriveTime Store #4128, San Antonio
+
+ASSIGNMENT WITHOUT RECOURSE:
+Dealer assigns this contract to Westlake Financial Services.
+
+_________________________________          Date: 09/06/2024
+DriveTime Automotive Group, Inc.

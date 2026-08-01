@@ -1,0 +1,274 @@
+U.S. SMALL BUSINESS ADMINISTRATION
+SBA 7(a) LOAN AUTHORIZATION AND AGREEMENT
+
+═══════════════════════════════════════════════════════════════════════════════
+LOAN AUTHORIZATION
+═══════════════════════════════════════════════════════════════════════════════
+
+SBA Loan Number: 7A-2025-04-0029481
+SBA Authorization Date: April 3, 2025
+Approval Office: SBA District Office — Portland, OR
+
+LENDER (SBA Preferred Lender — PLP):
+   Pacific West Community Bank
+   7200 SW Macadam Avenue, Suite 200, Portland, OR 97219
+   SBA Lender ID: PLP-OR-047182
+   FDIC Certificate #: 58412
+   Contact: Commercial Lending Division, (503) 555-0214
+
+BORROWER (Small Business):
+   Cascade Brewing & Taproom, LLC
+   Oregon Secretary of State Entity #: 1482947-91
+   Principal Place of Business: 628 NE Alberta Street, Portland, OR 97211
+   NAICS Code: 312120 (Breweries)
+   Year Established: 2019
+   Number of Employees: 14 (including 3 part-time)
+
+PERSONAL GUARANTOR(S):
+   1. Ryan Patrick O'Sullivan (51% ownership — Managing Member)
+      SSN: XXX-XX-7428
+      DOB: 09/12/1985
+      Home Address: 3014 SE Clinton Street, Portland, OR 97202
+      Net Worth (Personal Financial Statement): $284,000
+
+   2. Emily Chen-O'Sullivan (49% ownership — Member)
+      SSN: XXX-XX-3195
+      DOB: 02/28/1987
+      Home Address: Same as above
+      Net Worth (Personal Financial Statement): $247,000
+
+═══════════════════════════════════════════════════════════════════════════════
+                       LOAN PURPOSE AND USE OF PROCEEDS
+═══════════════════════════════════════════════════════════════════════════════
+
+PRIMARY PURPOSE: Business expansion — second taproom location build-out,
+brewing equipment acquisition, and working capital.
+
+DETAILED USE OF PROCEEDS:
+
+   Leasehold Improvements (new location):     $185,000.00
+     - Commercial kitchen build-out
+     - Taproom bar construction & seating
+     - ADA-compliant restroom renovation
+     - HVAC and plumbing upgrades
+     - Signage and exterior improvements
+
+   Brewing Equipment:                         $127,000.00
+     - 15-barrel brewhouse system (Specific Mechanical)
+     - (4) 30-barrel fermenters
+     - Glycol chiller system
+     - Canning line (Wild Goose 250)
+
+   Working Capital:                           $55,000.00
+     - Initial inventory (hops, grain, yeast)
+     - Staff hiring and training (6 new hires)
+     - Marketing for grand opening
+     - Rent deposits and utility setup
+
+   Debt Refinance:                            $33,000.00
+     - Payoff existing equipment line (Umpqua Bank)
+
+   SBA Guaranty Fee (financed):               $15,640.00
+   ─────────────────────────────────────────────────────
+   TOTAL LOAN AMOUNT:                        $415,640.00
+
+═══════════════════════════════════════════════════════════════════════════════
+                           LOAN TERMS
+═══════════════════════════════════════════════════════════════════════════════
+
+1. LOAN AMOUNT: $415,640.00
+
+2. INTEREST RATE: Variable
+   Index: Wall Street Journal Prime Rate
+   Current Prime (as of 04/01/2025): 7.50%
+   Spread: Prime + 2.75%
+   Current Effective Rate: 10.25%
+   Rate Adjustment: Monthly (on the first business day)
+   Maximum Rate (Ceiling): None per SBA regulations
+   Minimum Rate (Floor): 2.75% (spread only)
+
+3. SBA GUARANTY:
+   Guaranty Percentage: 75% (loans over $150,000)
+   SBA Guaranteed Portion: $311,730.00
+   Lender's Unguaranteed Portion: $103,910.00
+
+4. SBA GUARANTY FEE:
+   Fee Rate: 3.75% of guaranteed portion (loans $150,001-$700,000)
+   Fee Amount: $11,689.88
+   Additional Fee (first year): Calculated per SBA SOP 50-10(7)
+   Total Guaranty Fee: $15,640.00 (financed into loan)
+
+5. LOAN TERM: 120 months (10 years)
+   Maturity Date: April 1, 2035
+
+6. MONTHLY PAYMENT (estimated at current rate):
+   Principal & Interest: $5,537.24/month
+   Payments begin: May 1, 2025
+   NOTE: Payment amount will adjust with Prime Rate changes.
+
+7. AMORTIZATION: Fully amortizing over 120 months. No balloon payment.
+
+═══════════════════════════════════════════════════════════════════════════════
+                         COLLATERAL
+═══════════════════════════════════════════════════════════════════════════════
+
+The following collateral secures this loan:
+
+A. BUSINESS ASSETS (Blanket Lien):
+   UCC-1 Financing Statement filed with Oregon Secretary of State
+   Covers: All business assets, including but not limited to inventory,
+   accounts receivable, equipment, furniture, fixtures, and general
+   intangibles of Cascade Brewing & Taproom, LLC.
+
+B. SPECIFIC EQUIPMENT:
+   - 15-barrel brewhouse system and associated fermentation equipment
+   - Wild Goose 250 canning line
+   Serial numbers and descriptions per attached Equipment Schedule A.
+
+C. LEASEHOLD INTEREST:
+   Assignment of lease for new location: 1847 NW 23rd Avenue, Portland, OR
+   Landlord consent obtained: YES (letter dated 03/15/2025)
+   Lease Term: 10 years with (2) 5-year renewal options
+   Monthly Rent: $7,200 (NNN)
+
+D. PERSONAL GUARANTEES:
+   Unlimited personal guarantees from all owners with 20%+ ownership.
+   - Ryan Patrick O'Sullivan (51%): UNLIMITED PERSONAL GUARANTY
+   - Emily Chen-O'Sullivan (49%): UNLIMITED PERSONAL GUARANTY
+
+E. LIFE INSURANCE ASSIGNMENT:
+   Key Person: Ryan Patrick O'Sullivan
+   Policy Amount: $415,640 (decreasing term, matching loan balance)
+   Carrier: Pacific Life Insurance Company
+   Policy #: PL-OR-2025-0472918
+   Lender named as collateral assignee.
+
+═══════════════════════════════════════════════════════════════════════════════
+                    SBA-SPECIFIC REQUIREMENTS
+═══════════════════════════════════════════════════════════════════════════════
+
+A. ELIGIBILITY CERTIFICATION:
+   Borrower certifies:
+   (1) Business is a for-profit entity operating in the United States.
+   (2) Business qualifies as "small" per SBA size standards for NAICS 312120
+       (less than $41.5 million in average annual receipts).
+   (3) Borrower has been unable to obtain credit elsewhere on reasonable
+       terms (Credit Elsewhere Test — documented in lender's file).
+   (4) Borrower is not delinquent on any federal debt.
+   (5) No principal of the business is presently incarcerated, on probation,
+       or on parole.
+   (6) Business is not engaged in lending, speculation, or pyramid sales.
+
+B. EQUITY INJECTION:
+   Required Equity (10% minimum for startups/expansion): $46,182.00
+   Borrower Equity Injected: $52,000.00 (verified — business savings)
+   Source: Retained earnings from existing taproom operations.
+
+C. STANDBY AGREEMENT:
+   Any standby debt must be on full standby for the life of the SBA loan
+   (no payments of principal or interest). No standby debt identified.
+
+D. SBA FORM 1919 (Borrower Information Form):
+   Completed and submitted for all principals. Background checks cleared.
+
+E. IRS TAX TRANSCRIPT VERIFICATION:
+   IRS Form 4506-C processed. Business and personal tax returns verified
+   for 2022, 2023, and 2024 (filed extension, accepted).
+
+F. BUSINESS FINANCIAL ANALYSIS:
+   Revenue (2024): $847,200
+   Revenue (2023): $691,400
+   Revenue (2022): $512,800
+   Net Income (2024): $94,100
+   Debt Service Coverage Ratio (historical): 1.42x
+   Projected DSCR (with new location, Year 2): 1.58x
+   Global Cash Flow (with personal income): ADEQUATE
+
+═══════════════════════════════════════════════════════════════════════════════
+                    AFFIRMATIVE COVENANTS
+═══════════════════════════════════════════════════════════════════════════════
+
+Borrower agrees to:
+
+(1) Provide annual financial statements (compiled by CPA) within 120 days
+    of fiscal year-end.
+(2) Provide annual personal financial statements for all guarantors.
+(3) Maintain hazard insurance on all collateral, naming Lender as loss payee.
+(4) Maintain all required business licenses and permits (including OLCC
+    liquor license, Multnomah County health permits).
+(5) Pay all taxes when due.
+(6) Use loan proceeds ONLY for purposes described in this authorization.
+(7) Maintain a minimum Debt Service Coverage Ratio of 1.20x.
+(8) Allow Lender to inspect business premises and records upon reasonable
+    notice.
+
+═══════════════════════════════════════════════════════════════════════════════
+                    NEGATIVE COVENANTS
+═══════════════════════════════════════════════════════════════════════════════
+
+Without prior written consent of Lender, Borrower shall NOT:
+
+(1) Incur additional debt exceeding $25,000 in aggregate.
+(2) Change business ownership structure or transfer more than 25% of
+    ownership interests.
+(3) Acquire or merge with another business.
+(4) Sell, lease, or transfer a substantial portion of business assets.
+(5) Make distributions or owner draws exceeding reasonable compensation
+    (defined as $120,000/year combined for both owners).
+(6) Relocate the principal place of business without notice.
+(7) Change the nature of the business.
+
+═══════════════════════════════════════════════════════════════════════════════
+                    DEFAULT AND REMEDIES
+═══════════════════════════════════════════════════════════════════════════════
+
+EVENTS OF DEFAULT:
+(a) Failure to make any payment within 10 days of due date.
+(b) Breach of any covenant, representation, or warranty.
+(c) Filing of bankruptcy petition by or against Borrower.
+(d) Material adverse change in Borrower's financial condition.
+(e) Death of a guarantor without replacement guaranty/collateral.
+(f) Default on any other obligation to Lender or SBA.
+(g) Loss of required licenses (especially OLCC license).
+
+LATE FEE: 5% of the overdue payment, assessed after 10-day grace period.
+
+REMEDIES:
+Lender may, upon default:
+(1) Declare the entire balance immediately due and payable.
+(2) Exercise all rights under the UCC to seize and sell collateral.
+(3) Pursue personal guarantors for the full loan balance.
+(4) Request SBA to purchase the guaranteed portion of the loan (SBA repair).
+
+SBA LIQUIDATION: If default is not cured, the guaranteed portion may be
+submitted to SBA for purchase. SBA may then pursue all available remedies
+through the Department of Justice and Treasury Offset Program.
+
+═══════════════════════════════════════════════════════════════════════════════
+                         SIGNATURES
+═══════════════════════════════════════════════════════════════════════════════
+
+BORROWER:
+_________________________________          Date: 04/03/2025
+Cascade Brewing & Taproom, LLC
+By: Ryan Patrick O'Sullivan, Managing Member
+
+
+PERSONAL GUARANTOR:
+_________________________________          Date: 04/03/2025
+Ryan Patrick O'Sullivan, Individually
+
+_________________________________          Date: 04/03/2025
+Emily Chen-O'Sullivan, Individually
+
+
+LENDER:
+_________________________________          Date: 04/03/2025
+Catherine Morales
+Senior Vice President, SBA Lending
+Pacific West Community Bank
+
+SBA AUTHORIZATION:
+This loan has been authorized under delegated authority (PLP).
+SBA review is not required prior to closing.
+Filed in SBA's E-Tran system: 04/03/2025

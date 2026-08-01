@@ -1,0 +1,219 @@
+                    RETAIL INSTALLMENT SALE CONTRACT
+                    ─────────────────────────────────
+                    (Motor Vehicle — Simple Finance)
+
+Contract Number: RISC-2025-TX-0047283
+Date: February 22, 2025
+State: Texas
+
+═══════════════════════════════════════════════════════════════════════════════
+SELLER/DEALER:
+   Lone Star Toyota of Dallas
+   3800 West Plano Parkway, Plano, TX 75075
+   TX Motor Vehicle Dealer License: P-147829
+   Phone: (972) 555-0288
+
+CREDITOR/ASSIGNEE:
+   Toyota Motor Credit Corporation (TMCC)
+   P.O. Box 105386, Atlanta, GA 30348
+   NMLS #: Not applicable (auto lender)
+
+BUYER:
+   Ashley Nicole Reeves
+   SSN: XXX-XX-5814
+   TX Driver License: 08472918
+   DOB: 12/09/1995
+   Address: 2104 Harvest Hill Road, Unit 7, Dallas, TX 75234
+   Phone: (469) 555-0193
+   Email: a.reeves95@email.com
+
+CO-BUYER: None
+
+═══════════════════════════════════════════════════════════════════════════════
+                    VEHICLE DESCRIPTION
+═══════════════════════════════════════════════════════════════════════════════
+
+Year/Make/Model: 2025 Toyota RAV4 XLE Premium AWD
+VIN: JTMAB3FV1RD847291
+Exterior Color: Blueprint (8X8)
+Interior: Black SofTex
+Odometer: 12 miles (new vehicle)
+Condition: NEW
+
+MSRP:                                    $36,620.00
+Dealer-Installed Accessories:
+   All-Weather Floor Liners (PT908-42215): $269.00
+   Door Edge Guards:                       $115.00
+   ────────────────────────────────────────
+Total Vehicle Price:                      $37,004.00
+
+═══════════════════════════════════════════════════════════════════════════════
+               ITEMIZATION OF AMOUNT FINANCED
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Cash Price of Vehicle:                $37,004.00
+2. Sales Tax (TX 6.25%):                 $2,312.75
+3. Title Fee:                            $33.00
+4. License & Registration:               $75.00
+5. Documentation Fee:                    $150.00
+6. State Inspection Fee:                 $25.75
+   ─────────────────────────────────────────
+7. TOTAL CASH DELIVERED PRICE:           $39,600.50
+
+8. TRADE-IN ALLOWANCE:
+   2019 Honda Civic LX (VIN: ...8742)    ($12,500.00)
+   Less: Payoff to Honda Financial        $4,218.47
+   Net Trade-In Credit:                  ($8,281.53)
+
+9. DOWN PAYMENT (Cash):                  ($3,500.00)
+
+10. Toyota Rebate/Incentive:             ($1,000.00)
+    ─────────────────────────────────────────
+11. UNPAID BALANCE OF CASH PRICE:        $26,818.97
+
+12. OTHER CHARGES (included in financing):
+    (a) GAP Waiver (voluntary):          $895.00
+    (b) Toyota Care Plus (maintenance):  $575.00
+    (c) Fabric/Paint Protection:         $399.00
+    ─────────────────────────────────────────
+13. AMOUNT FINANCED:                     $28,687.97
+
+═══════════════════════════════════════════════════════════════════════════════
+                      TRUTH IN LENDING DISCLOSURES
+                (Required by Federal Regulation Z — 12 CFR 1026)
+═══════════════════════════════════════════════════════════════════════════════
+
+┌──────────────────┬──────────────────┬──────────────────┬──────────────────┐
+│  ANNUAL          │  FINANCE         │  AMOUNT          │  TOTAL OF        │
+│  PERCENTAGE      │  CHARGE          │  FINANCED        │  PAYMENTS        │
+│  RATE            │                  │                  │                  │
+│                  │ The dollar       │ The amount of    │ The amount you   │
+│ The cost of your │ amount the       │ credit provided  │ will have paid   │
+│ credit as a      │ credit will      │ to you or on     │ after you have   │
+│ yearly rate.     │ cost you.        │ your behalf.     │ made all         │
+│                  │                  │                  │ payments as      │
+│                  │                  │                  │ scheduled.       │
+│                  │                  │                  │                  │
+│     4.99%        │   $4,485.76      │  $28,687.97      │  $33,173.73      │
+└──────────────────┴──────────────────┴──────────────────┴──────────────────┘
+
+PAYMENT SCHEDULE:
+   Number of Payments: 60
+   Payment Amount: $552.90/month
+   First Payment Due: April 1, 2025
+   Final Payment Due: March 1, 2030
+
+SECURITY INTEREST: Creditor will retain a security interest (lien) in the
+vehicle described above until the loan is paid in full.
+
+LATE CHARGE: If a payment is more than 10 days late, Buyer will be charged
+5% of the payment amount or $25.00, whichever is greater.
+
+PREPAYMENT: Buyer may prepay in full or in part at any time. No prepayment
+penalty applies. Unearned finance charges will be credited using the actuarial
+method.
+
+═══════════════════════════════════════════════════════════════════════════════
+                     CREDIT INFORMATION
+═══════════════════════════════════════════════════════════════════════════════
+
+Credit Score Used: 712 (Equifax Auto-Enhanced)
+Credit Tier: Tier 1+ (Toyota Motor Credit)
+
+Adverse Action: None. Buyer received the best available rate.
+
+Credit Score Disclosure Notice:
+"Your credit score was used in making the credit decision on your application.
+Your credit score is a number that reflects the information in your credit
+report. Your score can change, depending on how the information in your credit
+report changes."
+
+   Score Range: 300-850
+   Key Factors Affecting Score:
+   1. Proportion of revolving balances to credit limits is too high
+   2. Length of time accounts have been established
+   3. Too many inquiries in the last 12 months
+
+═══════════════════════════════════════════════════════════════════════════════
+                  VOLUNTARY PROTECTION PRODUCTS
+═══════════════════════════════════════════════════════════════════════════════
+
+The following products are OPTIONAL and NOT required to obtain credit:
+
+[X] GAP WAIVER AGREEMENT — $895.00
+    Provider: Toyota Financial Protection Products
+    Coverage: If vehicle is declared a total loss, waives the difference
+    between insurance settlement and remaining loan balance (up to 150% of
+    MSRP). Maximum waiver: $50,000. Excludes delinquent payments, late fees.
+
+[X] TOYOTA CARE PLUS — $575.00
+    Maintenance Plan: 4 years/45,000 miles from date of first use
+    Includes: Oil changes, tire rotations, multi-point inspections,
+    24-hour roadside assistance
+
+[X] FABRIC & PAINT PROTECTION — $399.00
+    Provider: Cilajet Environmental Surface Protection
+    Coverage: 5-year warranty against UV fading, bird droppings, tree sap
+
+[ ] EXTENDED WARRANTY (DECLINED)
+    Toyota Extra Care VSA - Not purchased
+
+BUYER ACKNOWLEDGES: These products are voluntary. Buyer has been informed
+that declining these products will NOT affect the credit decision or interest
+rate offered.
+
+Buyer Initials: _A.R._     Date: 02/22/2025
+
+═══════════════════════════════════════════════════════════════════════════════
+                    DEFAULT AND REPOSSESSION
+═══════════════════════════════════════════════════════════════════════════════
+
+DEFAULT: Buyer will be in default if:
+(a) Buyer fails to make any payment when due;
+(b) Buyer fails to maintain required insurance;
+(c) Buyer provides false information on the credit application;
+(d) Buyer attempts to sell or transfer the vehicle without consent;
+(e) The vehicle is seized by any governmental authority.
+
+REMEDIES UPON DEFAULT: Upon default, Creditor may:
+(1) Demand immediate payment of the entire unpaid balance (acceleration);
+(2) Repossess the vehicle as permitted by Texas Business & Commerce Code
+    §9.609 (with or without judicial process, without breach of peace);
+(3) Sell the vehicle at public or private sale after 10 days' notice;
+(4) Seek a deficiency judgment for any remaining balance after sale.
+
+RIGHT TO CURE: After default but before repossession, Buyer has the right
+to cure the default by paying all past-due amounts plus late charges within
+20 days of receiving written notice of default.
+
+RIGHT OF REDEMPTION: After repossession, Buyer may redeem the vehicle by
+paying the full accelerated balance plus repossession costs within 10 days.
+
+INSURANCE REQUIREMENT: Buyer must maintain comprehensive and collision
+insurance with Creditor listed as lienholder. Minimum coverage: actual cash
+value of vehicle. If Buyer fails to maintain insurance, Creditor may purchase
+force-placed insurance at Buyer's expense.
+
+═══════════════════════════════════════════════════════════════════════════════
+                         SIGNATURES
+═══════════════════════════════════════════════════════════════════════════════
+
+BY SIGNING BELOW, BUYER ACKNOWLEDGES RECEIVING A COMPLETED COPY OF THIS
+RETAIL INSTALLMENT SALE CONTRACT AND AGREES TO ALL TERMS HEREIN.
+
+BUYER:
+_________________________________          Date: 02/22/2025
+Ashley Nicole Reeves
+
+
+SELLER:
+_________________________________          Date: 02/22/2025
+James Tran, Finance Director
+Lone Star Toyota of Dallas
+
+ASSIGNMENT: Seller hereby assigns all right, title, and interest in this
+contract to Toyota Motor Credit Corporation without recourse.
+
+_________________________________          Date: 02/25/2025
+James Tran, for Lone Star Toyota of Dallas
+(Assignor)

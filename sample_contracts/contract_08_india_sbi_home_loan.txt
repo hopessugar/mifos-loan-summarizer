@@ -1,0 +1,320 @@
+भारतीय स्टेट बैंक / STATE BANK OF INDIA
+HOUSING LOAN AGREEMENT
+(Under SBI Regular Home Loan Scheme — Floating Rate)
+
+═══════════════════════════════════════════════════════════════════════════════
+                        AGREEMENT DETAILS
+═══════════════════════════════════════════════════════════════════════════════
+
+Loan Account Number: SBIH-MUM-2025-31847291
+Agreement Date: 18th February, 2025
+Branch: SBI Bandra West Branch (Branch Code: 00479)
+Address: Plot No. 14, Linking Road, Bandra (West), Mumbai - 400050
+IFSC: SBIN0000479
+
+═══════════════════════════════════════════════════════════════════════════════
+                        PARTIES
+═══════════════════════════════════════════════════════════════════════════════
+
+LENDER:
+   State Bank of India, a body corporate constituted under the
+   State Bank of India Act, 1955 (as amended), having its Corporate Centre
+   at State Bank Bhavan, Madame Cama Road, Mumbai — 400021.
+   CIN: L65191MH1955GOI085740
+
+BORROWER (Primary Applicant):
+   Name: Dr. Arvind Subramaniam Iyer
+   PAN: AXXPI4827K
+   Aadhaar: XXXX XXXX 7294
+   Date of Birth: 14/08/1982
+   Occupation: Senior Consultant Cardiologist
+   Employer: Kokilaben Dhirubhai Ambani Hospital, Mumbai
+   Monthly Gross Salary: ₹4,25,000 (Rupees Four Lakh Twenty-Five Thousand)
+   Net Monthly Income (after tax): ₹3,12,000
+   Office Address: Rao Saheb Achutrao Patwardhan Marg, Four Bungalows,
+                   Andheri (West), Mumbai — 400053
+   Residence: 802, Skylark Towers, Pali Hill, Bandra (West), Mumbai - 400050
+   Mobile: +91-98204 XXXXX
+   Email: arvind.iyer@xxxxx.com
+
+CO-BORROWER (Co-Applicant):
+   Name: Dr. Meera Arvind Iyer
+   PAN: BXXPI5918L
+   Aadhaar: XXXX XXXX 4182
+   Date of Birth: 22/11/1984
+   Occupation: Dermatologist (Own Clinic)
+   Monthly Professional Income: ₹2,80,000
+   Relationship to Borrower: Spouse
+
+═══════════════════════════════════════════════════════════════════════════════
+                     PROPERTY DETAILS
+═══════════════════════════════════════════════════════════════════════════════
+
+Purpose: Purchase of residential flat (under-construction)
+Property Description:
+   Flat No. 1204, 12th Floor, Tower B, "Lodha Altamount"
+   Altamount Road, Mumbai — 400026
+   Developer: Lodha Developers Limited (RERA Reg: P51800000247)
+   Super Built-Up Area: 1,850 sq. ft.
+   Carpet Area (RERA): 1,295 sq. ft.
+   Configuration: 3 BHK + Study + 2 Covered Parking
+   Expected Possession: December 2026
+
+Agreement Value (as per Sale Agreement):        ₹4,85,00,000
+                                                (Rupees Four Crore Eighty-Five Lakh)
+Stamp Duty (5%):                                ₹24,25,000
+Registration Charges (1%):                      ₹4,85,000
+GST (if applicable — under construction):      ₹24,25,000 (5% without ITC)
+   ──────────────────────────────────────────
+Total Cost of Acquisition:                      ₹5,38,35,000
+
+SBI Valuation:
+   Valuer: M/s. ABC Valuers & Consultants (SBI Empaneled)
+   Market Value: ₹4,90,00,000
+   Forced Sale Value: ₹4,16,50,000
+   Valuation Date: 05/02/2025
+
+═══════════════════════════════════════════════════════════════════════════════
+                        LOAN TERMS
+═══════════════════════════════════════════════════════════════════════════════
+
+1. LOAN AMOUNT SANCTIONED: ₹3,60,00,000
+   (Rupees Three Crore Sixty Lakh Only)
+   
+   Loan-to-Value (LTV) Ratio: 74.23% (RBI max for loans > ₹75 lakh: 75%)
+
+2. INTEREST RATE:
+   Type: FLOATING RATE linked to SBI EBLR (External Benchmark Lending Rate)
+   Current EBLR (RBI Repo Rate based): 6.50% p.a.
+   Spread: +0.15% (for salaried professional with CIBIL > 750)
+   Risk Premium: NIL (high-value salaried, premium property)
+   ──────────────────────────────────────────
+   Effective Rate: 6.65% p.a. (reducing balance)
+   
+   Rate Reset: Every quarter (1st April, 1st July, 1st October, 1st January)
+   
+   NOTE: As per RBI circular dated 01/04/2019, all new floating rate retail
+   loans are linked to an external benchmark. Rate changes are transmitted
+   within the reset period.
+
+3. TENURE: 240 months (20 years)
+   Maturity Date: February 2045
+   Maximum age at maturity: Borrower will be 62 years (within SBI limit of 70)
+
+4. EQUATED MONTHLY INSTALMENT (EMI):
+   EMI Amount: ₹2,72,480 (at current rate of 6.65%)
+   EMI Start Date: 1st April, 2025
+   Mode: ECS/NACH Auto-Debit from SBI Savings Account No. XXXXXX7291
+
+5. TOTAL INTEREST PAYABLE (over full tenure at current rate):
+   Approximately ₹2,93,95,200
+
+6. TOTAL AMOUNT REPAYABLE:
+   Approximately ₹6,53,95,200
+
+═══════════════════════════════════════════════════════════════════════════════
+                   DISBURSEMENT SCHEDULE
+═══════════════════════════════════════════════════════════════════════════════
+
+Since the property is under construction, the loan shall be disbursed in
+stages linked to construction progress as certified by SBI's empaneled
+technical officer:
+
+   Stage 1: Foundation + Plinth              20%    ₹72,00,000
+   Stage 2: RCC up to 6th Floor              15%    ₹54,00,000
+   Stage 3: RCC up to 12th Floor             20%    ₹72,00,000
+   Stage 4: Brickwork completion             15%    ₹54,00,000
+   Stage 5: Plastering + Flooring            15%    ₹54,00,000
+   Stage 6: Possession/OC received           15%    ₹54,00,000
+   ──────────────────────────────────────────────────
+   Total:                                    100%   ₹3,60,00,000
+
+PRE-EMI INTEREST: During the construction period, Borrower shall pay only
+the interest on the amount actually disbursed. Full EMI commences after
+final disbursement or within 18 months of first disbursement, whichever is
+earlier.
+
+═══════════════════════════════════════════════════════════════════════════════
+                   FEES AND CHARGES
+═══════════════════════════════════════════════════════════════════════════════
+
+Processing Fee:                              ₹36,000 (0.10% — special rate
+                                             for medical professionals)
+                                             Plus GST @18%: ₹6,480
+                                             Total: ₹42,480
+
+Documentation Charges:                       NIL (waived — festive offer)
+
+CERSAI Registration Fee:                     ₹100 (Central Registry)
+
+MODT (Memorandum of Deposit of Title Deeds):
+   Stamp Duty on MODT: ₹1,800 (0.05% of loan, max varies by state)
+   (As per Maharashtra Stamp Act)
+
+Valuation Fee:                               ₹5,000 + GST
+Legal Opinion Fee:                           ₹3,000 + GST
+Franking Charges:                            ₹500
+
+Pre-closure/Foreclosure Charges:             NIL
+   (As per RBI circular DNBR.PD.007/03.10.119/2016-17, no pre-closure
+   charges on floating rate home loans for individual borrowers)
+
+Penal Interest on Delayed EMI:               2% p.a. over the applicable
+                                             rate, on the overdue EMI
+                                             (As per RBI guidelines on
+                                             penal charges, Oct 2023)
+
+Duplicate Statement/NOC:                     ₹250 per instance
+
+EMI Bounce Charges:                          ₹500 per instance + GST
+
+Rate Conversion Fee (Fixed to Float):        0.50% of outstanding principal
+
+═══════════════════════════════════════════════════════════════════════════════
+                        SECURITY
+═══════════════════════════════════════════════════════════════════════════════
+
+PRIMARY SECURITY:
+   Equitable Mortgage by deposit of original title deeds of the property
+   described above with the Bank. This includes:
+   - Original Agreement for Sale (registered)
+   - Chain of title documents from Developer
+   - Approved building plans
+   - Commencement Certificate
+   - Occupation Certificate (upon receipt)
+   - Share Certificate of Society/Association (upon formation)
+   - NOC from Developer for mortgage
+
+COLLATERAL SECURITY: NIL (not required for loans to salaried professionals
+with LTV ≤ 75%)
+
+GUARANTEE:
+   Co-Borrower Dr. Meera Arvind Iyer serves as co-obligant. No third-party
+   guarantee required.
+
+CERSAI REGISTRATION:
+   The equitable mortgage shall be registered with the Central Registry of
+   Securitisation Asset Reconstruction and Security Interest of India
+   (CERSAI) under the SARFAESI Act, 2002.
+
+═══════════════════════════════════════════════════════════════════════════════
+                   INCOME TAX BENEFITS (INFORMATION ONLY)
+═══════════════════════════════════════════════════════════════════════════════
+
+This section is for informational purposes only and does not constitute
+tax advice. Borrower should consult a chartered accountant.
+
+Under Old Tax Regime:
+   Section 24(b): Deduction on interest paid — up to ₹2,00,000/year
+                  (for self-occupied property)
+   Section 80C:   Deduction on principal repaid — up to ₹1,50,000/year
+   Section 80EEA: Additional deduction of ₹1,50,000 (if stamp duty value
+                  ≤ ₹45 lakh — NOT applicable in this case)
+
+Co-Borrower Benefit: Both borrowers may claim proportionate deduction based
+on their contribution to EMI payment, provided both are co-owners.
+
+═══════════════════════════════════════════════════════════════════════════════
+               BORROWER REPRESENTATIONS & COVENANTS
+═══════════════════════════════════════════════════════════════════════════════
+
+The Borrower(s) hereby represent, warrant, and covenant:
+
+(a) All information provided in the loan application and supporting documents
+    is true, correct, and complete.
+
+(b) CIBIL TransUnion Score (as on 01/02/2025):
+    Dr. Arvind S. Iyer: 792
+    Dr. Meera A. Iyer: 768
+    No defaults, DPDs, or write-offs in any credit facility.
+
+(c) Existing liabilities:
+    - Car Loan (HDFC Bank): EMI ₹18,500/month, Outstanding ₹4,20,000
+    - Credit Card (SBI Card Elite): Limit ₹5,00,000, Utilization <15%
+    - No other loans, guarantees, or contingent liabilities.
+
+(d) FOIR (Fixed Obligation to Income Ratio):
+    Total EMI Obligations (incl. this loan): ₹2,90,980
+    Combined Net Income: ₹5,92,000
+    FOIR: 49.2% (SBI max permissible: 65% for income > ₹2,00,000/month)
+
+(e) The property shall be used exclusively for residential purposes and
+    shall not be let out commercially without prior bank approval.
+
+(f) Borrower shall insure the property under a comprehensive policy for
+    fire, earthquake, and natural calamities, with SBI named as the
+    first loss payee. Minimum sum insured: ₹3,60,00,000.
+
+(g) Borrower shall not create any second charge on the property without
+    the bank's prior written consent.
+
+(h) In the event of any default, SBI shall have the right to:
+    - Initiate recovery under the SARFAESI Act, 2002
+    - Issue a 60-day demand notice under Section 13(2)
+    - Take possession of the secured asset under Section 13(4)
+    - Sell the property through auction
+    - File proceedings before the Debt Recovery Tribunal (DRT)
+
+═══════════════════════════════════════════════════════════════════════════════
+                        SIGNATURES
+═══════════════════════════════════════════════════════════════════════════════
+
+IN WITNESS WHEREOF, the parties hereto have set their hands on this Agreement
+on the day and year first above written.
+
+BORROWER:
+_________________________________          Date: 18/02/2025
+Dr. Arvind Subramaniam Iyer
+
+CO-BORROWER:
+_________________________________          Date: 18/02/2025
+Dr. Meera Arvind Iyer
+
+
+FOR AND ON BEHALF OF STATE BANK OF INDIA:
+
+_________________________________          Date: 18/02/2025
+Shri Ramesh Chandra Dubey
+Chief Manager, Bandra West Branch
+Employee Code: 84729147
+
+_________________________________          Date: 18/02/2025
+Smt. Prerna Kulkarni
+Assistant General Manager, Home Loan Processing Centre
+Employee Code: 71842938
+
+
+WITNESSES:
+
+1. _________________________ (Name, Address, Signature)
+
+2. _________________________ (Name, Address, Signature)
+
+═══════════════════════════════════════════════════════════════════════════════
+                     SCHEDULE OF DOCUMENTS DEPOSITED
+═══════════════════════════════════════════════════════════════════════════════
+
+The following original documents have been deposited with the Bank:
+
+Sr.  Document Description                              Received (✓)
+──── ──────────────────────────────────────────────── ────────────
+1.   Registered Agreement for Sale                        ✓
+2.   Title Search Report (30 years)                       ✓
+3.   Original Approved Building Plans                     ✓
+4.   IOD (Intimation of Disapproval) / CC                 ✓
+5.   Commencement Certificate                             ✓
+6.   Developer's NOC for Mortgage                         ✓
+7.   PAN Cards (both borrowers)                           ✓
+8.   Aadhaar Cards (both borrowers)                       ✓
+9.   Salary Slips (last 6 months — Dr. Arvind)            ✓
+10.  ITR + Computation (last 3 years — both)              ✓
+11.  Bank Statements (last 12 months — both)              ✓
+12.  Form 16 (last 2 years — Dr. Arvind)                  ✓
+13.  GST Returns (Dr. Meera — last 12 months)             ✓
+14.  Property Tax Receipts (from Developer)               ✓
+15.  RERA Registration Certificate                        ✓
+16.  Demand Letters from Developer                        ✓
+17.  Post-dated cheques (24 nos.)                         ✓
+18.  NACH/ECS Mandate Form                                ✓
+
+Receipt Acknowledged by Borrower: _________ Date: 18/02/2025

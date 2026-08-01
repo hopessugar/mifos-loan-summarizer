@@ -1,0 +1,318 @@
+                    HOME EQUITY LINE OF CREDIT AGREEMENT
+                    ══════════════════════════════════════
+                    (Variable Rate — Open-End Credit Plan)
+
+Account Number: HELOC-2025-WF-0847291
+Date: March 28, 2025
+
+═══════════════════════════════════════════════════════════════════════════════
+                         PARTIES
+═══════════════════════════════════════════════════════════════════════════════
+
+CREDITOR:
+   Wells Fargo Bank, N.A.
+   NMLS ID: 399801
+   HELOC Servicing Center
+   P.O. Box 10335, Des Moines, IA 50306
+   Phone: (800) 555-0149
+
+BORROWER(S):
+   Linda Marie Johansson
+   SSN: XXX-XX-9417
+   DOB: 03/14/1968
+   Address: 8247 Lakeshore Boulevard, Shaker Heights, OH 44120
+   Employment: Director of Human Resources, Cleveland Clinic
+   Annual Gross Income: $142,000
+
+   Erik Paul Johansson
+   SSN: XXX-XX-2583
+   DOB: 07/22/1965
+   Address: Same as above
+   Employment: Self-employed — Johansson Architecture Studio, LLC
+   Annual Gross Income: $118,000
+
+   COMBINED GROSS ANNUAL INCOME: $260,000
+
+═══════════════════════════════════════════════════════════════════════════════
+                      PROPERTY AND LIEN INFORMATION
+═══════════════════════════════════════════════════════════════════════════════
+
+Property: 8247 Lakeshore Boulevard, Shaker Heights, OH 44120
+Legal Description: Lot 42, Shaker Heights Village Allotment, as recorded in
+                   Volume 1847, Page 294, Cuyahoga County Recorder's Office
+Property Type: Single-Family Detached
+Year Built: 1927 (Tudor Revival, renovated 2018)
+Living Area: 3,400 sq ft
+
+Current Appraised Value: $625,000.00
+Appraisal Date: March 10, 2025
+Appraiser: Great Lakes Appraisal Group, OH License #2024-4721
+
+FIRST MORTGAGE (SENIOR LIEN):
+   Lender: JPMorgan Chase Bank, N.A.
+   Loan #: CHASE-2019-07-284719
+   Original Amount: $380,000.00
+   Current Payoff Balance: $312,400.00
+   Rate: 3.875% (fixed, 30-year)
+   Monthly P&I: $1,786.22
+
+HELOC LIEN POSITION: SECOND LIEN
+   (Subordinate to existing first mortgage)
+
+COMBINED LOAN-TO-VALUE (CLTV):
+   First Mortgage Balance:    $312,400.00
+   HELOC Credit Limit:        $150,000.00
+   ─────────────────────────────────────
+   Maximum Combined Balance:  $462,400.00
+   CLTV (at full draw):       73.98%
+   Maximum Permitted CLTV:    80.00%
+
+AVAILABLE EQUITY:
+   Property Value:            $625,000.00
+   Max 80% CLTV:              $500,000.00
+   Less First Mortgage:       ($312,400.00)
+   ─────────────────────────────────────
+   Available Equity:          $187,600.00
+   HELOC Approved:            $150,000.00
+
+═══════════════════════════════════════════════════════════════════════════════
+                       CREDIT LINE TERMS
+═══════════════════════════════════════════════════════════════════════════════
+
+1. CREDIT LIMIT: $150,000.00
+
+2. MINIMUM INITIAL DRAW: $25,000.00 (required at closing)
+
+3. ACCESS METHODS:
+   (a) HELOC Checks (book of 25 provided at closing)
+   (b) Wells Fargo Online Banking transfer
+   (c) Wells Fargo Mobile App transfer
+   (d) Branch withdrawal
+   (e) Dedicated HELOC Visa Platinum Access Card (for purchases & ATM)
+       Card Number: XXXX-XXXX-XXXX-4817
+       Daily ATM Limit: $1,000
+       Daily Purchase Limit: $10,000
+
+4. MINIMUM DRAW AMOUNT: $300.00 (per transaction)
+
+5. INTEREST RATE:
+   Type: VARIABLE — based on Wall Street Journal Prime Rate
+   Index: WSJ Prime Rate (currently 7.50% as of 03/28/2025)
+   Margin: -0.26% (below Prime — introductory)
+   
+   INTRODUCTORY RATE:
+     Rate: 6.99% APR (fixed for first 12 months)
+     Introductory Period: 03/28/2025 through 03/28/2026
+     After Introductory Period: Prime + (-0.26%) = Currently 7.24%
+   
+   VARIABLE RATE AFTER INTRODUCTORY PERIOD:
+     Current Rate (Prime - 0.26%):        7.24%
+     Rate Floor (Minimum APR):            4.99%
+     Rate Ceiling (Maximum APR):          18.00%
+     Rate Adjustment: Monthly (on the first business day)
+
+6. DRAW PERIOD: 10 years (03/28/2025 through 03/28/2035)
+   During the draw period, Borrower may borrow, repay, and re-borrow
+   up to the credit limit.
+
+7. REPAYMENT PERIOD: 20 years (03/28/2035 through 03/28/2055)
+   After the draw period expires:
+   - No further advances may be made.
+   - Outstanding balance is amortized over the remaining 20-year term.
+   - Monthly payments convert from interest-only to fully amortizing P&I.
+
+8. TOTAL TERM: 30 years (10-year draw + 20-year repayment)
+
+═══════════════════════════════════════════════════════════════════════════════
+                   PAYMENT TERMS
+═══════════════════════════════════════════════════════════════════════════════
+
+DURING DRAW PERIOD (Years 1-10):
+   Minimum Monthly Payment: Interest-only on outstanding balance
+   Example (at $100,000 drawn, 7.24% rate): ~$603.33/month
+   
+   Borrower MAY make principal payments at any time. Principal payments
+   restore available credit (revolving).
+
+DURING REPAYMENT PERIOD (Years 11-30):
+   Monthly Payment: Fully amortizing principal & interest
+   Example (at $100,000 balance, 7.24%, 20-year amort): ~$790.18/month
+   
+   No further draws permitted. Balance must be repaid in full by maturity.
+
+PAYMENT DUE DATE: 1st of each month (first payment: May 1, 2025)
+GRACE PERIOD: 15 days
+LATE FEE: 5% of the minimum payment due or $50.00, whichever is greater
+
+═══════════════════════════════════════════════════════════════════════════════
+                      FEES AND CHARGES
+═══════════════════════════════════════════════════════════════════════════════
+
+Application Fee:                          $0.00 (waived)
+Annual Fee:                               $75.00 (waived for first year)
+Appraisal Fee:                            $450.00 (paid by Borrower)
+Title Search:                             $250.00
+Recording Fee (Second Mortgage):          $95.00
+Flood Certification:                      $20.00
+Document Preparation:                     $0.00 (included)
+   ────────────────────────────────────────
+   TOTAL CLOSING COSTS:                   $815.00
+
+EARLY CLOSURE FEE:
+   If the HELOC is closed within 36 months of opening, a cancellation
+   fee of $500.00 shall apply. This fee reimburses Wells Fargo for
+   closing costs absorbed.
+   After 36 months: No early closure fee.
+
+OVER-LIMIT FEE: $0.00 (draws exceeding the credit limit will be declined)
+
+CHECK STOP-PAYMENT FEE: $35.00 per request
+
+RETURNED PAYMENT FEE: $35.00
+
+NOTARY FEE: Paid by Creditor at closing.
+
+═══════════════════════════════════════════════════════════════════════════════
+                   CREDIT AND UNDERWRITING
+═══════════════════════════════════════════════════════════════════════════════
+
+FICO SCORES (pulled 03/05/2025):
+   Linda M. Johansson: Experian 781, TransUnion 774, Equifax 789
+   Erik P. Johansson:  Experian 758, TransUnion 762, Equifax 749
+   Decision Score (lower median): 758
+
+DTI ANALYSIS:
+   Monthly Housing (1st Mortgage PITI):    $2,489.00
+   Estimated HELOC interest-only:          $904.50 (at full draw)
+   Auto Loan (Honda Financial):            $389.00
+   Student Loan (federal, IBR):            $0.00 (in IBR, $0 payment)
+   Credit Cards (minimum payments):        $280.00
+   ─────────────────────────────────────────
+   Total Monthly Obligations:              $4,062.50
+   Gross Monthly Income:                   $21,666.67
+   Back-End DTI:                           18.7%
+
+═══════════════════════════════════════════════════════════════════════════════
+              FREEZE, REDUCTION, AND TERMINATION
+═══════════════════════════════════════════════════════════════════════════════
+
+BORROWER'S RIGHT TO FREEZE OR REDUCE:
+   Borrower may request to freeze or reduce the credit line at any time
+   by contacting the HELOC Servicing Center. The credit line may be
+   reopened or increased at Borrower's request, subject to Creditor
+   approval.
+
+CREDITOR'S RIGHT TO FREEZE, REDUCE, OR TERMINATE:
+   Under federal law (Regulation Z, 12 CFR § 1026.40(f)), Creditor may
+   freeze, reduce, or terminate the credit line if:
+
+   (a) The property value declines significantly below the appraised value;
+   (b) Creditor reasonably believes Borrower will not be able to repay;
+   (c) There is a material change in Borrower's financial circumstances;
+   (d) Borrower is in default under any term of this Agreement;
+   (e) Government action (e.g., regulatory restriction) affects the plan;
+   (f) The maximum APR is reached under the Agreement.
+
+   If the credit line is frozen or reduced, Creditor must provide written
+   notice and the reason. Borrower has the right to request reinstatement.
+
+BALLOON PAYMENT WARNING:
+   If Borrower makes only minimum (interest-only) payments during the
+   10-year draw period and draws the full $150,000, the outstanding
+   balance at the end of the draw period will be $150,000. This balance
+   will then be amortized over 20 years, resulting in significantly
+   higher monthly payments.
+
+═══════════════════════════════════════════════════════════════════════════════
+              RIGHT OF RESCISSION (FEDERAL DISCLOSURE)
+═══════════════════════════════════════════════════════════════════════════════
+
+IMPORTANT — YOUR RIGHT TO CANCEL
+
+You are entering into a transaction that will result in a lien on your home.
+Under the federal Truth in Lending Act, you have the RIGHT TO CANCEL this
+transaction within THREE (3) BUSINESS DAYS from the date of closing (not
+counting Sundays and federal holidays).
+
+Closing Date: March 28, 2025 (Friday)
+Last Day to Cancel: March 31, 2025 (Monday) by midnight
+
+To cancel, you must notify the Creditor in writing at:
+   Wells Fargo HELOC Rescission Department
+   P.O. Box 10335, Des Moines, IA 50306
+   Fax: (866) 555-0184
+
+If you cancel, the Creditor must return all fees paid within 20 calendar
+days, and the security interest in your home becomes void.
+
+ACKNOWLEDGMENT: Each Borrower has received TWO (2) copies of this Notice
+of Right to Cancel.
+
+Linda M. Johansson: Initials _L.J._    Date: 03/28/2025
+Erik P. Johansson:  Initials _E.J._    Date: 03/28/2025
+
+═══════════════════════════════════════════════════════════════════════════════
+                    DEFAULT AND REMEDIES
+═══════════════════════════════════════════════════════════════════════════════
+
+EVENTS OF DEFAULT:
+(a) Failure to make minimum payment within 30 days of due date;
+(b) Failure to maintain insurance on the property;
+(c) Failure to pay property taxes;
+(d) Sale or transfer of the property;
+(e) Bankruptcy filing;
+(f) Material misrepresentation in the application;
+(g) Destruction of the property;
+(h) Default under the first mortgage.
+
+REMEDIES:
+Upon default, Creditor may:
+(1) Freeze the credit line (no further advances);
+(2) Accelerate the entire outstanding balance;
+(3) Foreclose on the property (subject to the senior lien) through
+    judicial foreclosure per Ohio Revised Code § 2323.07;
+(4) Pursue a deficiency judgment for any balance remaining after sale.
+
+NOTE: Ohio is a judicial foreclosure state. Creditor must obtain a court
+order before conducting a foreclosure sale. Borrower has the right of
+redemption under Ohio law.
+
+═══════════════════════════════════════════════════════════════════════════════
+                    TAX INFORMATION (DISCLAIMER)
+═══════════════════════════════════════════════════════════════════════════════
+
+IMPORTANT: Under the Tax Cuts and Jobs Act of 2017, interest paid on a
+HELOC may only be deductible if the loan proceeds are used to "buy, build,
+or substantially improve" the taxpayer's home that secures the loan.
+
+Interest on HELOC funds used for debt consolidation, college tuition, or
+other non-home-improvement purposes is generally NOT tax-deductible for
+tax years 2018-2025. Consult a tax advisor.
+
+═══════════════════════════════════════════════════════════════════════════════
+                         SIGNATURES
+═══════════════════════════════════════════════════════════════════════════════
+
+BORROWER(S):
+_________________________________          Date: 03/28/2025
+Linda Marie Johansson
+
+_________________________________          Date: 03/28/2025
+Erik Paul Johansson
+
+
+CREDITOR:
+_________________________________          Date: 03/28/2025
+Margaret S. Chen
+Vice President, Home Equity Lending
+Wells Fargo Bank, N.A.
+NMLS #: 947182
+
+NOTARY:
+State of Ohio, County of Cuyahoga
+Sworn and subscribed before me on March 28, 2025.
+
+_________________________________
+Notary Public, State of Ohio
+Commission Expires: 11/15/2029
+Commission #: 2024-OH-84729

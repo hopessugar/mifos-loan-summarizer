@@ -1,0 +1,292 @@
+UNIFORM RESIDENTIAL LOAN AGREEMENT
+(Fannie Mae/Freddie Mac Uniform Instrument - Form 3200)
+
+LOAN NUMBER: CONV-2025-0847291
+FHA/VA CASE NUMBER: N/A (Conventional)
+
+THIS LOAN AGREEMENT ("Agreement") is made this 12th day of March, 2025, in the
+County of Fairfax, Commonwealth of Virginia.
+
+BETWEEN:
+
+LENDER:
+   Patriot National Mortgage Corporation
+   NMLS ID: 224871
+   Principal Office: 8200 Greensboro Drive, Suite 900, McLean, VA 22102
+   Licensed Mortgage Lender - VA License #MC-5721
+
+BORROWER(S):
+   Michael Andrew Thompson
+   Social Security Number: XXX-XX-4821
+   Date of Birth: 06/15/1984
+   Current Address: 1247 Maple Crest Lane, Apt 302, Arlington, VA 22201
+
+   Jennifer Lynn Thompson
+   Social Security Number: XXX-XX-7193
+   Date of Birth: 11/02/1986
+   Current Address: Same as above
+
+CO-BORROWER: None
+
+===============================================================================
+                         PROPERTY DESCRIPTION
+===============================================================================
+
+Subject Property: 4518 Ridgeview Terrace, Fairfax, VA 22030
+Legal Description: Lot 14, Block 7, Section 3, Ridgeview Estates Subdivision,
+                   as recorded in Plat Book 247, Page 89, Fairfax County Records
+Property Type: Single-Family Residence (Detached)
+Year Built: 2019
+Estimated Square Footage: 2,850 sq ft
+Number of Units: 1
+Occupancy: Primary Residence
+
+Appraised Value: $685,000.00
+Appraisal Date: February 28, 2025
+Appraiser: Commonwealth Appraisal Services, Inc.
+Appraisal License: VA-CR-4461028
+
+===============================================================================
+                           LOAN TERMS
+===============================================================================
+
+ARTICLE I - BORROWING AND REPAYMENT
+
+Section 1.01 - Principal Amount
+The Lender agrees to lend to Borrower the sum of FIVE HUNDRED FORTY-EIGHT
+THOUSAND AND 00/100 DOLLARS ($548,000.00), subject to the terms and conditions
+set forth herein.
+
+Section 1.02 - Interest Rate
+The annual rate of interest shall be SIX AND ONE-QUARTER PERCENT (6.25%) per
+annum, fixed for the entire term of the loan.
+
+Section 1.03 - Loan Term
+The term of this loan shall be THREE HUNDRED SIXTY (360) months (30 years),
+commencing on April 1, 2025, and maturing on March 1, 2055.
+
+Section 1.04 - Monthly Payment (Principal & Interest)
+The Borrower shall pay monthly installments of THREE THOUSAND THREE HUNDRED
+SEVENTY-FOUR AND 08/100 DOLLARS ($3,374.08), due on the first day of each
+calendar month, beginning May 1, 2025.
+
+Section 1.05 - Loan-to-Value (LTV) Ratio
+The LTV at origination is 80.00%. No Private Mortgage Insurance (PMI) is
+required as LTV does not exceed 80%.
+
+Section 1.06 - Annual Percentage Rate (APR)
+The APR for this loan, inclusive of all finance charges, is 6.412%.
+
+===============================================================================
+                         ESCROW ACCOUNT
+===============================================================================
+
+ARTICLE II - ESCROW AND IMPOUND REQUIREMENTS
+
+Section 2.01 - Monthly Escrow Payment
+In addition to the principal and interest payment, Borrower shall pay monthly
+escrow deposits as follows:
+
+   (a) Real Property Taxes (estimated): $612.50/month ($7,350.00 annually)
+   (b) Homeowners Insurance Premium:   $187.50/month ($2,250.00 annually)
+   (c) Flood Insurance (if applicable): $0.00/month (Zone X - not required)
+
+   TOTAL MONTHLY ESCROW: $800.00
+
+Section 2.02 - Total Monthly Housing Payment (PITI)
+   Principal & Interest:  $3,374.08
+   Escrow (Tax/Insurance): $800.00
+   HOA Dues (if any):      $125.00
+   ─────────────────────────────────
+   TOTAL MONTHLY PAYMENT:  $4,299.08
+
+Section 2.03 - Escrow Analysis
+Lender shall perform an annual escrow analysis and may adjust the monthly
+escrow payment to ensure adequate funds are available. Borrower will receive
+an Annual Escrow Account Statement no later than 30 days after the analysis.
+
+===============================================================================
+                    CLOSING COSTS AND FEES
+===============================================================================
+
+ARTICLE III - SETTLEMENT CHARGES
+
+The following fees are due at closing (see attached HUD-1/Closing Disclosure):
+
+   Origination Fee (0.5%):                         $2,740.00
+   Discount Points (0 points):                     $0.00
+   Appraisal Fee:                                  $575.00
+   Credit Report Fee:                              $65.00
+   Flood Certification:                            $25.00
+   Tax Service Fee:                                $85.00
+   Title Search & Examination:                     $450.00
+   Lender's Title Insurance:                       $1,247.00
+   Owner's Title Insurance (optional):             $985.00
+   Settlement/Closing Fee:                         $675.00
+   Recording Fees:                                 $186.00
+   Transfer Taxes:                                 $0.00 (exempt in VA)
+   Survey Fee:                                     $400.00
+   Attorney Review Fee:                            $350.00
+   Pest Inspection:                                $75.00
+   ─────────────────────────────────────────────────────────
+   TOTAL ESTIMATED CLOSING COSTS:                  $7,858.00
+
+   Seller Credits:                                 ($3,000.00)
+   Lender Credits:                                 $0.00
+   ─────────────────────────────────────────────────────────
+   NET CLOSING COSTS TO BORROWER:                  $4,858.00
+
+   Down Payment (20%):                             $137,000.00
+   TOTAL CASH TO CLOSE:                            $141,858.00
+
+===============================================================================
+                    PREPAYMENT AND DEFAULT
+===============================================================================
+
+ARTICLE IV - PREPAYMENT
+
+Section 4.01 - The Borrower may prepay this loan in whole or in part at any
+time without penalty. There is NO prepayment penalty on this loan.
+
+Section 4.02 - Partial prepayments shall be applied first to accrued interest,
+then to outstanding principal, unless Borrower specifically designates the
+payment as a principal-only reduction.
+
+ARTICLE V - LATE CHARGES AND DEFAULT
+
+Section 5.01 - Grace Period
+A grace period of FIFTEEN (15) calendar days is allowed for each monthly
+payment. Payments received after the 16th day of the month shall be considered
+late.
+
+Section 5.02 - Late Charge
+A late charge of FIVE PERCENT (5%) of the overdue principal and interest
+payment, or $168.70, whichever is less, shall be assessed for each late payment.
+
+Section 5.03 - Default
+The loan shall be considered in default if:
+   (a) Payment is more than 30 days past due;
+   (b) Borrower fails to maintain required insurance;
+   (c) Borrower fails to pay property taxes when due;
+   (d) Borrower commits waste on the property;
+   (e) Borrower files for bankruptcy protection;
+   (f) Borrower transfers the property without Lender's consent (due-on-sale).
+
+Section 5.04 - Acceleration
+Upon default, Lender may, at its option, declare the entire unpaid principal
+balance, together with accrued interest, immediately due and payable. Lender
+shall provide Borrower with 30 days' written notice before acceleration.
+
+Section 5.05 - Foreclosure
+In the event of uncured default, Lender may initiate non-judicial foreclosure
+proceedings pursuant to Virginia Code §55.1-1800 et seq. Borrower shall be
+liable for all costs of foreclosure, including reasonable attorney's fees.
+
+===============================================================================
+                    INSURANCE REQUIREMENTS
+===============================================================================
+
+ARTICLE VI - HAZARD AND LIABILITY INSURANCE
+
+Section 6.01 - Borrower shall maintain a homeowner's insurance policy with
+coverage not less than the replacement cost of the dwelling or the outstanding
+loan balance, whichever is greater.
+
+Section 6.02 - Policy must name Lender as mortgagee/loss payee under a
+standard mortgage clause (ISAOA/ATIMA).
+
+Section 6.03 - Minimum coverage: HO-3 (Special Form) or equivalent.
+Current Policy: Virginia Farm Bureau, Policy #HO-892741, effective 03/15/2025.
+
+===============================================================================
+                    REPRESENTATIONS AND WARRANTIES
+===============================================================================
+
+ARTICLE VII - BORROWER REPRESENTATIONS
+
+Borrower represents and warrants that:
+
+7.01 All information provided in the Uniform Residential Loan Application
+     (Form 1003) dated February 10, 2025 is true and complete.
+
+7.02 Borrower's combined annual gross income is $187,500.00.
+     - Michael A. Thompson: $112,000 (IT Project Manager, Booz Allen Hamilton)
+     - Jennifer L. Thompson: $75,500 (Registered Nurse, Inova Health System)
+
+7.03 Borrower's total monthly debt obligations (excluding this mortgage):
+     - Auto Loan (Ford Motor Credit): $487/month (balance: $14,200)
+     - Student Loan (Navient): $312/month (balance: $28,400)
+     - Credit Card minimum payments: $185/month
+
+7.04 Front-end DTI Ratio (housing): 27.5%
+     Back-end DTI Ratio (total debt): 33.8%
+
+7.05 Credit Scores (as of 02/12/2025):
+     - Michael A. Thompson: Experian 762, TransUnion 748, Equifax 755
+     - Jennifer L. Thompson: Experian 739, TransUnion 721, Equifax 734
+
+7.06 The property shall be occupied as Borrower's primary residence within
+     60 days of closing.
+
+===============================================================================
+                    ADDITIONAL PROVISIONS
+===============================================================================
+
+ARTICLE VIII - MISCELLANEOUS
+
+8.01 - MERS Registration: This loan IS registered with the Mortgage Electronic
+       Registration System (MERS). MERS ID: 1000247-0084729100-3.
+
+8.02 - Servicing Transfer: Lender reserves the right to sell, transfer, or
+       assign the servicing of this loan. Borrower will be notified of any
+       servicing transfer at least 15 days in advance.
+
+8.03 - Governing Law: This Agreement shall be governed by federal law and the
+       laws of the Commonwealth of Virginia.
+
+8.04 - Successors and Assigns: This Agreement shall be binding upon and inure
+       to the benefit of the heirs, executors, administrators, successors, and
+       assigns of both parties.
+
+8.05 - Severability: If any provision of this Agreement is deemed
+       unenforceable, the remaining provisions shall continue in full effect.
+
+8.06 - Entire Agreement: This Agreement, together with the Promissory Note,
+       Deed of Trust, and all related closing documents, constitutes the entire
+       agreement between the parties.
+
+===============================================================================
+                         SIGNATURES
+===============================================================================
+
+IN WITNESS WHEREOF, the parties have executed this Agreement as of the date
+first written above.
+
+BORROWER:
+_________________________________          Date: 03/12/2025
+Michael Andrew Thompson
+
+_________________________________          Date: 03/12/2025
+Jennifer Lynn Thompson
+
+
+LENDER:
+_________________________________          Date: 03/12/2025
+David R. Castellano
+Senior Vice President, Mortgage Lending
+Patriot National Mortgage Corporation
+NMLS ID: 224871
+
+NOTARY ACKNOWLEDGMENT:
+
+State of Virginia, County of Fairfax
+On this 12th day of March, 2025, before me, the undersigned Notary Public,
+personally appeared Michael Andrew Thompson and Jennifer Lynn Thompson,
+known to me to be the persons whose names are subscribed to the within
+instrument, and acknowledged that they executed the same for the purposes
+therein contained.
+
+_________________________________
+Notary Public
+Commission Expires: 09/30/2028
+Commission #: 7842916

@@ -1,0 +1,225 @@
+U.S. DEPARTMENT OF HOUSING AND URBAN DEVELOPMENT
+FEDERAL HOUSING ADMINISTRATION
+
+                    FHA INSURED MORTGAGE LOAN AGREEMENT
+                    ────────────────────────────────────
+
+FHA CASE NUMBER: 541-8294710
+LOAN NUMBER: FHA-2025-03-19847
+LENDER: AmeriFirst Federal Savings Bank (NMLS #118294)
+
+DATE: January 8, 2025
+
+═══════════════════════════════════════════════════════════════════════════════
+SECTION A — PARTIES TO THE AGREEMENT
+═══════════════════════════════════════════════════════════════════════════════
+
+MORTGAGEE (LENDER):
+   AmeriFirst Federal Savings Bank
+   FHA Lender Approval ID: 29471-0003
+   2100 West Cypress Creek Road, Fort Lauderdale, FL 33309
+   Contact: (954) 555-0142
+
+MORTGAGOR (BORROWER):
+   Marcus DeShawn Williams
+   DOB: 03/22/1991
+   SSN: XXX-XX-6284
+   Employment: Warehouse Operations Supervisor, Amazon Fulfillment Center
+   Annual Gross Income: $62,400.00
+   Mailing Address: 7820 NW 44th Street, Apt 12B, Sunrise, FL 33351
+
+═══════════════════════════════════════════════════════════════════════════════
+SECTION B — PROPERTY INFORMATION
+═══════════════════════════════════════════════════════════════════════════════
+
+Property Address: 1934 SW 68th Avenue, Miramar, FL 33023
+Property Type: Single-Family Attached (Townhome)
+Year Built: 2017
+Living Area: 1,480 sq ft (3 bed / 2.5 bath)
+HOA: Miramar Palms Homeowners Association ($215/month)
+
+FHA Appraisal:
+   Appraised Value: $345,000.00
+   FHA Appraisal #: FL-0294871
+   Effective Date: 12/19/2024
+   Condition: C3 (Average)
+   Appraisal valid for 120 days from effective date
+
+═══════════════════════════════════════════════════════════════════════════════
+SECTION C — LOAN TERMS AND CONDITIONS
+═══════════════════════════════════════════════════════════════════════════════
+
+C.1  LOAN TYPE: FHA 203(b) - Purchase Money Mortgage
+C.2  PURCHASE PRICE: $340,000.00
+C.3  PRINCIPAL LOAN AMOUNT: $333,580.00 (98.11% LTV after MIP financing)
+
+C.4  DOWN PAYMENT:
+     Minimum Required (3.5%): $11,900.00
+     Borrower Down Payment:   $11,900.00
+     Source of Down Payment:  Personal Savings (verified, 3 months seasoned)
+     Gift Funds:              $0.00
+
+C.5  INTEREST RATE: 6.75% per annum (fixed)
+C.6  LOAN TERM: 360 months (30 years)
+C.7  AMORTIZATION: Fully amortizing, level payment
+
+C.8  MONTHLY PRINCIPAL & INTEREST: $2,163.42
+
+C.9  FHA MORTGAGE INSURANCE PREMIUM (MIP):
+     (a) Upfront MIP (UFMIP): 1.75% of base loan amount
+         UFMIP Amount: $5,880.25
+         UFMIP Financed into Loan: YES (added to base loan)
+         Base Loan Amount: $327,700.00
+         Total Loan with UFMIP: $333,580.00
+
+     (b) Annual MIP: 0.55% of average outstanding balance
+         Monthly MIP: Approximately $152.89/month (initial)
+         MIP Duration: Life of the loan (LTV > 90% at origination)
+
+C.10 TOTAL MONTHLY PAYMENT BREAKDOWN:
+     Principal & Interest:           $2,163.42
+     Monthly MIP:                    $152.89
+     Property Taxes (est.):          $354.17  ($4,250/year)
+     Homeowners Insurance:           $195.83  ($2,350/year)
+     Flood Insurance (Zone AE):      $108.33  ($1,300/year)
+     HOA Dues:                       $215.00
+     ─────────────────────────────────────────
+     TOTAL MONTHLY OBLIGATION:       $3,189.64
+
+C.11 QUALIFYING RATIOS:
+     Front-End (Housing) DTI: 30.7% (FHA max: 31%)
+     Back-End (Total Debt) DTI: 42.1% (FHA max: 43%)
+     Compensating Factors Applied: Residual income exceeds threshold;
+     verified cash reserves of 2.5 months PITI.
+
+═══════════════════════════════════════════════════════════════════════════════
+SECTION D — CREDIT AND UNDERWRITING
+═══════════════════════════════════════════════════════════════════════════════
+
+D.1  FICO SCORES (pulled 12/15/2024):
+     Experian: 642    TransUnion: 651    Equifax: 638
+     Decision Score (median): 642
+
+D.2  CREDIT HISTORY NOTES:
+     - 1 x 30-day late payment on auto loan (09/2022) — explained: temporary
+       job transition. Resolved. No subsequent lates.
+     - 3 open revolving accounts, avg utilization: 34%
+     - No collections, judgments, or bankruptcies
+     - Housing history: 36 months rental, verified on-time
+
+D.3  MANUAL UNDERWRITE: YES
+     Reason: Credit score below 680 threshold for AUS approval.
+     Compensating factors documented per HUD Handbook 4000.1.
+
+D.4  EMPLOYMENT VERIFICATION:
+     Employer: Amazon.com Services LLC
+     Position: Warehouse Operations Supervisor
+     Start Date: 04/2019 (5+ years tenure)
+     Verified by: VOE dated 12/20/2024
+
+═══════════════════════════════════════════════════════════════════════════════
+SECTION E — CLOSING COSTS (ESTIMATED)
+═══════════════════════════════════════════════════════════════════════════════
+
+     Loan Origination Fee (1%):      $3,277.00
+     Appraisal Fee:                  $500.00
+     Credit Report:                  $55.00
+     Flood Determination:            $20.00
+     Tax Monitoring Service:         $75.00
+     Title Insurance (Lender's):     $875.00
+     Title Insurance (Owner's):      $650.00
+     Title Search/Exam:              $300.00
+     Settlement Fee:                 $595.00
+     Recording Fees:                 $210.00
+     Doc Stamp Tax (FL):             $2,380.00
+     Intangible Tax (FL):            $667.16
+     Survey:                         $350.00
+     Home Inspection:                $425.00
+     Pest (WDO) Inspection:          $85.00
+     ─────────────────────────────────────────
+     TOTAL CLOSING COSTS:            $10,464.16
+
+     Seller Concessions (3%):        ($10,200.00)
+     ─────────────────────────────────────────
+     NET CLOSING COSTS:              $264.16
+
+     TOTAL CASH TO CLOSE:            $12,164.16
+
+═══════════════════════════════════════════════════════════════════════════════
+SECTION F — FHA-SPECIFIC PROVISIONS
+═══════════════════════════════════════════════════════════════════════════════
+
+F.1  AMENDATORY CLAUSE (Required by HUD):
+     "It is expressly agreed that, notwithstanding any other provisions of this
+     contract, the purchaser shall not be obligated to complete the purchase of
+     the property described herein or to incur any penalty by forfeiture of
+     earnest money deposits or otherwise unless the purchaser has been given,
+     in accordance with HUD/FHA or VA requirements, a written statement by the
+     Federal Housing Commissioner, Department of Veterans Affairs, or a Direct
+     Endorsement lender setting forth the appraised value of the property of
+     not less than $340,000.00."
+
+F.2  REAL ESTATE CERTIFICATION:
+     The property meets FHA Minimum Property Requirements (MPR) per HUD
+     Handbook 4000.1, Section II.D.3.
+
+F.3  LEAD-BASED PAINT DISCLOSURE: Not applicable (built after 1978).
+
+F.4  IDENTITY OF INTEREST: None identified between Buyer and Seller.
+
+F.5  FLIPPING RESTRICTIONS: Property has been owned by seller since 2020.
+     No 90-day flipping restriction applies.
+
+F.6  ASSUMPTION: This FHA loan IS assumable, subject to Lender's credit
+     qualification of the assuming party and HUD/FHA approval.
+
+═══════════════════════════════════════════════════════════════════════════════
+SECTION G — DEFAULT AND REMEDIES
+═══════════════════════════════════════════════════════════════════════════════
+
+G.1  LATE PAYMENT: A late charge of 4% of the overdue payment amount shall be
+     assessed if payment is not received within 15 days of the due date.
+
+G.2  DEFAULT EVENTS: Failure to make payment for 30+ days; failure to maintain
+     insurance; abandonment of property; fraud in loan application; transfer
+     of property without lender approval.
+
+G.3  LOSS MITIGATION: Before initiating foreclosure, Lender shall evaluate
+     Borrower for all available loss mitigation options per FHA guidelines,
+     including:
+     - Informal/Formal Forbearance
+     - FHA-HAMP Loan Modification
+     - Pre-Foreclosure Sale (Short Sale)
+     - Deed-in-Lieu of Foreclosure
+     - Partial Claim
+
+G.4  FORECLOSURE: Florida is a judicial foreclosure state. Lender must file
+     a lis pendens and obtain court judgment before conducting a foreclosure
+     sale. Borrower has right of redemption until the filing of the
+     certificate of sale.
+
+═══════════════════════════════════════════════════════════════════════════════
+SECTION H — SIGNATURES AND CERTIFICATIONS
+═══════════════════════════════════════════════════════════════════════════════
+
+BORROWER CERTIFICATION: I certify that all statements made in connection with
+this FHA-insured loan are true and complete. I understand that federal law
+(18 U.S.C. § 1014) provides for imprisonment and/or fines for any willful
+misstatements.
+
+BORROWER:
+_________________________________          Date: 01/08/2025
+Marcus DeShawn Williams
+
+
+LENDER:
+_________________________________          Date: 01/08/2025
+Patricia Gonzalez-Rivera
+VP, FHA Lending Division
+AmeriFirst Federal Savings Bank
+NMLS #: 847291
+
+CLOSING AGENT:
+_________________________________          Date: 01/08/2025
+Coastline Title & Escrow, LLC
+FL License #: T-0029481
